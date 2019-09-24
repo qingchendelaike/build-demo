@@ -1,0 +1,115 @@
+/deep/ .el-table {
+    margin: 19px 0 0 5px;
+  }
+
+  /deep/ .el-table tbody tr:hover > td {
+    background-color: #ffffff !important;
+  }
+
+  /deep/ .el-table .notBegun-row {
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      border-radius: 5px;
+      width: 4px;
+      height: 50px;
+      border-right: 5px solid #5CA7FF;
+    }
+  }
+  /deep/ .el-table .inHand-row {
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      border-radius: 5px;
+      width: 4px;
+      height: 50px;
+      border-right: 5px solid #5ca7ff;
+    }
+  }
+  /deep/ .el-table .cutOff-row {
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      border-radius: 5px;
+      width: 4px;
+      height: 50px;
+      border-right: 5px solid #E5E5E5;
+    }
+  }
+  /deep/ .el-table .completed-row {
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      border-radius: 5px;
+      width: 4px;
+      height: 50px;
+      border-right: 5px solid #F8E71C;
+    }
+  }
+
+  /deep/ .el-table .cancelled-row {
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      border-radius: 5px;
+      width: 4px;
+      height: 50px;
+      border-right: 5px solid #FF4001;
+    }
+  }
+
+
+
+  /deep/ .el-table td,
+  .el-table th.is-leaf {
+    border: none;
+  }
+  /deep/ .el-table,
+  .el-table__expanded-cell {
+    background: rgba(246, 246, 246, 1);
+    table {
+      border-collapse: separate;
+      border-spacing: 0px 5px;
+      &.el-table__header {
+        border-spacing: 0;
+      }
+      tr {
+        height: 50px;
+      }
+    }
+  }
+  /deep/ .el-table::before {
+    height: 0;
+  }
+
+
+  /deep/ table {
+    border-collapse: separate;
+    tr {
+      th {
+        padding: 0;
+        &:first-child {
+          border-radius: 3px 0 0 3px;
+          padding-left: 30px;
+        }
+        &:nth-last-child(2) {
+          border-radius: 0 3px 3px 0;
+        }
+      }
+      td {
+        padding: 0;
+        &:first-child {
+          border-radius: 3px 0 0 3px;
+          padding-left: 30px;
+        }
+        &:last-child {
+          border-radius: 0 3px 3px 0;
+        }
+      }
+    }
+  }

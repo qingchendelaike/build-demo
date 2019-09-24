@@ -1,0 +1,78 @@
+/* 字体 */
+$fontBold:bold;
+$fontNormal:normal;
+$color333333:#333333;
+$fontSize44:44px;
+$fontSize30:30px;
+$fontSize28:28px;
+$fontSize24:24px;
+$fontSize22:22px;
+
+/* 颜色 */
+
+$colorDD2D1E:#DD2D1E;
+$colorF8544A:#F8544A;
+$color5BA1F3:#5BA1F3;
+$colorF3F7FD:#F3F7FD;
+$colorFDF6F4:#FDF6F4;
+$color675757:#675757;
+$colorF6F6F6:#F6F6F6;
+$color555555:#555555;
+$color999999:#999999;
+$colorBCBCBC:rgba(188,188,188,0.8);
+$colorF0F0F0:#F0F0F0;
+$colorF6F6F6:#F6F6F6;
+
+/* 按钮 */
+$btnHeightMax:38px;
+$btnRadius3:3px;
+$btnHeight:25px;
+$btnMinWidth:25px;
+$btnMinMargin:8px;
+
+/* 表单 */
+$marginInput15:15px;
+$paddingInput20:20px;
+$fromSize14:14px;
+$InputHeight:40px;
+
+
+.fontSizeClassA{
+    font-weight: $fontBold;
+    color: $color333333;
+    font-size: $fontSize44;
+}
+
+.fontSizeClassB{
+    font-weight: $fontBold;
+    color: $color333333;
+    font-size: $fontSize30;
+}
+
+.fontSizeClass{
+    font-weight: $fontNormal;
+    color: $color333333;
+}
+
+.fontSizeClassC{
+    @extend .fontSizeClass;
+    font-size: $fontSize30;
+}
+
+.fontSizeText{
+    @extend .fontSizeClass;
+    font-size: $fontSize28;
+}
+
+.fontSizeAuxiliary{
+    @extend .fontSizeClass;
+    font-size: $fontSize24;
+}
+
+.fontSizeExplain{
+    @extend .fontSizeClass;
+    font-size: $fontSize22;
+}
+
+p{margin: 0;padding: 0;}
+
