@@ -57,11 +57,17 @@ export default {
   seriesItemDelete(params) {
     return api.post('/series/delete', params, header)
   },
-   /* 事项删除 */
-   matterSeriesDelete(params) {
+  /* 事项删除 */
+  matterSeriesDelete(params) {
     return api.post('/item/deleteSeriesItem', params, header)
   },
-  
-
+  /* 事项列表 */
+  matterSeriesList(params) {
+    return api.get('/item/menu', params, header)
+  },
+  /* 事项添加 */
+  matterSeriesAdd(params) {
+    return api.post('/series/addSeriesItem', params, header)
+  },
 
 }

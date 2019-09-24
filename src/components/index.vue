@@ -20,10 +20,9 @@
       </el-header>
       <router-view />
     </el-container>
-
     <!-- 用户信息 -->
-    <el-popover ref="popoverPse" popper-class="popoverPse" trigger="hover" placement="bottom-end">
-      <div class="personal">
+    <el-popover ref="popoverPse" popper-class="personal" trigger="hover" placement="bottom-end">
+      <div class="popoverPse">
         <router-link tag="p" to="/index/person/personMSg" v-if="type == 1">个人信息</router-link>
         <router-link tag="p" to="/index/person/adminPerson">账号密码</router-link>
         <p @click="sigOut">退出登录</p>
@@ -148,25 +147,6 @@ export default {
           background: url("../assets/img/index_sprites.png") no-repeat;
           background-position: -137px -3px;
         }
-      }
-    }
-  }
-}
-
-.popoverPse {
-  .personal {
-    padding: 18px;
-    text-align: center;
-    p {
-      line-height: 20px;
-      margin-top: 15px;
-      cursor: pointer;
-      &:last-child {
-        border-top: 1px solid #e5e5e5;
-        padding-top: 15px;
-      }
-      &:first-child {
-        margin-top: 0;
       }
     }
   }

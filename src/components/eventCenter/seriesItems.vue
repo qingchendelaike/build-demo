@@ -68,7 +68,7 @@
       <el-table-column label="操作" v-if="num" width="120px">
         <template slot-scope="scope">
           <!-- 事项添加 -->
-          <i class="el-icon-plus addIcon" @click="matterAdd(scope.$index, scope.row)"></i>
+          <i class="el-icon-plus addIcon" @click="matterAddPop(scope.$index, scope.row)"></i>
 
           <!-- 系列删除 -->
           <el-popover
@@ -128,8 +128,21 @@
       :close-on-click-modal="false"
       :visible.sync="dialogVisible"
     >
-      <el-transfer v-model="value" :data="data" :titles="['所有事项', '已选事项']"></el-transfer>
-      <span slot="footer" class="dialog-footer"></span>
+      <el-transfer
+        v-model="transferValue"
+        :props="{
+      key: 'item_id',
+      label: 'item_name',
+      disabled:'is_choose' == true
+    }"
+        :data="transferData"
+        :titles="['所有事项', '已选事项']"
+      ></el-transfer>
+
+      <span slot="footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="matterAdd">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -137,22 +150,15 @@
 <script>
 export default {
   data() {
-    const generateData = _ => {
-      const data = [];
-      for (let i = 1; i <= 15; i++) {
-        data.push({
-          key: i,
-          label: `备选项 ${i}`,
-          disabled: i % 4 === 0
-        });
-      }
-      return data;
-    };
     return {
-      data: generateData(),
-      value: [1, 4],
-      dialogVisible: true,
+      transferValue: [],
+      transferData: [],
+      dialogVisible: false,
       visible: false,
+      matterData: {
+        series_id: "",
+        item_ids: ""
+      },
       tableData: [],
       addFrom: {
         series: ""
@@ -167,8 +173,30 @@ export default {
   },
   methods: {
     /* 事项添加 */
-    matterAdd(index, row) {
-      console.log(index, row);
+    async matterAdd() {
+      this.matterData.item_ids = this.transferValue.join(",");
+      let res = await this.$api.allMatters.matterSeriesAdd(this.matterData);
+      if (res.status == "success") {
+        this.transferValue = []
+        this.list();
+      }
+    },
+
+    /* 事项添加弹窗 */
+    matterAddPop(index, row) {
+      this.dialogVisible = true;
+      this.matterData.series_id = row.series_id;
+      this.matterList();
+    },
+    /* 查询所有事项列表 */
+    async matterList() {
+      let req = {
+        page: 0
+      };
+      let res = await this.$api.allMatters.matterSeriesList(req);
+      if (res.status == "success") {
+        this.transferData = res.data.lists;
+      }
     },
     /* 事项关闭 */
     matterBtn(val) {
@@ -372,5 +400,4 @@ export default {
     }
   }
 }
-
 </style>

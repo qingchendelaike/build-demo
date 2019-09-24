@@ -69,8 +69,4 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "../../assets/css/table.scss";
-.page-box {
-  margin-top: 40px;
-  text-align: right;
-}
 </style>
