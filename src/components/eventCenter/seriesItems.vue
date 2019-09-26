@@ -23,7 +23,7 @@
         <template slot-scope="props">
           <el-form label-position="left" class="demo-table-expand">
             <el-form-item label v-for="(item,index) in props.row.sub_item" :key="item.item_id">
-              <span>{{ item.item_name }}</span>
+              <span @click="itemDeatils(item)" style="cursor: pointer;">{{ item.item_name }}</span>
               <span :style="{'width':num ==true?'235px':'250px'}">{{ item.time }}</span>
               <el-popover
                 trigger="click"
@@ -68,7 +68,7 @@
       <el-table-column label="操作" v-if="num" width="120px">
         <template slot-scope="scope">
           <!-- 事项添加 -->
-          <i class="el-icon-plus addIcon" @click="matterAdd(scope.$index, scope.row)"></i>
+          <i class="el-icon-plus addIcon" @click="matterAddPop(scope.$index, scope.row)"></i>
 
           <!-- 系列删除 -->
           <el-popover
@@ -128,8 +128,44 @@
       :close-on-click-modal="false"
       :visible.sync="dialogVisible"
     >
-      <el-transfer v-model="value" :data="data" :titles="['所有事项', '已选事项']"></el-transfer>
-      <span slot="footer" class="dialog-footer"></span>
+      <el-form ref="form" :model="diaFormData" label-width="80px">
+        <el-form-item label="选择年份">
+          <el-date-picker
+            v-model="diaFormData.year"
+            type="year"
+            placeholder="选择年份"
+            style="width:100%;"
+            @change="changeData"
+            value-format="yyyy"
+          ></el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="搜索选项">
+          <el-autocomplete
+            v-model="diaFormData.name"
+            :fetch-suggestions="querySearchAsync"
+            placeholder="输入事项或名称查询"
+            @select="handleSelect"
+            style="width:100%;"
+          >
+            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          </el-autocomplete>
+        </el-form-item>
+      </el-form>
+      <el-transfer
+        v-model="transferValue"
+        :props="{
+            key: 'item_id',
+            label: 'item_name',
+            disabled:'is_choose' == true
+          }"
+        :data="transferData"
+        :titles="['所有事项', '已选事项']"
+      ></el-transfer>
+      <span slot="footer">
+        <el-button @click="matterClose">取 消</el-button>
+        <el-button type="primary" @click="matterAdd">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -137,22 +173,21 @@
 <script>
 export default {
   data() {
-    const generateData = _ => {
-      const data = [];
-      for (let i = 1; i <= 15; i++) {
-        data.push({
-          key: i,
-          label: `备选项 ${i}`,
-          disabled: i % 4 === 0
-        });
-      }
-      return data;
-    };
     return {
-      data: generateData(),
-      value: [1, 4],
-      dialogVisible: true,
+      restaurants: [],
+      timeout: null,
+      diaFormData: {
+        name: "",
+        year: ''
+      },
+      transferValue: [],
+      transferData: [],
+      dialogVisible: false,
       visible: false,
+      matterData: {
+        series_id: "",
+        item_ids: ""
+      },
       tableData: [],
       addFrom: {
         series: ""
@@ -166,9 +201,73 @@ export default {
     };
   },
   methods: {
+    /* 事项详情 */
+    itemDeatils(val){
+      this.$router.push({path:'/index/detailsEvent/initiateDetails',query:{'item_id':val.item_id}})
+    },
+    /* 事项添加取消 */
+    matterClose() {
+      this.dialogVisible = false;
+      this.diaFormData.name = "";
+      this.diaFormData.year ='';
+      this.restaurants = [];
+    },
+    /* 时间选择查询事项 */
+    changeData() {
+      this.matterList();
+    },
+    /* 事件搜索 */
+    querySearchAsync(queryString, cb) {
+      var restaurants = this.restaurants;
+      var results = queryString
+        ? restaurants.filter(this.createStateFilter(queryString))
+        : restaurants;
+      results.forEach(i => {
+        i.value = i.item_name;
+      });
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        cb(results);
+      }, 1000 * Math.random());
+    },
+    createStateFilter(queryString) {
+      return state => {
+        return (
+          state.item_name.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
+      };
+    },
+    handleSelect(item) {
+      this.transferValue.push(item.item_id);
+    },
     /* 事项添加 */
-    matterAdd(index, row) {
-      console.log(index, row);
+    async matterAdd() {
+      if (this.transferValue.length > 0) {
+        this.matterData.item_ids = this.transferValue.join(",");
+        let res = await this.$api.allMatters.matterSeriesAdd(this.matterData);
+        if (res.status == "success") {
+          this.transferValue = [];
+          this.dialogVisible = false;
+          this.diaFormData.name = "";
+          this.list();
+          this.num = true;
+        }
+      }
+    },
+    /* 事项添加弹窗 */
+    matterAddPop(index, row) {
+      this.dialogVisible = true;
+      this.matterData.series_id = row.series_id;
+      this.matterList();
+    },
+    /* 查询所有事项列表 */
+    async matterList() {
+      let res = await this.$api.allMatters.matterSeriesList({
+        year: this.diaFormData.year
+      });
+      if (res.status == "success") {
+        this.transferData = this.restaurants = res.data;
+      }
     },
     /* 事项关闭 */
     matterBtn(val) {
@@ -372,5 +471,4 @@ export default {
     }
   }
 }
-
 </style>
