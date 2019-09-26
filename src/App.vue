@@ -29,7 +29,7 @@ html,
 body,
 #app {
   min-width: 1200px;
-  height: 100%;
+  height:100%;
   font-size: 14px;
 }
 * {

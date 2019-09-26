@@ -57,6 +57,14 @@ export default new Router({
           name: 'personMSg',
           component: () => import('@/components/personal/personMSg.vue'),
         }]
+      },{
+        path: '/recordList',
+        name: 'recordList',
+        component: () => import('@/components/eventRecord/recordList.vue')
+      },{
+        path: '/test',
+        name: 'test',
+        component: () => import('@/components/eventRecord/test.vue')
       }
     ]
   }]
