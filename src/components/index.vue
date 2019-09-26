@@ -41,7 +41,7 @@ export default {
       defaultImg: require("../assets/img/defaultIcon.png"),
       routerMsg: [
         {
-          path: "/recordList",
+          path: "/index/recordList",
           name: "大事记"
         },
         {
