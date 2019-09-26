@@ -55,6 +55,10 @@ export default new Router({
           path: '/index/detailsEvent/uploadFiles',
           name: 'uploadFiles',
           component: () => import('@/components/detailsEvent/uploadFiles.vue'),
+        },{
+          path: '/index/detailsEvent/participation',
+          name: 'participation',
+          component: () => import('@/components/detailsEvent/participation.vue'),
         }]
       }
       /* 个人信息 */

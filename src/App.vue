@@ -147,29 +147,4 @@ body,
   }
 }
 
-/* 事项详情 */
-.event-centen {
-  /deep/ .el-tabs {
-    .el-tabs__active-bar {
-      background-color: transparent;
-    }
-    .el-tabs__nav-wrap::after {
-      background-color: transparent;
-    }
-    .el-tabs__item {
-      height: 30px;
-      line-height: 30px;
-      font-size: 22px;
-      color: #999999;
-    }
-    .el-tabs__item:hover {
-      color: #000;
-    }
-    .el-tabs__item {
-      &.is-active {
-        color: #000;
-      }
-    }
-  }
-}
 </style>

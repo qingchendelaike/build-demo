@@ -2,16 +2,12 @@
   <div class="eventDeatils" id="person-box">
     <div class="event-box">
       <i class="el-icon-arrow-left backIcon" @click="callBack"></i>
-
       <div class="event-centen">
-        <router-link v-for="(item,index) in detailsTree" :key="index" :to="item.url == pathUrl.path ? (item.url+'?item_id='+pathUrl.query.item_id) :item.url">
-          {{item.name}}
-        </router-link>
-        <p class="status">
-          <span>发起人：{{detailsData.create_user_name}}</span>
-          <span>事项状态：{{detailsData.zh_status}}</span>
-        </p>
-
+        <div class="routerBox">
+          <router-link tag="div" v-for="(item,index) in detailsTree" :key="index" :to="item.url+'?item_id='+$route.query.item_id">
+            {{item.name}}
+          </router-link>
+        </div>
         <router-view></router-view>
       </div>
     </div>
@@ -22,14 +18,13 @@ export default {
   data(){
     return{
       detailsData:[],
-      pathUrl:"",
       detailsTree:[
         {
           url:'/index/detailsEvent/initiateDetails',
           name:'发起详情'
         },
         {
-          url:'/index/detailsEvent/initiateDetails',
+          url:'/index/detailsEvent/participation',
           name:'参与反馈'
         },
         {
@@ -44,21 +39,9 @@ export default {
     callBack() {
       this.$router.push('/index/eventSummary/seriesItems')
     },
-    /* 查询事项详情 */
-    async initiate() {
-      let req = {
-        item_id: this.$route.query.item_id
-      };
-      const res = await this.$api.allMatters.matterDetails(req);
-      if (res.status == "success") {
-        this.detailsData = res.data;
-        this.detailsTasks = res.data.tasks;
-      }
-    }
+
   },
   mounted(){
-      this.initiate()
-      this.pathUrl = this.$route
   }
 }
 </script>
@@ -118,15 +101,22 @@ export default {
           }
         }
       }
-      .status {
-        margin: 15px 0 10px 0;
-        span {
-          &:first-child {
-            margin-right: 20px;
-          }
-        }
-      }
     }
   }
 }
+  .routerBox{
+    display: flex;
+    div{
+      color:rgba(153,153,153,1);
+      line-height:30px;
+      height:30px;
+      font-size:22px;
+      cursor: pointer;
+      margin-right: 40px;
+      &.router-link-active{
+        color: #333333;
+      }
+    }
+  }
+
 </style>

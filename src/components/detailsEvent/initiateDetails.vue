@@ -1,5 +1,9 @@
 <template>
   <div class="event-centen">
+    <p class="status">
+      <span>发起人：{{detailsData.create_user_name}}</span>
+      <span>事项状态：{{detailsData.zh_status}}</span>
+    </p>
     <details-tip
       v-if="detailsData.item_status == 3 || detailsData.item_status == 5"
       :detailsData="detailsData"
@@ -66,3 +70,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+  .status{
+    margin: 30px 0 10px 0;
+  }
+
+</style>
