@@ -6,10 +6,24 @@ export default {
     // return出去了一个promise
     return api.get('/organization/lists', params, header)
   },
-  /*反馈列表*/
+  /*反馈下拉*/
   feedbackMenu(params) {
     // return出去了一个promise
     return api.get('/item/feedbackMenu', params, header)
   },
-
+  /*反馈列表*/
+  feedbackLists(params) {
+    // return出去了一个promise
+    return api.get('/item/feedbackLists', params, header)
+  },
+  /*修改反馈(发起人)*/
+  feedbackEdit(params) {
+    // return出去了一个promise
+    return api.post('/item/editFeedback', params, header)
+  },
+/*修改反馈备注(发起人)*/
+  feedbackEditRemark(params) {
+    // return出去了一个promise
+    return api.post('/item/editFeedbackRemark', params, header)
+  },
 }
