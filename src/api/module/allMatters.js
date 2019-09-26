@@ -67,7 +67,19 @@ export default {
   },
   /* 事项添加 */
   matterSeriesAdd(params) {
-    return api.post('/series/addSeriesItem', params, header)
+    return api.post('/item/addSeriesItem', params, header)
   },
-
+  /* 事项详情 */
+  matterDetails(params){
+    return api.get('/item/detail', params, header)
+  },
+  /* 删除事项详情 */
+  matterDetailsDel(params){
+    return api.get('/item/delItem', params, header)
+  },
+  /* 编辑事项备注 */
+  matterDetailsRemark(params){
+    return api.post('/item/editRemark', params, header)
+  },
+  
 }

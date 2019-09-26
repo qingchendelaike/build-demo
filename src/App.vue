@@ -9,9 +9,10 @@
 export default {
   watch: {
     $route(to, from) {
-      if (to.path == "/index/person/personMSg") {
+      if (to.path == "/index/person/personMSg" || to.path =='/index/detailsEvent') {
+        let pxH = to.path == "/index/person/personMSg" ? 126:226
         this.$nextTick(() => {
-          this.$api.common.maxHeight("person-box", 126);
+          this.$api.common.maxHeight("person-box", pxH);
         });
       } else {
         this.$nextTick(() => {
@@ -123,7 +124,6 @@ body,
 }
 
 /* 个人信息 */
-
 .personal {
   text-align: center;
   width: 110px;
@@ -144,6 +144,32 @@ body,
   }
   &.el-popover {
     padding: 0;
+  }
+}
+
+/* 事项详情 */
+.event-centen {
+  /deep/ .el-tabs {
+    .el-tabs__active-bar {
+      background-color: transparent;
+    }
+    .el-tabs__nav-wrap::after {
+      background-color: transparent;
+    }
+    .el-tabs__item {
+      height: 30px;
+      line-height: 30px;
+      font-size: 22px;
+      color: #999999;
+    }
+    .el-tabs__item:hover {
+      color: #000;
+    }
+    .el-tabs__item {
+      &.is-active {
+        color: #000;
+      }
+    }
   }
 }
 </style>
