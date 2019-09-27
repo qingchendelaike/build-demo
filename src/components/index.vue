@@ -45,11 +45,11 @@ export default {
           name: "大事记"
         },
         {
-          path: "/index/eventSummary",
+          path: "/index/eventSummary/allMatters",
           name: "事项中心"
         },
         {
-          path: "/",
+          path: "/index/globalConfig/organManage",
           name: "全局设置"
         },
         {

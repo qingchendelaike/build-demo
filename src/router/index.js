@@ -75,10 +75,40 @@ export default new Router({
           name: 'personMSg',
           component: () => import('@/components/personal/personMSg.vue'),
         }]
-      },{
+      },
+      /* 大事记 */
+      {
         path: 'recordList',
         name: 'recordList',
         component: () => import('@/components/eventRecord/recordList.vue')
+      },
+      /* 全局设置 */
+      {
+        path: 'globalConfig',
+        name: 'globalConfig',
+        component: () => import('@/components/globalConfig/globalConfig.vue'),
+        redirect: '/index/globalConfig/organManage',
+        children: [{
+          /* 组织架构管理 */
+          path: '/index/globalConfig/organManage',
+          name: 'organManage',
+          component: () => import('@/components/globalConfig/organManage.vue')
+        }, {
+          /* 职务权限管理 */
+          path: '/index/globalConfig/powerManage',
+          name: 'powerManage',
+          component: () => import('@/components/globalConfig/powerManage.vue')
+        }, {
+          /* 党务用户管理 */
+          path: '/index/globalConfig/userManage',
+          name: 'userManage',
+          component: () => import('@/components/globalConfig/userManage.vue')
+        }, {
+          /* 人员资料库 */
+          path: '/index/globalConfig/userData',
+          name: 'userData',
+          component: () => import('@/components/globalConfig/userData.vue')
+        }]
       }
     ]
   }, ]
