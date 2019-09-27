@@ -26,4 +26,14 @@ export default {
     // return出去了一个promise
     return api.post('/item/editFeedbackRemark', params, header)
   },
+  /* 催办反馈 */
+  pushFeedback(params) {
+    // return出去了一个promise
+    return api.post('/item/pushFeedback', params, header)
+  },
+  /* 反馈事项(参与人) */
+  feedback(params) {
+    // return出去了一个promise
+    return api.post('/item/feedback', params, header)
+  },
 }
