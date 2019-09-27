@@ -142,17 +142,17 @@
     },
     mounted(){
        //判断today的位置，居中
-       let tTop=document.querySelector(".today").offsetTop;
-       let tWidth=document.querySelector(".today").clientHeight/2;
-       let halfDis=document.querySelector("#scrollContainer").clientHeight/2;
-       if(tTop>halfDis){
-         let scrollDis=Math.abs(halfDis-tTop-tWidth);
-         document.querySelector("#scrollContainer").scrollBy(0,scrollDis);
-       }
+      if(document.querySelector(".today")){
+        let tTop=document.querySelector(".today").offsetTop;
+        let tWidth=document.querySelector(".today").clientHeight/2;
+        let halfDis=document.querySelector("#scrollContainer").clientHeight/2;
+        if(tTop>halfDis){
+          let scrollDis=Math.abs(halfDis-tTop-tWidth);
+          document.querySelector("#scrollContainer").scrollBy(0,scrollDis);
+        }
+      }
        let _this=this;
        document.querySelector("#scrollContainer").onscroll=function(e){
-         //滚动啦
-         console.log("滚动啦");
          let divscroll=document.querySelector("#scrollContainer");
          let scrollTop=divscroll.scrollTop;//页面上卷的高度
          let wholeHeight=divscroll.scrollHeight;//页面底部到顶部的距离
@@ -173,9 +173,7 @@
              let prevData=res.data;
              for(let j=prevData.length-1;j>=0;j--){
                _this.modelData.unshift(prevData[j]);
-
              }
-             console.log(_this.modelData);
            })
 
          }
