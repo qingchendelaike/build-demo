@@ -11,6 +11,8 @@
       @delDetauls="delDetauls"
       @threeSum="threeSum"
     ></details-tip>
+
+    <div v-if="detailsData.is_self == true"></div>
     <detailsFrom
       v-if="detailsData.item_status == 1 || detailsData.item_status == 2"
       :detailsData="detailsData"

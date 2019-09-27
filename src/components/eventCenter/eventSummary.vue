@@ -15,11 +15,17 @@
         direction="rtl"
         custom-class="pop-drawer"
         :show-close="false"
-        title="发去事项"
+        title="发起事项"
       >
-        <router-link v-for="(item,index) in dataMarrts" tag="div" class="drawer-box" :to="item.value" :key="index">
-          <img :src="item.icon" alt="">
-          <span>{{item.key}}</span> 
+        <router-link
+          v-for="(item,index) in dataMarrts"
+          tag="div"
+          class="drawer-box"
+          :to="item.value"
+          :key="index"
+        >
+          <img :src="item.icon" alt />
+          <span>{{item.key}}</span>
         </router-link>
       </el-drawer>
 
@@ -57,22 +63,22 @@ export default {
         {
           value: "/",
           key: "会议",
-          icon:  require("../../assets/img/meeting.png")
+          icon: require("../../assets/img/meeting.png")
         },
         {
           value: "/",
           key: "课程",
-          icon:  require("../../assets/img/course.png")
+          icon: require("../../assets/img/course.png")
         },
         {
           value: "/",
           key: "活动",
-          icon:  require("../../assets/img/activity.png")
+          icon: require("../../assets/img/activity.png")
         },
         {
           value: "/",
           key: "项目方案",
-          icon:  require("../../assets/img/plan.png")
+          icon: require("../../assets/img/plan.png")
         }
       ]
     };

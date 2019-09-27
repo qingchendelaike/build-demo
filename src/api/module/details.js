@@ -6,6 +6,13 @@ export default {
     // return出去了一个promise
     return api.get('/organization/lists', params, header)
   },
+  /* 类型标签 */
+  labelLists(params) {
+    // return出去了一个promise
+    return api.get('/label/lists', params, header)
+  },
+
+
   /*反馈下拉*/
   feedbackMenu(params) {
     // return出去了一个promise
