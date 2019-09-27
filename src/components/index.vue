@@ -76,12 +76,6 @@ export default {
     this.userName = userName;
     this.type = type;
     this.defaultImg = userImg;
-    /*   let user = JSON.parse(localStorage.getItem("userInfo"));
-    this.userName = user.user_name;
-    this.type = user.type;
-    if (user.user_img) {
-      this.defaultImg = user.user_img;
-    } */
   }
 };
 </script>

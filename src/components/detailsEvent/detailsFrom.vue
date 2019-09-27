@@ -42,7 +42,7 @@
             <h3>类型标签管理</h3>
             <div v-for="(item,index) in labelData" :key="index" class="labelBox">
               <span class="labelTitle">{{item.label_name}}</span>
-              <!-- <el-input v-model="item.label_name" style="width: 160px;height: 36px;">--></el-input>
+              <!-- <el-input v-model="item.label_name" style="width: 160px;height: 36px;"></el-input>-->
               <!--<span class="label Edit"></span>-->
               <span class="label Add">保存</span>
               <span class="label Close"></span>
@@ -150,9 +150,13 @@
       </el-form-item>
 
       <el-form-item label="归属系列" prop="desc">
-        <el-select placeholder="请选择归属系列" v-model="ruleForm.series" style="width:100%;">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+        <el-select v-model="ruleForm.series" multiple placeholder="请选择归属系列"  style="width:100%;">
+          <el-option
+            v-for="item in seriseData"
+            :key="item.series_id"
+            :label="item.series_name"
+            :value="item.series_id">
+          </el-option>
         </el-select>
       </el-form-item>
 
@@ -252,10 +256,19 @@
                 },
                 organData: [],
                 labelData: [],
-                labelArr: []
+                labelArr: [],
+                seriseData:[]
             };
         },
         methods: {
+            /*归属系列*/
+            async seriesMenu(){
+                const res = await this.$api.details.seriesMenu();
+                if (res.status == "success") {
+                    this.seriseData = res.data;
+
+                }
+            },
             /*参与人员*/
             userAll(){
 
@@ -341,13 +354,12 @@
         mounted() {
             this.ruleForm = JSON.parse(JSON.stringify(this.detailsData));
             let arr = this.ruleForm.item_label.split(",");
-            console.log(this.ruleForm.notices)
             arr.forEach(i => {
                 this.labelArr.push(i);
             });
-
             this.organ();
             this.labelLists();
+            this.seriesMenu();
         }
     };
 </script>

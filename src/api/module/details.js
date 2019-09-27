@@ -17,6 +17,13 @@ export default {
     return api.get('/partyUser/organizeUserLists', params, header)
   },
 
+  /*系列列表*/
+  seriesMenu(params) {
+    // return出去了一个promise
+    return api.get('/series/menu', params, header)
+  },
+
+
   /*反馈下拉*/
   feedbackMenu(params) {
     // return出去了一个promise

@@ -115,12 +115,15 @@ export default {
       }
        const res = await this.$api.details.pushFeedback(req);
         if (res.status == "success") {
-          console.log(res.data, '')
+            this.$message({
+                message: '催办成功',
+                type: 'success'
+            });
         }
     },
     /* 催办 */
     urge(){
-      
+       this.pushFeedback()
     },
     /*转换*/
     changeID(key) {
@@ -222,8 +225,6 @@ export default {
   mounted() {
     this.menu();
     this.initiate();
-
-    this.pushFeedback()
   }
 };
 </script>
@@ -238,47 +239,50 @@ export default {
   align-content: center;
   .statusRed {
     cursor: pointer;
-    height: 16px;
-    background: rgba(255, 64, 1, 1);
+    text-align: center;
+    width: 40px;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    background: #ff4001;
     border-radius: 3px;
-    color: rgba(255, 255, 255, 1);
-    padding: 6px 8px;
-  }
-  .statusFlex{
-    flex: 1;
-    padding-left: 20px;
-  }
+    color: #fff;
+}
+.statusFlex{
+flex: 1;
+padding-left: 20px;
+}
 }
 .selectSpan {
-  cursor: not-allowed;
-  width: 180px;
-  background-color: #e5e5e5;
-  background-image: none;
-  border-radius: 4px;
-  border: 1px solid #dcdfe6;
-  box-sizing: border-box;
-  color: #606266;
-  display: inline-block;
-  font-size: inherit;
-  height: 40px;
-  line-height: 40px;
-  outline: 0;
-  padding: 0 15px;
-  i {
-    float: right;
-    margin-top: 15px;
-  }
+cursor: not-allowed;
+width: 180px;
+background-color: #e5e5e5;
+background-image: none;
+border-radius: 4px;
+border: 1px solid #dcdfe6;
+box-sizing: border-box;
+color: #606266;
+display: inline-block;
+font-size: inherit;
+height: 40px;
+line-height: 40px;
+outline: 0;
+padding: 0 15px;
+i {
+float: right;
+margin-top: 15px;
+}
 }
 
 .spanBtn {
-  height: 25px;
-  background: rgba(243, 247, 253, 1);
-  border-radius: 3px;
-  font-size: 11px;
-  font-weight: 400;
-  color: rgba(92, 167, 255, 1);
-  line-height: 16px;
-  padding: 6px 8px;
-  cursor: pointer;
+height: 25px;
+background: rgba(243, 247, 253, 1);
+border-radius: 3px;
+font-size: 11px;
+font-weight: 400;
+color: rgba(92, 167, 255, 1);
+line-height: 16px;
+padding: 6px 8px;
+cursor: pointer;
 }
 </style>
