@@ -181,7 +181,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
     .event-centen {
       width: 950px;
       height: auto;
