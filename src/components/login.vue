@@ -48,7 +48,7 @@
         custom-class="dialog-index"
       >
         <el-form>
-          <el-select style="width: 100%;" v-model="subject" placeholder="请选择事项状态">
+          <el-select style="width: 100%;" v-model="subject" placeholder="请选择组织与服务">
             <el-option
               v-for="(item,index) in popData"
               :label="item.orange"
@@ -128,14 +128,17 @@ export default {
       };
       const res = await this.$api.userLogin.login(req);
       if (res.status == "success") {
-        this.$store.dispatch("setMenu", res.data);
+          this.$store.dispatch("setMenu", res.data);
         if (res.data.type == 1) {
           if (res.data.is_more_duty == 0) {
              const power = await this.$api.userLogin.loginPower();
             if(power.status == "success"){
+                this.$store.dispatch("setMenu", power.data);
               this.$router.push("/index/eventSummary/allMatters");
             }
+
           } else if (res.data.is_more_duty == 1) {
+
             this.activeBool = true;
             this.dataCookie = res.data.cookie;
             let data = res.data.organize_duty;
@@ -170,12 +173,14 @@ export default {
         };
         const res = await this.$api.userLogin.chooseLogin(req);
         if (res.status == "success") {
+            this.$store.dispatch("setMenu", res.data);
           this.$router.push("/index/eventSummary/allMatters");
         }
       }
     },
     handleClose() {
       this.activeBool = false;
+      this.popData = []
     },
     randomNum(min, max) {
       return Math.floor(Math.random() * (max - min) + min);

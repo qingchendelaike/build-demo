@@ -127,7 +127,7 @@ body,
 .personal {
   text-align: center;
   width: 110px;
-  height: 140px;
+  height: auto;
   .popoverPse {
     p {
       line-height: 20px;
@@ -135,7 +135,7 @@ body,
       cursor: pointer;
       &:last-child {
         border-top: 1px solid #e5e5e5;
-        padding-top: 15px;
+        padding: 15px;
       }
       &:first-child {
         margin-top: 0;

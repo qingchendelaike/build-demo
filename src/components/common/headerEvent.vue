@@ -187,13 +187,15 @@ export default {
         dataObj.organize_name = data[i].organize_name;
         dataArray.push(dataObj);
         let dataChild = data[i]["sub_organization"];
-        if (dataChild.length > 0) {
-          for (let j = 0; j < dataChild.length; j++) {
-            let dataObj = {};
-            dataObj.organize_id = dataChild[j].organize_id;
-            dataObj.organize_name = dataChild[j].organize_name;
-            dataArray.push(dataObj);
-          }
+        if(dataChild){
+            // if (dataChild.length > 0) {
+                for (let j = 0; j < dataChild.length; j++) {
+                    let dataObj = {};
+                    dataObj.organize_id = dataChild[j].organize_id;
+                    dataObj.organize_name = dataChild[j].organize_name;
+                    dataArray.push(dataObj);
+                }
+            // }
         }
       }
       return dataArray;

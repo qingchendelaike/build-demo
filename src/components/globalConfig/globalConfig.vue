@@ -1,6 +1,7 @@
 <template>
   <el-container class="container-box">
     <el-aside width="190px">
+
       <router-link
         v-for="(item,index) in indecChild"
         :to="item.path"
@@ -79,5 +80,63 @@
   .main-box {
     position: relative;
     padding: 20px 35px 20px 20px;
+  }
+
+  /*css精灵图代码*/
+  .bg-data_icon_type {
+    width: 13px; height: 13px;
+    background: url('../../assets/img/navslide_sprites.png') -146px -45px;
+  }
+  .bg-item_icon_allitem_off {
+    width: 13px; height: 11px;
+    background: url('../../assets/img/navslide_sprites.png') -146px -78px;
+  }
+  .bg-item_icon_allitem_on {
+    width: 13px; height: 11px;
+    background: url('../../assets/img/navslide_sprites.png') -113px -45px;
+  }
+  .bg-item_icon_implement_off {
+    width: 13px; height: 15px;
+    background: url('../../assets/img/navslide_sprites.png') -44px -44px;
+  }
+  .bg-item_icon_implement_on {
+    width: 13px; height: 15px;
+    background: url('../../assets/img/navslide_sprites.png') -80px -10px;
+  }
+  .bg-item_icon_mine_off {
+    width: 15px; height: 14px;
+    background: url('../../assets/img/navslide_sprites.png') -10px -10px;
+  }
+  .bg-item_icon_mine_on {
+    width: 15px; height: 14px;
+    background: url('../../assets/img/navslide_sprites.png') -45px -10px;
+  }
+  .bg-item_icon_series_off {
+    width: 13px; height: 15px;
+    background: url('../../assets/img/navslide_sprites.png') -113px -10px;
+  }
+  .bg-item_icon_series_on {
+    width: 13px; height: 15px;
+    background: url('../../assets/img/navslide_sprites.png') -10px -79px;
+  }
+  .bg-set_icon_jurisdiction {
+    width: 13px; height: 15px;
+    background: url('../../assets/img/navslide_sprites.png') -43px -79px;
+  }
+  .bg-set_icon_systemroles {
+    width: 13px; height: 15px;
+    background: url('../../assets/img/navslide_sprites.png') -76px -79px;
+  }
+  .bg-set_icon_systemuser {
+    width: 14px; height: 15px;
+    background: url('../../assets/img/navslide_sprites.png') -10px -44px;
+  }
+  .bg-set_icon_user {
+    width: 13px; height: 15px;
+    background: url('../../assets/img/navslide_sprites.png') -109px -79px;
+  }
+  .bg-set_icon_userdata {
+    width: 13px; height: 15px;
+    background: url('../../assets/img/navslide_sprites.png') -146px -10px;
   }
 </style>

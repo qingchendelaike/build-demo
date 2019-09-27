@@ -11,7 +11,11 @@ export default {
     // return出去了一个promise
     return api.get('/label/lists', params, header)
   },
-
+/*选择参与人员*/
+  organizeUser(params) {
+    // return出去了一个promise
+    return api.get('/partyUser/organizeUserLists', params, header)
+  },
 
   /*反馈下拉*/
   feedbackMenu(params) {

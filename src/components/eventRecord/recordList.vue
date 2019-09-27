@@ -7,32 +7,32 @@
             <span class="today-icon" v-show="dateYear(item.date,index)">{{item.date|getYear()}}</span>
             <el-popover
               placement="right"
-              width="486" v-model="visible[index]" v-if="item.msgList.length>0" @show="initActiveMsgIndex()">
-              <div class="msg-tip" v-if="item.msgList[activeMsgIndex]">
-                <h3 class="popover-title">{{item.msgList[activeMsgIndex].msgTitle}}<i class="el-icon-close fr" @click="hidePopover(index)"></i></h3>
-                <p class="msg-content">{{item.msgList[activeMsgIndex].msgContent}}</p>
-                <div class="msg-btn" v-if="item.msgList.length>1">
+              width="486" v-model="visible[index]" v-if="item.notice_lists.length>0" @show="initActiveMsgIndex()">
+              <div class="msg-tip" v-if="item.notice_lists[activeMsgIndex]">
+                <h3 class="popover-title">{{item.notice_lists[activeMsgIndex].name}}<i class="el-icon-close fr" @click="hidePopover(index)"></i></h3>
+                <p class="msg-content">{{item.notice_lists[activeMsgIndex].content}}</p>
+                <div class="msg-btn" v-if="item.notice_lists.length>1">
                   <el-button size="mini" v-if="activeMsgIndex>0" type="text" @click="activeMsgIndex=activeMsgIndex-1">上一条</el-button>
-                  <el-button type="primary" v-if="activeMsgIndex<item.msgList.length-1" @click="activeMsgIndex=activeMsgIndex+1">下一条</el-button>
+                  <el-button type="primary" v-if="activeMsgIndex<item.notice_lists.length-1" @click="activeMsgIndex=activeMsgIndex+1">下一条</el-button>
                 </div>
               </div>
 
-              <span class="user-waring alarm-icon"  slot="reference" > <i v-if="showMsgAlarm(item.msgList)" class="red-icon"></i> </span>
+              <span class="user-waring alarm-icon"  slot="reference" > <i v-if="showMsgAlarm(item.notice_lists)" class="red-icon"></i> </span>
             </el-popover>
           </div>
-          <el-card v-for="(eventItem,index) in item.eventList" :key="index" v-show="index==0" :class="eventItem.zh_status|itemStatusColor()">
+          <el-card v-for="(eventItem,index) in item.item_lists" :key="index" v-show="index==0" :class="eventItem.item_status|itemStatusColor()">
             <span class="event-title">
-              <img class="event-icon" :src="eventItem.zh_type|imgType()" alt="">
+              <img class="event-icon" :src="eventItem.item_type|imgType()" alt="">
               {{eventItem.item_name}}
             </span>
             <span class="event-state">
-              {{eventItem.zh_status|itemStatusText()}}
-              <el-popover v-if="eventItem.itemTip&&eventItem.itemTip.length>0"
-                placement="bottom"
-                width="370"
-                trigger="click">
+              {{eventItem.item_status|itemStatusText()}}
+              <el-popover v-if="eventItem.tasks&&eventItem.tasks.length>0"
+                          placement="bottom"
+                          width="370"
+                          trigger="click">
                 <ul class="tip-list">
-                  <li v-for="tip in eventItem.itemTip">{{tip}}</li>
+                  <li v-for="tip in eventItem.tasks">{{tip}}</li>
                 </ul>
                 <i class="tip-icon" slot="reference" ></i>
               </el-popover>
@@ -138,10 +138,10 @@
       },
     },
     created() {
-       this.getInitData();
+      this.getInitData();
     },
     mounted(){
-       //判断today的位置，居中
+      //判断today的位置，居中
       if(document.querySelector(".today")){
         let tTop=document.querySelector(".today").offsetTop;
         let tWidth=document.querySelector(".today").clientHeight/2;
@@ -151,33 +151,33 @@
           document.querySelector("#scrollContainer").scrollBy(0,scrollDis);
         }
       }
-       let _this=this;
-       document.querySelector("#scrollContainer").onscroll=function(e){
-         let divscroll=document.querySelector("#scrollContainer");
-         let scrollTop=divscroll.scrollTop;//页面上卷的高度
-         let wholeHeight=divscroll.scrollHeight;//页面底部到顶部的距离
-         let divHeight=divscroll.clientHeight;//页面可视区域的高度
-         if(scrollTop+divHeight>=wholeHeight){
-           axios.get("../static/data.json").then((res)=>{
-             let nextData=res.data;
-             console.log(nextData);
-             for(let i=0;i<nextData.length;i++){
-               _this.modelData.push(nextData[i]);
-             }
-             console.log(_this.modelData);
-           })
+      let _this=this;
+      document.querySelector("#scrollContainer").onscroll=function(e){
+        let divscroll=document.querySelector("#scrollContainer");
+        let scrollTop=divscroll.scrollTop;//页面上卷的高度
+        let wholeHeight=divscroll.scrollHeight;//页面底部到顶部的距离
+        let divHeight=divscroll.clientHeight;//页面可视区域的高度
+        if(scrollTop+divHeight>=wholeHeight){
+          axios.get("../static/data.json").then((res)=>{
+            let nextData=res.data;
+            console.log(nextData);
+            for(let i=0;i<nextData.length;i++){
+              _this.modelData.push(nextData[i]);
+            }
+            console.log(_this.modelData);
+          })
 
-         }
-         if(scrollTop==0){
-           axios.get("../static/prev.json").then((res)=>{
-             let prevData=res.data;
-             for(let j=prevData.length-1;j>=0;j--){
-               _this.modelData.unshift(prevData[j]);
-             }
-           })
+        }
+        if(scrollTop==0){
+          axios.get("../static/prev.json").then((res)=>{
+            let prevData=res.data;
+            for(let j=prevData.length-1;j>=0;j--){
+              _this.modelData.unshift(prevData[j]);
+            }
+          })
 
-         }
-       }
+        }
+      }
     },
     methods:{
       isToday(str){
@@ -217,215 +217,18 @@
       showMsgAlarm(msgList){
         //消息提示小红点
         for(let i=0;i<msgList.length;i++){
-          if(msgList[i].msgState==0){
+          if(!msgList[i].is_view){
             return true;
           }
         }
         return false;
       },
-      getInitData(){
-        //获取数据
-        this.modelData=[
-          {
-            date:"2018/04/12",
-            msgList:[{
-              msgTitle:"每月党费缴纳提醒",//消息提醒标题
-              msgContent:"第一条每月党费缴纳提醒每月党费缴纳提醒每月党费缴纳提醒000001",//消息提醒内容
-              msgState:0,//是否查看，1:已查看，0：未查看
-            },{
-              msgTitle:"每月党费缴纳提醒0002",
-              msgContent:"第一条每月党费缴纳提醒每月党费缴纳提醒每月党费缴纳提醒00002",
-              msgState:1,
-            },{
-              msgTitle:"每月党费缴纳提醒0002",
-              msgContent:"第一条每月党费缴纳提醒每月党费缴纳提醒每月党费缴纳提醒00003",
-              msgState:1,
-            }],
-            eventList:[{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:1,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:1,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            },{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:1,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:1,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            }]
-
-          },{
-            date:"2019/09/20",
-            msgList:[{
-              msgTitle:"每月党费缴纳提醒",//消息提醒标题
-              msgContent:"每月党费缴纳提醒每月党费缴纳提醒每月党费缴纳提醒00001",//消息提醒内容
-              msgState:1,//是否查看，1:已查看，0：未查看
-            }],
-            eventList:[{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:3,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:4,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            },{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:3,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:3,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            }]
-
-          },{
-            date:"2019/09/24",
-            msgList:[{
-              msgTitle:"每月党费缴纳提醒",//消息提醒标题
-              msgContent:"每月党费缴纳提醒每月党费缴纳提醒每月党费缴纳提醒",//消息提醒内容
-              msgState:0,//是否查看，1:已查看，0：未查看
-            },{
-              msgTitle:"每月党费缴纳提醒0002",
-              msgContent:"每月党费缴纳提醒每月党费缴纳提醒每月党费缴纳提醒",
-              msgState:1,
-            }],
-            eventList:[{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:4,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:5,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            },{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:4,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:5,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            }]
-
-          },{
-            date:"2019/09/12",
-            msgList:[{
-              msgTitle:"每月党费缴纳提醒",//消息提醒标题
-              msgContent:"每月党费缴纳提醒每月党费缴纳提醒每月党费缴纳提醒",//消息提醒内容
-              msgState:0,//是否查看，1:已查看，0：未查看
-            },{
-              msgTitle:"每月党费缴纳提醒0002",
-              msgContent:"每月党费缴纳提醒每月党费缴纳提醒每月党费缴纳提醒",
-              msgState:1,
-            }],
-            eventList:[{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:1,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:1,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            },{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:1,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:1,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            }]
-
-          },{
-            date:"2019/09/26",
-            msgList:[],
-            eventList:[{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:4,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:2,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            },{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:1,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:4,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            }]
-
-          },{
-            date:"2019/09/24",
-            msgList:[],
-            eventList:[{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:4,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:2,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            },{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:1,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:4,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            }]
-
-          },{
-            date:"2019/09/25",
-            msgList:[],
-            eventList:[{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:4,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:2,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            },{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:1,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:4,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            }]
-
-          },{
-            date:"2019/09/25",
-            msgList:[],
-            eventList:[{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:4,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:2,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            },{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:1,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:4,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            }]
-
-          },{
-            date:"2019/09/25",
-            msgList:[],
-            eventList:[{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:4,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:2,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-              itemTip:["携带纸笔，学习材料","准备发言稿并于会后3天内上传电子版至本任务页面","负责撰写会议纪要，并于会后3天内上传电子版至任务页面"]
-            },{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:1,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:4,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            }]
-
-          },{
-            date:"2019/09/25",
-            msgList:[],
-            eventList:[{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:4,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:2,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            },{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:1,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:4,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            }]
-
-          },{
-            date:"2019/09/25",
-            msgList:[],
-            eventList:[{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:4,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:2,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            },{
-              item_name:"事项名称事项名称事项名称事项名称事项名称事项名称",
-              zh_type:1,//类型 1-会议 2-课程 3-活动 4-项目方案
-              zh_status:4,//状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
-              time:"2018-04-12~2019-09-19",//起始时间
-            }]
-
-          },
-        ]
+      async getInitData(){
+        let res=await this.$api.eventRecord.getData({});
+        console.log(res);
+        if(res.status=="success"){
+          this.modelData=res.data;
+        }
         for(let i=0;i<this.modelData.length;i++){
           this.visible[i]=false;
         }
@@ -471,200 +274,200 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-.record-wrapper.el-container{
-  height: calc(100% - 66px) !important;
-  .main-box{
-    background:rgba(246,246,246,1);
-    border-radius:6px;
-    margin: 20px;
-    padding:15px 135px 15px 110px;
-    .el-timeline{
-      position:relative;
-    }
-    .today{
-      .el-timeline-item__node{
-        background-color: #fff;
-        border:3px solid #FF4001;
-        box-sizing: border-box;
+  .record-wrapper.el-container{
+    height: calc(100% - 66px) !important;
+    .main-box{
+      background:rgba(246,246,246,1);
+      border-radius:6px;
+      margin: 20px;
+      padding:15px 135px 15px 110px;
+      .el-timeline{
+        position:relative;
       }
-    }
-    .el-timeline-item__content{
-      position:relative;
-      .icon-collection{
-        position: absolute;
-        top: -30px;
-        left: -145px;
-        width: 108px;
-        text-align: right;
-        line-height: 31px;
-        height: 31px;
-        .alarm-icon{
-          display: inline-block;
-          background: url("../../assets/img/nav_icon_news.png") no-repeat;
-          background-size:cover;
-          width:18px;
-          height:23px;
-          margin-left: 5px;
-          position: relative;
-          .red-icon{
+      .today{
+        .el-timeline-item__node{
+          background-color: #fff;
+          border:3px solid #FF4001;
+          box-sizing: border-box;
+        }
+      }
+      .el-timeline-item__content{
+        position:relative;
+        .icon-collection{
+          position: absolute;
+          top: -30px;
+          left: -145px;
+          width: 108px;
+          text-align: right;
+          line-height: 31px;
+          height: 31px;
+          .alarm-icon{
             display: inline-block;
-            width:5px;
-            height: 5px;
-            border-radius: 100%;
-            background-color: #FF4001;
-            position: absolute;
-            top:3px;
-            right: -1px;
+            background: url("../../assets/img/nav_icon_news.png") no-repeat;
+            background-size:cover;
+            width:18px;
+            height:23px;
+            margin-left: 5px;
+            position: relative;
+            .red-icon{
+              display: inline-block;
+              width:5px;
+              height: 5px;
+              border-radius: 100%;
+              background-color: #FF4001;
+              position: absolute;
+              top:3px;
+              right: -1px;
+            }
+          }
+          .today-icon{
+            width:60px;
+            height:26px;
+            display: inline-block;
+            background: url("../../assets/img/dashiji_icon_data.png") no-repeat;
+            background-size:cover;
+            line-height: 26px;
+            text-align: center;
+            color:#fff;
+            font-weight: bold;
+            position: relative;
+            top:-4px;
+
           }
         }
-        .today-icon{
-          width:60px;
-          height:26px;
+
+      }
+
+      .el-card{
+        margin-bottom: 10px;
+        position: relative;
+        &.blue-br{
+          border-right: 4px solid #3DA8FF;
+        }
+        &.green-br{
+          border-right: 4px solid #50E3C2;
+        }
+        &.grey-br{
+          border-right: 4px solid #E5E5E5;
+          color:#B4B4B4;
+        }
+        &.yellow-br{
+          border-right: 4px solid #FBE700;
+          color:#B4B4B4;
+        }
+        &.red-br{
+          border-right: 4px solid #DD2D1E;
+        }
+
+
+      }
+
+      .el-card__body{
+        padding:15px;
+        .event-icon{
+          width:24px;
+          height:24px;
+          margin-right:12px;
+          vertical-align: middle;
+        }
+        span{
           display: inline-block;
-          background: url("../../assets/img/dashiji_icon_data.png") no-repeat;
-          background-size:cover;
-          line-height: 26px;
-          text-align: center;
-          color:#fff;
-          font-weight: bold;
-          position: relative;
-          top:-4px;
+        }
+        .event-title{
+          width:65%;
 
         }
-      }
-
-    }
-
-    .el-card{
-      margin-bottom: 10px;
-      position: relative;
-      &.blue-br{
-        border-right: 4px solid #3DA8FF;
-      }
-      &.green-br{
-        border-right: 4px solid #50E3C2;
-      }
-      &.grey-br{
-        border-right: 4px solid #E5E5E5;
-        color:#B4B4B4;
-      }
-      &.yellow-br{
-        border-right: 4px solid #FBE700;
-        color:#B4B4B4;
-      }
-      &.red-br{
-        border-right: 4px solid #DD2D1E;
-      }
-
-
-    }
-
-    .el-card__body{
-      padding:15px;
-      .event-icon{
-        width:24px;
-        height:24px;
-        margin-right:12px;
-        vertical-align: middle;
-      }
-      span{
-        display: inline-block;
-      }
-      .event-title{
-        width:65%;
-
-      }
-      .event-state{
-        width:8%;
-        position: absolute;
-        .tip-icon{
-          width:25px;
-          height: 25px;
-          display: inline-block;
-          background: url("../../assets/img/index_sprites.png") no-repeat  -10px -57px;
+        .event-state{
+          width:8%;
           position: absolute;
-          margin-left:10px;
-          top:-2px;
-          /*left:10px;*/
+          .tip-icon{
+            width:25px;
+            height: 25px;
+            display: inline-block;
+            background: url("../../assets/img/index_sprites.png") no-repeat  -10px -57px;
+            position: absolute;
+            margin-left:10px;
+            top:-2px;
+            /*left:10px;*/
+          }
+        }
+        .event-time{
+          width:20%;
+          float:right;
+        }
+
+      }
+
+
+    }
+    .time-location{
+      position: fixed;
+      right:100px;
+      bottom:50px;
+      display: inline-block;
+      box-shadow:0px 2px 16px 0px rgba(188,188,188,0.8);
+      background-color: #fff;
+      .date-label{
+        line-height: 50px;
+        margin-left: 30px;
+      }
+      .el-input{
+        top: -5px;
+        margin-left:5px;
+        width: 190px;
+        height: 40px;
+      }
+      .el-button{
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        box-sizing: border-box;
+        border: unset;
+        .location-icon{
+          width:18px;
+          height:23px;
+          display: inline-block;
+          background: url("../../assets/img/icon_location.png") no-repeat;
+          background-size:cover;
         }
       }
-      .event-time{
-        width:20%;
-        float:right;
-      }
 
     }
-
-
   }
-  .time-location{
-    position: fixed;
-    right:100px;
-    bottom:50px;
-    display: inline-block;
-    box-shadow:0px 2px 16px 0px rgba(188,188,188,0.8);
-    background-color: #fff;
-    .date-label{
-      line-height: 50px;
-      margin-left: 30px;
-    }
-    .el-input{
-      top: -5px;
-      margin-left:5px;
-      width: 190px;
-      height: 40px;
-    }
-    .el-button{
-      width: 50px;
-      height: 50px;
-      padding: 0;
-      box-sizing: border-box;
-      border: unset;
-      .location-icon{
-        width:18px;
-        height:23px;
-        display: inline-block;
-        background: url("../../assets/img/icon_location.png") no-repeat;
-        background-size:cover;
-      }
-    }
-
-  }
-}
-/*事项提醒*/
-.tip-list{
-  list-style: none;
-  border: 1px solid #E5E5E5;
-  border-radius:3px;
-  li{
-    /*height: 40px;*/
-    padding:10px 15px;
-  }
-  li+li{
-    border-top: 1px solid #E5E5E5;
-  }
-}
-.msg-tip{
-  padding:8px 5px 18px 18px;
-  .fr{
-    float: right;
-  }
-  .popover-title{
-    font-size: 15px;
-    margin-bottom: 15px;
-  }
-  .msg-content{
-    max-height: 100px;
-    padding:10px 20px;
-    font-size: 14px;
-    overflow: auto;
+  /*事项提醒*/
+  .tip-list{
+    list-style: none;
+    border: 1px solid #E5E5E5;
     border-radius:3px;
-    border:1px solid rgba(229,229,229,1);
+    li{
+      /*height: 40px;*/
+      padding:10px 15px;
+    }
+    li+li{
+      border-top: 1px solid #E5E5E5;
+    }
+  }
+  .msg-tip{
+    padding:8px 5px 18px 18px;
+    .fr{
+      float: right;
+    }
+    .popover-title{
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+    .msg-content{
+      max-height: 100px;
+      padding:10px 20px;
+      font-size: 14px;
+      overflow: auto;
+      border-radius:3px;
+      border:1px solid rgba(229,229,229,1);
 
+    }
+    .msg-btn{
+      text-align: right;
+      margin-top:30px;
+    }
   }
-  .msg-btn{
-    text-align: right;
-    margin-top:30px;
-  }
-}
 </style>
