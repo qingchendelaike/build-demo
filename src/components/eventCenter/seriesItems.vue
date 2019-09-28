@@ -233,7 +233,7 @@ export default {
     createStateFilter(queryString) {
       return state => {
         return (
-          state.item_name.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+          state.item_name.toLowerCase().indexOf(queryString.toLowerCase()) >= 0
         );
       };
     },

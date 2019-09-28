@@ -22,6 +22,11 @@ export default {
     // return出去了一个promise
     return api.get('/series/menu', params, header)
   },
+  /*取消事项*/
+  cancelItem(params) {
+    // return出去了一个promise
+    return api.post('/item/cancelItem', params, header)
+  },
 
 
   /*反馈下拉*/
@@ -54,4 +59,42 @@ export default {
     // return出去了一个promise
     return api.post('/item/feedback', params, header)
   },
+
+  /*文件列表*/
+  fileLists(params) {
+    // return出去了一个promise
+    return api.get('/item/fileLists', params, header)
+  },
+  /*删除文件*/
+  delFile(params) {
+    // return出去了一个promise
+    return api.post('/item/delFile', params, header)
+  },
+  /*替换文件*/
+  changeFile(params) {
+    // return出去了一个promise
+    return api.post('/item/changeFile', params, header)
+  },
+  /*上传文件*/
+  ploadFile(params) {
+    // return出去了一个promise
+    return api.post('/item/uploadFile', params, header)
+  },
+/*选择参与人员*/
+  itemUserLists(params) {
+    // return出去了一个promise
+    return api.get('/partyUser/itemUserLists', params, header)
+  },
+  /*催办上传*/
+  pushUp(params) {
+    // return出去了一个promise
+    return api.post('/item/pushUploadFile', params, header)
+  },
+  /*完结事项*/
+  finishItem(params) {
+    // return出去了一个promise
+    return api.post('/item/finishItem', params, header)
+  },
+
+
 }

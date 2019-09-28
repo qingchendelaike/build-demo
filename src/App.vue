@@ -75,6 +75,17 @@ body,
   .el-dialog__footer {
     width: 100%;
   }
+  &.el-popover{
+    padding: 20px 0;
+    .el-form{
+      width: 350px;
+      margin: 0 auto;
+    }
+    .el-transfer{
+      width: 350px;
+      margin: 0 auto;
+    }
+  }
 }
 
 /* 分页 */

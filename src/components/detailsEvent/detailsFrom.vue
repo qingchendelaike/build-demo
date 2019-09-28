@@ -170,15 +170,31 @@
         </div>
       </el-form-item>
 
+
       <el-form-item>
-        <el-button @click="resetForm('ruleForm')">取消事项</el-button>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+        <el-popover
+          ref="popover"
+          placement="top"
+          title="确认取消事项？"
+          width="280"
+          v-model="cancelBool"
+          trigger="click">
+          <p>将及时发送取消事项通知，请确认后操作。</p>
+          <div style="text-align: right; margin: 0">
+            <el-button type="text" @click="cancelBool= false">取消</el-button>
+            <el-button type="primary" @click="cancelBtnDel()">确定</el-button>
+          </div>
+          <el-button slot="reference" >取消事项</el-button>
+        </el-popover>
+
+        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
         <el-radio-group v-model="radio">
           <el-radio :label="1">
             <span class="radioCheck">发送查阅通知，选中后提交即发送，请确认内容后操作</span>
           </el-radio>
         </el-radio-group>
       </el-form-item>
+
     </el-form>
 
   </div>
@@ -189,6 +205,7 @@
         props: ["detailsData"],
         data() {
             return {
+                cancelBool:false,
                 regionOptions: [],
                 radio: 1,
                 visibleBool: false,
@@ -261,6 +278,17 @@
             };
         },
         methods: {
+            /*取消事项  确定按钮*/
+            async cancelBtnDel(){
+                let req = {
+                    item_id:this.ruleForm.item_id
+                }
+                const res = await this.$api.details.cancelItem(req);
+                if (res.status == "success") {
+                    this.cancelBool = false
+                    console.log('取消成功')
+                }
+            },
             /*归属系列*/
             async seriesMenu(){
                 const res = await this.$api.details.seriesMenu();
@@ -296,7 +324,6 @@
             },
             /*时间提醒确定*/
             tiemr(val) {
-
                 console.log(val)
             },
             /* 类型标签 */
@@ -456,7 +483,6 @@
 
   .labelP {
     display: flex;
-
     .iconAddTitle {
       height: 21px;
       font-size: 15px;
@@ -488,6 +514,9 @@
     }
   }
 
+  .radioCheck{
+    color: #999999;
+  }
 
   .labelBox {
     box-sizing: border-box;

@@ -10,7 +10,7 @@
         <p class="status">
           <span>发起人：{{details.create_user_name}}</span>
           <span class="statusFlex">事项状态：{{details.zh_status}}</span>
-          <span class="statusRed" @click="urge" ><!-- v-if="details.is_self" -->催办</span>
+          <span class="statusRed" @click="pushFeedback"><!-- v-if="details.is_self" -->催办</span>
         </p>
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="user_name" label="姓名"></el-table-column>
@@ -89,200 +89,201 @@
 </template>
 
 <script>
-export default {
-  name: "participation",
-  data() {
-    return {
-      activeName: "0",
-      detailsData: [
-        { feed_name: "未反馈", feed_id: 0, more_remark: 0, isSet: false }
-      ],
-      tableData: [],
-      arr: {},
-      page: {
-        page: 0,
-        page_limit: 10,
-        total: 0
-      },
-      details: []
-    };
-  },
-  methods: {
-    /* 催办反馈 */
-    async pushFeedback(){
-      let req = {
-        item_id:this.$route.query.item_id,
-      }
-       const res = await this.$api.details.pushFeedback(req);
-        if (res.status == "success") {
-            this.$message({
-                message: '催办成功',
-                type: 'success'
-            });
-        }
-    },
-    /* 催办 */
-    urge(){
-       this.pushFeedback()
-    },
-    /*转换*/
-    changeID(key) {
-      for (let i = 0; i < this.detailsData.length; i++) {
-        if (key == this.detailsData[i]["feed_id"]) {
-          return this.detailsData[i]["feed_name"];
-        }
-      }
-    },
-    /*取消*/
-    clSelect(val, key) {
-      if (key == 1) {
-        val.isSet = false;
-        val.feed_id = this.arr.feed_id;
-      } else {
-        val.isRemark = false;
-        val.feed_remark = this.arr.feed_remark;
-      }
-    },
-    /*保存*/
-    async svSelect(val, key) {
-       let req = {
-          iu_id: val.iu_id,
-          feed_id: val.feed_id,
-          feed_remark: val.feed_remark
-        };
-      if (key == 2) {
-        const res = await this.$api.details.feedbackEditRemark(req);
-        if (res.status == "success") {
-          this.feedbackLists();
-        }
-      } else {
-        const res = await this.$api.details.feedbackEdit(req);
-        if (res.status == "success") {
-          this.feedbackLists();
-        }
-      }
-    },
-    /*修改*/
-    upSelect(val, key) {
-      if (key == 1) {
-        val.isSet = true;
-      } else {
-        val.isRemark = true;
-      }
+    export default {
+        name: "participation",
+        data() {
+            return {
+                activeName: "0",
+                detailsData: [
+                    {feed_name: "未反馈", feed_id: 0, more_remark: 0, isSet: false}
+                ],
+                tableData: [],
+                arr: {},
+                page: {
+                    page: 0,
+                    page_limit: 10,
+                    total: 0
+                },
+                details: []
+            };
+        },
+        methods: {
+            /* 催办反馈 */
+            async pushFeedback() {
+                let req = {
+                    item_id: this.$route.query.item_id,
+                }
+                const res = await this.$api.details.pushFeedback(req);
+                if (res.status == "success") {
+                    this.$message({
+                        message: '催办成功',
+                        type: 'success'
+                    });
+                }
+            },
+            /*转换*/
+            changeID(key) {
+                for (let i = 0; i < this.detailsData.length; i++) {
+                    if (key == this.detailsData[i]["feed_id"]) {
+                        return this.detailsData[i]["feed_name"];
+                    }
+                }
+            },
+            /*取消*/
+            clSelect(val, key) {
+                if (key == 1) {
+                    val.isSet = false;
+                    val.feed_id = this.arr.feed_id;
+                } else {
+                    val.isRemark = false;
+                    val.feed_remark = this.arr.feed_remark;
+                }
+            },
+            /*保存*/
+            async svSelect(val, key) {
+                let req = {
+                    iu_id: val.iu_id,
+                    feed_id: val.feed_id,
+                    feed_remark: val.feed_remark
+                };
+                if (key == 2) {
+                    const res = await this.$api.details.feedbackEditRemark(req);
+                    if (res.status == "success") {
+                        this.feedbackLists();
+                    }
+                } else {
+                    const res = await this.$api.details.feedbackEdit(req);
+                    if (res.status == "success") {
+                        this.feedbackLists();
+                    }
+                }
+            },
+            /*修改*/
+            upSelect(val, key) {
+                if (key == 1) {
+                    val.isSet = true;
+                } else {
+                    val.isRemark = true;
+                }
 
-      this.arr = JSON.parse(JSON.stringify(val));
-    },
-    /*切换*/
-    handleClick() {
-      this.feedbackLists();
-    },
-    //分页
-    handleSizeChange(val) {
-      this.page.page = val;
-      this.feedbackLists();
-    },
-    handleCurrentChange(val) {
-      this.page.page = val;
-      this.feedbackLists();
-    },
-    /* 反馈列表*/
-    async menu() {
-      const res = await this.$api.details.feedbackMenu();
-      if (res.status == "success") {
-        this.detailsData.push(...res.data);
-        this.feedbackLists();
-      }
-    },
-    /* 反馈下拉 */
-    async feedbackLists() {
-      let req = {
-        item_id: this.$route.query.item_id,
-        feed_id: this.activeName,
-        page: this.page.page,
-        page_limit: this.page.page_limit
-      };
-      const res = await this.$api.details.feedbackLists(req);
-      if (res.status == "success") {
-        res.data.data.lists.forEach(v => {
-          v.isSet = false;
-          v.isRemark = false;
-        });
-        this.tableData = res.data.data.lists;
-        this.page.total = res.data.data.count;
-      }
-    },
-    /* 查询事项详情 */
-    async initiate() {
-      let req = {
-        item_id: this.$route.query.item_id
-      };
-      const res = await this.$api.allMatters.matterDetails(req);
-      if (res.status == "success") {
-        this.details = res.data;
-      }
-    }
-  },
-  mounted() {
-    this.menu();
-    this.initiate();
-  }
-};
+                this.arr = JSON.parse(JSON.stringify(val));
+            },
+            /*切换*/
+            handleClick() {
+                this.feedbackLists();
+            },
+            //分页
+            handleSizeChange(val) {
+                this.page.page = val;
+                this.feedbackLists();
+            },
+            handleCurrentChange(val) {
+                this.page.page = val;
+                this.feedbackLists();
+            },
+            /* 反馈列表*/
+            async menu() {
+                const res = await this.$api.details.feedbackMenu();
+                if (res.status == "success") {
+                    this.detailsData.push(...res.data);
+                    this.feedbackLists();
+                }
+            },
+            /* 反馈下拉 */
+            async feedbackLists() {
+                let req = {
+                    item_id: this.$route.query.item_id,
+                    feed_id: this.activeName,
+                    page: this.page.page,
+                    page_limit: this.page.page_limit
+                };
+                const res = await this.$api.details.feedbackLists(req);
+                if (res.status == "success") {
+                    res.data.data.lists.forEach(v => {
+                        v.isSet = false;
+                        v.isRemark = false;
+                    });
+                    this.tableData = res.data.data.lists;
+                    this.page.total = res.data.data.count;
+                }
+            },
+            /* 查询事项详情 */
+            async initiate() {
+                let req = {
+                    item_id: this.$route.query.item_id
+                };
+                const res = await this.$api.allMatters.matterDetails(req);
+                if (res.status == "success") {
+                    this.details = res.data;
+                }
+            }
+        },
+        mounted() {
+            this.menu();
+            this.initiate();
+        }
+    };
 </script>
 
 <style scoped lang="scss">
-@import "../../assets/css/table";
-.status {
-  margin: 10px 0 10px 0;
-  color: rgba(85, 85, 85, 1);
-  height: 25px;
-  display: flex;
-  align-content: center;
-  .statusRed {
-    cursor: pointer;
-    text-align: center;
-    width: 40px;
-    height: 26px;
-    line-height: 26px;
-    text-align: center;
-    background: #ff4001;
-    border-radius: 3px;
-    color: #fff;
-}
-.statusFlex{
-flex: 1;
-padding-left: 20px;
-}
-}
-.selectSpan {
-cursor: not-allowed;
-width: 180px;
-background-color: #e5e5e5;
-background-image: none;
-border-radius: 4px;
-border: 1px solid #dcdfe6;
-box-sizing: border-box;
-color: #606266;
-display: inline-block;
-font-size: inherit;
-height: 40px;
-line-height: 40px;
-outline: 0;
-padding: 0 15px;
-i {
-float: right;
-margin-top: 15px;
-}
-}
+  @import "../../assets/css/table";
 
-.spanBtn {
-height: 25px;
-background: rgba(243, 247, 253, 1);
-border-radius: 3px;
-font-size: 11px;
-font-weight: 400;
-color: rgba(92, 167, 255, 1);
-line-height: 16px;
-padding: 6px 8px;
-cursor: pointer;
-}
+  .status {
+    margin: 10px 0 10px 0;
+    color: rgba(85, 85, 85, 1);
+    height: 25px;
+    display: flex;
+    align-content: center;
+
+    .statusRed {
+      cursor: pointer;
+      text-align: center;
+      width: 40px;
+      height: 26px;
+      line-height: 26px;
+      text-align: center;
+      background: #ff4001;
+      border-radius: 3px;
+      color: #fff;
+    }
+
+    .statusFlex {
+      flex: 1;
+      padding-left: 20px;
+    }
+  }
+
+  .selectSpan {
+    cursor: not-allowed;
+    width: 180px;
+    background-color: #e5e5e5;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 40px;
+    line-height: 40px;
+    outline: 0;
+    padding: 0 15px;
+
+    i {
+      float: right;
+      margin-top: 15px;
+    }
+  }
+
+  .spanBtn {
+    height: 25px;
+    background: rgba(243, 247, 253, 1);
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(92, 167, 255, 1);
+    line-height: 16px;
+    padding: 6px 8px;
+    cursor: pointer;
+  }
 </style>

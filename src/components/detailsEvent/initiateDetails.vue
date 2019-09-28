@@ -5,7 +5,7 @@
       <span>事项状态：{{detailsData.zh_status}}</span>
     </p>
     <details-tip
-      v-if="detailsData.item_status == 3 || detailsData.item_status == 5"
+      v-if="detailsData.item_status == 3 || detailsData.item_status == 5 || detailsData.item_status == 4"
       :detailsData="detailsData"
       :detailsTasks="detailsTasks"
       @delDetauls="delDetauls"
@@ -76,6 +76,9 @@ export default {
 <style lang="scss" scoped>
   .status{
     margin: 30px 0 10px 0;
+    span:first-child{
+      margin-right: 10px;
+    }
   }
 
 </style>

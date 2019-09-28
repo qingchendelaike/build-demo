@@ -230,14 +230,12 @@ export default {
     .main-title-event-icon {
       padding-right: 0px;
       width: 20px;
-      background: url("../../assets/img/index_sprites.png") no-repeat;
-      background-position: -61px -13px;
+      background: url("../../assets/img/index_sprites.png") -61px -13px no-repeat;
       vertical-align: bottom;
     }
     .main-title-export-icon {
       width: 20px;
-      background: url("../../assets/img/index_sprites.png") no-repeat;
-      background-position: -13px -14px;
+      background: url("../../assets/img/index_sprites.png") -13px -14px no-repeat;
       vertical-align: bottom;
     }
   }
@@ -257,8 +255,7 @@ export default {
     height: 20px;
     display: inline-block;
     vertical-align: sub;
-    background: url("../../assets/img/index_sprites.png") no-repeat;
-    background-position: -12px -59px;
+    background: url("../../assets/img/index_sprites.png") -12px -59px no-repeat;
     cursor: pointer;
   }
 }
