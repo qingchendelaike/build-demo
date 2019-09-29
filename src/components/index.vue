@@ -3,14 +3,15 @@
     <el-container>
       <el-header>
         <div class="header-router">
-          <span class="header-title">党建工作系统</span>
-          <router-link
-            v-for="(item,index) in routerMsg"
-            :to="item.path"
-            :key="index"
-            tag="span"
-          >{{item.name}}</router-link>
-        </div>
+          <a class="header-title">党建工作系统</a>
+          <a  v-for="(item,index) in routerMsg" :class="{'router-link-exact-active':$route.path.indexOf(item.path)>-1}" @click="activeLink(index,item.path)">{{item.name}}</a>
+        <!--          <router-link-->
+        <!--            v-for="(item,index) in routerMsg"-->
+        <!--            :to="item.path"-->
+        <!--            :key="index"-->
+        <!--            tag="span"-->
+        <!--          >{{item.name}}</router-link>-->
+  </div>
         <div class="userMsg">
           <span class="user-waring"></span>
           <img :src="defaultImg" class="user-icon" alt />
@@ -39,25 +40,26 @@ export default {
       userName: "",
       type: 2,
       defaultImg: require("../assets/img/defaultIcon.png"),
+      activeIndex:1,
       routerMsg: [
         {
           path: "/index/recordList",
           name: "大事记"
         },
         {
-          path: "/index/eventSummary/allMatters",
+          path: "/index/eventSummary",
           name: "事项中心"
         },
         {
-          path: "/index/globalConfig/organManage",
+          path: "/index/globalConfig",
           name: "全局设置"
         },
         {
-          path: "/",
+          path: "/index/styleZone",
           name: "学习空间"
         },
         {
-          path: "/",
+          path: "/index/dataView",
           name: "数据概览"
         }
       ]
@@ -70,6 +72,10 @@ export default {
           this.$router.push("/");
         }
       });
+    },
+    activeLink(index,path){
+      this.activeIndex=index;
+      this.$router.push(path)
     }
   },
   mounted() {
@@ -98,12 +104,28 @@ export default {
     display: flex;
     .header-router {
       flex: 1 250px;
+      /*
       span {
         display: inline-block;
         margin-right: 53px;
         cursor: pointer;
         font-size: 15px;
         font-weight: 600;
+        &.header-title {
+          @extend .fontSizeAuxiliary;
+        }
+        &.router-link-exact-active {
+          color: rgba(255, 64, 1, 1);
+        }
+      }*/
+      a {
+        display: inline-block;
+        margin-right: 53px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        color:#000;
+        text-decoration: none;
         &.header-title {
           @extend .fontSizeAuxiliary;
         }

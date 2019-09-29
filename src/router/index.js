@@ -87,27 +87,37 @@ export default new Router({
         path: 'globalConfig',
         name: 'globalConfig',
         component: () => import('@/components/globalConfig/globalConfig.vue'),
-        redirect: '/index/globalConfig/organManage',
+        redirect: '/index/globalConfig/partyWork/organManage',
         children: [{
           /* 组织架构管理 */
-          path: '/index/globalConfig/organManage',
+          path: '/index/globalConfig/partyWork/organManage',
           name: 'organManage',
           component: () => import('@/components/globalConfig/organManage.vue')
         }, {
           /* 职务权限管理 */
-          path: '/index/globalConfig/powerManage',
+          path: '/index/globalConfig/partyWork/powerManage',
           name: 'powerManage',
           component: () => import('@/components/globalConfig/powerManage.vue')
         }, {
           /* 党务用户管理 */
-          path: '/index/globalConfig/userManage',
+          path: '/index/globalConfig/partyWork/userManage',
           name: 'userManage',
           component: () => import('@/components/globalConfig/userManage.vue')
         }, {
           /* 人员资料库 */
-          path: '/index/globalConfig/userData',
+          path: '/index/globalConfig/partyWork/userData',
           name: 'userData',
           component: () => import('@/components/globalConfig/userData.vue')
+        },{
+          /* 系统角色管理 */
+          path: '/index/globalConfig/system/roleManage',
+          name: 'roleManage',
+          component: () => import('@/components/globalConfig/roleManage.vue')
+        }, {
+          /* 系统用户管理 */
+          path: '/index/globalConfig/system/sysUserManage',
+          name: 'sysUserManage',
+          component: () => import('@/components/globalConfig/sysUserManage.vue')
         }]
       }
     ]
