@@ -9,8 +9,11 @@
 export default {
   watch: {
     $route(to, from) {
-      if (to.path == "/index/person/personMSg" || to.path =='/index/detailsEvent') {
-        let pxH = to.path == "/index/person/personMSg" ? 126:226
+      if (
+        to.path == "/index/person/personMSg" ||
+        to.path == "/index/detailsEvent"
+      ) {
+        let pxH = to.path == "/index/person/personMSg" ? 126 : 226;
         this.$nextTick(() => {
           this.$api.common.maxHeight("person-box", pxH);
         });
@@ -75,16 +78,33 @@ body,
   .el-dialog__footer {
     width: 100%;
   }
-  &.el-popover{
+  &.el-popover {
     padding: 20px 0;
-    .el-form{
+    .el-form {
       width: 350px;
       margin: 0 auto;
     }
-    .el-transfer{
+    .el-transfer {
       width: 350px;
       margin: 0 auto;
     }
+  }
+}
+
+.labelpop {
+  padding: 30px;
+  box-sizing: border-box;
+  width: 273px;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 2px 16px 0px rgba(188, 188, 188, 0.8);
+  h3 {
+    margin-bottom: 22px;
+  }
+  .lableTis {
+    font-size: 12px;
+    color: rgba(153, 153, 153, 1);
+    line-height: 17px;
+    margin:18px 0 10px 0;
   }
 }
 
@@ -157,49 +177,45 @@ body,
     padding: 0;
   }
 }
-.tree-com{
+.tree-com {
   /*树形控件样式修改*/
-  .el-tree{
+  .el-tree {
     background-color: unset;
     margin-top: 12px;
-    .el-tree-node{
+    .el-tree-node {
       position: relative;
-      .el-tree-node__content{
-        width:100%;
+      .el-tree-node__content {
+        width: 100%;
         height: 36px;
         line-height: 36px;
-        .add-icon{
-          color:#333;
+        .add-icon {
+          color: #333;
           position: absolute;
           right: 10px;
-          top:12px;
+          top: 12px;
           font-size: 12px;
         }
-        .el-tree-node__expand-icon.expanded{
+        .el-tree-node__expand-icon.expanded {
           /*transform: rotate(180deg);*/
         }
-        .el-tree-node__expand-icon.is-leaf{
+        .el-tree-node__expand-icon.is-leaf {
           color: transparent;
           cursor: default;
         }
       }
     }
-
   }
-
 }
-.el-popper{
-  .pb-popover-title{
-    color:#555555;
+.el-popper {
+  .pb-popover-title {
+    color: #555555;
     font-size: 15px;
   }
-  .el-form{
+  .el-form {
     margin-top: 20px;
-    .el-button{
-      width:100px;
+    .el-button {
+      width: 100px;
     }
   }
 }
-
-
 </style>

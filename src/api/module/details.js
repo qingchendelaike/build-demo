@@ -11,7 +11,23 @@ export default {
     // return出去了一个promise
     return api.get('/label/lists', params, header)
   },
-/*选择参与人员*/
+  /* 删除标签 */
+  labelDelete(params) {
+    // return出去了一个promise
+    return api.post('/label/delete', params, header)
+  },
+  /* 修改标签 */
+  labelEdit(params) {
+    // return出去了一个promise
+    return api.post('/label/edit', params, header)
+  },
+  /* 添加标签 */
+  labelAdd(params) {
+    // return出去了一个promise
+    return api.post('/label/add', params, header)
+  },
+
+  /*选择参与人员*/
   organizeUser(params) {
     // return出去了一个promise
     return api.get('/partyUser/organizeUserLists', params, header)
@@ -28,7 +44,6 @@ export default {
     return api.post('/item/cancelItem', params, header)
   },
 
-
   /*反馈下拉*/
   feedbackMenu(params) {
     // return出去了一个promise
@@ -44,7 +59,7 @@ export default {
     // return出去了一个promise
     return api.post('/item/editFeedback', params, header)
   },
-/*修改反馈备注(发起人)*/
+  /*修改反馈备注(发起人)*/
   feedbackEditRemark(params) {
     // return出去了一个promise
     return api.post('/item/editFeedbackRemark', params, header)
@@ -80,7 +95,7 @@ export default {
     // return出去了一个promise
     return api.post('/item/uploadFile', params, header)
   },
-/*选择参与人员*/
+  /*选择参与人员*/
   itemUserLists(params) {
     // return出去了一个promise
     return api.get('/partyUser/itemUserLists', params, header)
@@ -94,6 +109,26 @@ export default {
   finishItem(params) {
     // return出去了一个promise
     return api.post('/item/finishItem', params, header)
+  },
+  /* 存档类型列表 */
+  archiveList(params) {
+    // return出去了一个promise
+    return api.get('/archive/lists', params, header)
+  },
+  /* 添加存档类型 */
+  archiveAdd(params) {
+    // return出去了一个promise
+    return api.post('/archive/add', params, header)
+  },
+  /* 编辑类型列表 */
+  archiveEdit(params) {
+    // return出去了一个promise
+    return api.post('/archive/edit', params, header)
+  },
+  /* 删除类型列表 */
+  archiveDelete(params) {
+    // return出去了一个promise
+    return api.post('/archive/delete', params, header)
   },
 
 

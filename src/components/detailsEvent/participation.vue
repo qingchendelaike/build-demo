@@ -10,12 +10,16 @@
         <p class="status">
           <span>发起人：{{details.create_user_name}}</span>
           <span class="statusFlex">事项状态：{{details.zh_status}}</span>
-          <span class="statusRed" @click="pushFeedback"><!-- v-if="details.is_self" -->催办</span>
+
+          <!--催办  状态为：未开始 进行中 已截止 显示-->
+          <span  v-if="details.item_status == 1 || details.item_status==2 || details.item_status ==3">
+            <span class="statusRed" @click="pushFeedback" v-if="details.is_self || details.is_special">催办</span>
+          </span>
         </p>
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="user_name" label="姓名"></el-table-column>
           <el-table-column prop="account" label="登陆账号"></el-table-column>
-          <el-table-column width="340" prop="feed_id" label="反馈状态">
+          <el-table-column width="360" prop="feed_id" label="反馈状态">
             <template slot-scope="scope">
               <el-select
                 style="width:180px"
@@ -35,15 +39,22 @@
                 {{changeID(scope.row.feed_id)}}
                 <i class="el-icon-arrow-down"></i>
               </span>
+              <!--修改 状态为：未开始 进行中 已截止 显示-->
+              <span v-if="details.item_status == 1 || details.item_status==2 || details.item_status ==3">
               <span
                 class="spanBtn"
                 @click="upSelect(scope.row,1)"
-                v-if="scope.row.isSet == false"
+                v-if="(details.is_self || details.is_special) && scope.row.isSet == false"
               >修改</span>
+              </span>
               <span class="spanBtn" @click="clSelect(scope.row,1)" v-if="scope.row.isSet == true">取消</span>
               <span class="spanBtn" @click="svSelect(scope.row,1)" v-if="scope.row.isSet == true">保存</span>
+
+
             </template>
           </el-table-column>
+
+          <!--备注修改-->
           <el-table-column v-if="item.more_remark != 0" prop="feed_remark" label="备注">
             <template slot-scope="scope">
               <span v-if="scope.row.isRemark == false">{{scope.row.feed_remark}}</span>
@@ -53,11 +64,15 @@
                 placeholder="请输入内容"
               ></el-input>
 
+              <!-- 状态为：未开始 进行中 已截止 显示-->
+              <span v-if="details.item_status == 1 || details.item_status==2 || details.item_status ==3">
               <span
                 class="spanBtn"
                 @click="upSelect(scope.row,2)"
-                v-if="scope.row.isRemark == false"
+                v-if="(details.is_self || details.is_special) && scope.row.isRemark == false"
               >修改</span>
+              </span>
+
               <span
                 class="spanBtn"
                 @click="clSelect(scope.row,2)"
@@ -68,6 +83,7 @@
                 @click="svSelect(scope.row,2)"
                 v-if="scope.row.isRemark == true"
               >保存</span>
+
             </template>
           </el-table-column>
         </el-table>
@@ -245,6 +261,7 @@
       background: #ff4001;
       border-radius: 3px;
       color: #fff;
+      display: inline-block;
     }
 
     .statusFlex {
