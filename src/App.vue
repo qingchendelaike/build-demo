@@ -157,5 +157,49 @@ body,
     padding: 0;
   }
 }
+.tree-com{
+  /*树形控件样式修改*/
+  .el-tree{
+    background-color: unset;
+    margin-top: 12px;
+    .el-tree-node{
+      position: relative;
+      .el-tree-node__content{
+        width:100%;
+        height: 36px;
+        line-height: 36px;
+        .add-icon{
+          color:#333;
+          position: absolute;
+          right: 10px;
+          top:12px;
+          font-size: 12px;
+        }
+        .el-tree-node__expand-icon.expanded{
+          /*transform: rotate(180deg);*/
+        }
+        .el-tree-node__expand-icon.is-leaf{
+          color: transparent;
+          cursor: default;
+        }
+      }
+    }
+
+  }
+
+}
+.el-popper{
+  .pb-popover-title{
+    color:#555555;
+    font-size: 15px;
+  }
+  .el-form{
+    margin-top: 20px;
+    .el-button{
+      width:100px;
+    }
+  }
+}
+
 
 </style>
