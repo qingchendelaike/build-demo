@@ -3,6 +3,7 @@
     <div class="status">
       <span>发起人：{{detailsData.create_user_name}}</span>
       <span class="statusFlex">事项状态：{{detailsData.zh_status}}</span>
+      <div v-if="detailsData.item_status == 1 || detailsData.item_status==2 || detailsData.item_status ==3">
       <el-popover
         placement="left-start"
         popper-class="transferDia"
@@ -34,31 +35,31 @@
           :data="transferData"
           :titles="['所有事项', '已选事项']"
         ></el-transfer>
-        <p v-if="diaFormData.bool" style="width: 100%;color: red;text-align: center;margin-top: 10px;">{{diaFormData.boolMsg}}</p>
+        <p v-if="diaFormData.bool" style="width: 100%;color: red;text-align: center;margin-top: 10px;">
+          {{diaFormData.boolMsg}}</p>
 
         <div style="width: 100%;text-align: right;margin: 30px 30px 10px 0;">
           <el-button type="text" @click="closeMatter('ruleForm')">取消</el-button>
           <el-button type="primary" @click="sumMatter('ruleForm')">确定</el-button>
         </div>
 
-
-        <span class="statusRed" slot="reference" @click="itemUserLists">
-        催办
-          <!--v-if="detailsData.is_self && detailsData.item_status == 1 || detailsData.is_self && detailsData.item_status == 2"-->
-      </span>
+        <!-- 状态为：未开始 进行中 已截止 显示-->
+          <span class="statusRed"  v-if="detailsData.is_self || detailsData.is_special" slot="reference" @click="itemUserLists" >催办</span>
       </el-popover>
+    </div>
     </div>
 
     <div class="filesBox" v-for="(item,index) in tableData" :key="index">
       <div class="meeting">
         <span>{{item.archive_name}}</span>
-        <p class="upFiles" @click="upFiles($event,item)">
-          <span class="meetIcon"></span>
-          <span>
-        上传文件
-      </span>
-          <input type="file"/>
-        </p>
+        <!-- 状态为：未开始 进行中 已截止 显示-->
+        <div v-if="detailsData.item_status == 1 || detailsData.item_status==2 || detailsData.item_status ==3">
+          <p class="upFiles" @click="upFiles($event,item)" >
+            <span class="meetIcon"></span>
+            <span>上传文件</span>
+            <input type="file"/>
+          </p>
+        </div>
       </div>
       <el-table
         :data="item.file_lists"
@@ -80,13 +81,13 @@
         <el-table-column
           label="操作">
           <template slot-scope="scope">
-            <div class="operationBox">
+            <!-- 状态为：未开始 进行中 已截止 显示-->
+            <div class="operationBox" v-if="detailsData.item_status == 1 || detailsData.item_status==2 || detailsData.item_status ==3" >
               <!-- <a class="scopeIcon dow" :href="scope.row.file_url" download="w3logo" title="下载文件"></a>-->
               <span class="scopeIcon dow" @click="dow(scope.row)" title="下载文件"></span>
               <span class="scopeIcon up" title="更换文件" v-if="detailsData.item_status != 4">
-              <input type="file" @change="changeFile($event,scope.row)">
+                <input type="file" @change="changeFile($event,scope.row)">
               </span>
-
               <el-popover
                 placement="bottom"
                 width="230"
@@ -99,30 +100,27 @@
                 </div>
                 <span slot="reference" v-if="detailsData.item_status != 4" class="scopeIcon del" title="删除文件"></span>
               </el-popover>
-
             </div>
           </template>
-
         </el-table-column>
-
       </el-table>
     </div>
 
-    <el-popover
-      placement="top"
-      v-model="finisVisible">
-      <h3>确认办结</h3>
-      <p style="margin: 15px;">确定办结该事项？请核对存档文件后操作。</p>
-      <div style="text-align: right; margin: 0">
-        <el-button type="text"  @click="finisVisible = false">取消</el-button>
-        <el-button type="primary"  @click="finisMatter" >确定</el-button>
-      </div>
-      <el-button slot="reference" style="margin-top: 30px;" type="primary" v-show="detailsData.is_special" :disabled="detailsData.item_status == 4" >{{detailsData.item_status == 4 ?'已办结':'办结事项'}}
-      </el-button>
-    </el-popover>
-
-
-
+    <div class="operationBox" v-if="detailsData.item_status == 1 || detailsData.item_status==2 || detailsData.item_status ==3" >
+      <el-popover
+        placement="top"
+        v-model="finisVisible">
+        <h3>确认办结</h3>
+        <p style="margin: 15px;">确定办结该事项？请核对存档文件后操作。</p>
+        <div style="text-align: right; margin: 0">
+          <el-button type="text" @click="finisVisible = false">取消</el-button>
+          <el-button type="primary" @click="finisMatter">确定</el-button>
+        </div>
+        <el-button slot="reference" style="margin-top: 30px;" type="primary" v-show="detailsData.is_special"
+                   :disabled="detailsData.item_status == 4">{{detailsData.item_status == 4 ?'已办结':'办结事项'}}
+        </el-button>
+      </el-popover>
+    </div>
 
   </div>
 </template>
@@ -131,15 +129,15 @@
     export default {
         data() {
             return {
-                finisVisible:false,
+                finisVisible: false,
                 dialogVisible: false,
                 transferValue: [],
                 transferData: [],
                 diaFormData: {
                     name: "",
                     metterName: '',
-                    bool:false,
-                    boolMsg:''
+                    bool: false,
+                    boolMsg: ''
                 },
                 rules: {
                     metterName: [
@@ -147,26 +145,9 @@
                     ],
                 },
                 restaurants: [],
-
                 visible: false,
                 detailsData: '',
-                tableData: [{
-                    "archive_id": "1",
-                    "archive_name": "图片",
-                    "file_lists": []
-                },
-                    {
-                        "archive_id": "2",
-                        "archive_name": "文件",
-                        "file_lists": [{
-                            "file_id": 1,
-                            "file_url": "http://intra-systemic.oss-cn-beijing.aliyuncs.com/1569290941wTXp.docx",
-                            "file_name": "党建工作系统-短信消息模板.docx",
-                            "updated_at": "2019-09-24 09:31:22",
-                            "user_name": "zmx"
-                        }
-                        ]
-                    }]
+                tableData: []
             };
         },
         methods: {
@@ -180,22 +161,21 @@
             sumMatter(val) {
                 this.$refs[val].validate((valid) => {
                     if (valid) {
-                        if(this.transferValue.length == 0){
+                        if (this.transferValue.length == 0) {
                             this.diaFormData.bool = true
                             this.diaFormData.boolMsg = "请选择催办人员"
-                        }else{
+                        } else {
                             this.pushUp()
                         }
                     }
                 });
             },
-            async pushUp(){
+            async pushUp() {
                 let req = {
-                    item_id:this.detailsData.item_id,
-                    user_ids:this.transferValue.join(','),
-                    push_remark:this.diaFormData.metterName
+                    item_id: this.detailsData.item_id,
+                    user_ids: this.transferValue.join(','),
+                    push_remark: this.diaFormData.metterName
                 }
-                console.log(req)
                 const res = await this.$api.details.pushUp(req);
                 if (res.status == "success") {
                     this.closeMatter('ruleForm')
@@ -273,7 +253,7 @@
                 }
             },
             /*上传文件*/
-            async upFiles($event,item) {
+            async upFiles($event, item) {
                 if ($event.path[0]['files'][0]) {
                     let formdata = new FormData();
                     formdata.append("file", $event.path[0]['files'][0]);
@@ -293,11 +273,6 @@
                 const res = await this.$api.details.fileLists(req);
                 if (res.status == "success") {
                     this.tableData = res.data.data
-                   /* data.forEach((i) => {
-                        if (i.file_lists.length > 0) {
-                            this.tableData.push(i.file_lists)
-                        }
-                    })*/
                 }
             }
             ,

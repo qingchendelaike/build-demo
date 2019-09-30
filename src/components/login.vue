@@ -133,7 +133,6 @@ export default {
           if (res.data.is_more_duty == 0) {
              const power = await this.$api.userLogin.loginPower();
             if(power.status == "success"){
-                this.$store.dispatch("setMenu", power.data);
               this.$router.push("/index/eventSummary/allMatters");
             }
 

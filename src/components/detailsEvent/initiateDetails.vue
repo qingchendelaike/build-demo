@@ -4,19 +4,21 @@
       <span>发起人：{{detailsData.create_user_name}}</span>
       <span>事项状态：{{detailsData.zh_status}}</span>
     </p>
+
+    <detailsFrom
+      v-if="((detailsData.item_status == 1 || detailsData.item_status == 2) && detailsData.is_self) || ((detailsData.item_status == 1 || detailsData.item_status == 2) && detailsData.is_special)"
+      :detailsData="detailsData"
+    ></detailsFrom>
+
     <details-tip
-      v-if="detailsData.item_status == 3 || detailsData.item_status == 5 || detailsData.item_status == 4"
+      v-else-if="detailsData.item_status == 1 || detailsData.item_status == 2 || detailsData.item_status == 3 || detailsData.item_status == 5 || detailsData.item_status == 4"
       :detailsData="detailsData"
       :detailsTasks="detailsTasks"
       @delDetauls="delDetauls"
       @threeSum="threeSum"
     ></details-tip>
 
-    <div v-if="detailsData.is_self == true"></div>
-    <detailsFrom
-      v-if="detailsData.item_status == 1 || detailsData.item_status == 2"
-      :detailsData="detailsData"
-    ></detailsFrom>
+
   </div>
 </template>
 

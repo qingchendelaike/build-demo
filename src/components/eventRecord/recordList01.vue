@@ -32,7 +32,7 @@
                 width="370"
                 trigger="click">
                 <ul class="tip-list">
-                  <li v-for="tip in eventItem.itemTip">{{tip}}</li>
+                  <li v-for="(tip,index) in eventItem.itemTip" :key="index">{{tip}}</li>
                 </ul>
                 <i class="tip-icon" slot="reference" ></i>
               </el-popover>
