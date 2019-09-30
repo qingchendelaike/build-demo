@@ -164,6 +164,9 @@ body,
     margin-top: 12px;
     .el-tree-node{
       position: relative;
+      &.is-current>.el-tree-node__content{
+        background-color: #fff;
+      }
       .el-tree-node__content{
         width:100%;
         height: 36px;

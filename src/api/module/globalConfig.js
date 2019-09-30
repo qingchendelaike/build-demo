@@ -7,4 +7,8 @@ export default {
     // return出去了一个promise
     return api.get('/organization/lists', params,header)
   },
+  addOrgan (params) {
+    // return出去了一个promise
+    return api.post('/organization/add', params,header)
+  },
 }
