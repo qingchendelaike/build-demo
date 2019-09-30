@@ -9,7 +9,7 @@
     >
       <span class="labelTitle" v-show="item.set_bool == false">{{item.label_name}}</span>
       <el-input v-model="item.label_name" v-show="item.set_bool" style="width: 150px;height: 36px;"></el-input>
-      <span class="label Edit" v-show="item.set_bool == false" @click="editLabel(item)"></span>
+      <!-- <span class="label Edit" v-show="item.set_bool == false" @click="editLabel(item)"></span> -->
       <span class="label Add" v-show="item.set_bool" @click="addLable(item)">保存</span>
       <span class="label Close" @click="closeLable(item,index)"></span>
     </div>
@@ -40,13 +40,14 @@ export default {
       this.$emit("editLabel", item);
     },
     addLable(item) {
+      console.log(item)
       this.$emit("addLable", item);
     },
     closeLable(item, index) {
       this.$emit("closeLable", item, index);
     },
     addTitle() {
-      this.$emit("addTitle", item, index);
+      this.$emit("addTitle");
     },
     labelType() {
       this.$emit("labelType", true);
@@ -55,7 +56,8 @@ export default {
       this.$emit("closeType", false);
     }
   },
-  mounted() {}
+  mounted() {
+  }
 };
 </script>
 

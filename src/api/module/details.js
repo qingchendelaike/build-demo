@@ -27,12 +27,6 @@ export default {
     return api.post('/label/add', params, header)
   },
 
-  /*选择参与人员*/
-  organizeUser(params) {
-    // return出去了一个promise
-    return api.get('/partyUser/organizeUserLists', params, header)
-  },
-
   /*系列列表*/
   seriesMenu(params) {
     // return出去了一个promise
@@ -130,6 +124,12 @@ export default {
     // return出去了一个promise
     return api.post('/archive/delete', params, header)
   },
+  /* 选择参与人员 */
+  organizeUserLists(params) {
+    // return出去了一个promise
+    return api.get('/partyUser/itemOrganizeUserLists', params, header)
+  },
+
 
 
 }

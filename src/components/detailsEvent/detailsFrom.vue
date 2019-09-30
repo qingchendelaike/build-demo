@@ -10,19 +10,28 @@
       <el-form-item :label="typeSw(detailsData.item_type)+'名称'" prop="item_name">
         <el-input placeholder="给会议起个名字吧" v-model="ruleForm.item_name"></el-input>
       </el-form-item>
-      <el-form-item label="组织主体" prop="organize_name">
-        {{ruleForm.organize_name}}
-        <el-cascader
-          style="width:100%;"
-          v-model="ruleForm.organize_name"
-          :options="organData"
-          :props="{
-              value:'organize_id',
-              children:'sub_organization',
-              label:'organize_name'
-            }"
-          @change="handleChange"
-        ></el-cascader>
+      <el-form-item label="组织主体" prop="organize_id">
+        <el-select v-model="mineStatus" placeholder="请选择组织主体" multiple>
+          <!-- //option展开高度太小，把height设置为auto就好啦 -->
+          <el-option :value="mineStatusValue" style="height: auto">
+            <el-tree
+              :data="organData"
+              :check-strictly="true"
+              show-checkbox
+              node-key="organize_id"
+              ref="tree"
+              highlight-current
+              :props="{
+                id: 'organize_id',
+                label: 'organize_name',
+                children:'sub_organization'
+              }"
+              default-expand-all
+              @check-change="handleCheckChange"
+              @node-click="nodeClick"
+            ></el-tree>
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="类型标签" prop="labelArr">
         <div class="inpuIcon">
@@ -38,12 +47,11 @@
           </el-select>
 
           <labelMsg
-          :lableText="lableText"
+            :lableText="lableText"
             :labelData="labelData"
             :labelBool="labelBool"
             @labelType="labelType"
             @closeType="closeType"
-            @editLabel="editLabel"
             @addLable="addLable"
             @closeLable="closeLable"
             @addTitle="addTitle"
@@ -91,13 +99,13 @@
             </p>
 
             <div class="pop" v-for="(item,index) in ruleForm.notices" :key="index">
-              <el-select v-model="item.send_type + ''" class="popOver" placeholder="请选择">
+              <el-select v-model=" item.send_type + ''" class="popOver" placeholder="请选择">
                 <el-option label="开始前" value="1"></el-option>
                 <el-option label="开始后" value="2"></el-option>
                 <el-option label="截止前" value="3"></el-option>
                 <el-option label="截止后" value="4"></el-option>
               </el-select>
-              <el-input placeholder="请输入内容" v-model="item.time + ''" class="popInp"></el-input>
+              <el-input placeholder="请输入内容" v-model=" item.time + ''" class="popInp"></el-input>
               <el-select v-model="item.time_type" class="popTimer" placeholder="请选择">
                 <el-option label="分" value="1"></el-option>
                 <el-option label="小时" value="2"></el-option>
@@ -129,8 +137,37 @@
 
       <el-form-item label="参与人员" prop="users">
         <div class="usersBox">
-          <span>{{ruleForm.users}}</span>
-          <span class="iconUser" @click="userAll"></span>
+          <span v-for="(item,index) in ruleForm.users" :key="index">{{item.user_name+'/'}}</span>
+
+          <el-popover placement="left-start" popper-class="transferDia" v-model="dialogVisible">
+            <el-select
+              v-model="detailsData.organize_id"
+              placeholder="请选择组织"
+              @change="organizeChange"
+            >
+              <el-option
+                v-for="item in organArr"
+                :key="item.organize_id"
+                :label="item.organize_name"
+                :value="item.organize_id"
+              ></el-option>
+            </el-select>
+
+            <el-transfer
+              v-model="transferValue"
+              :props="{
+                  key: 'user_id',
+                  label: 'user_name',
+                }"
+              :data="transferData"
+              :titles="['人员列表', '已选人员']"
+            ></el-transfer>
+            <div style="width: 100%;text-align: right;margin: 30px 30px 10px 0;">
+              <el-button type="text" @click="dialogVisible = false">取消</el-button>
+              <el-button type="primary" @click="transferBtn">确定</el-button>
+            </div>
+            <span class="iconUser" @click="userAll" slot="reference"></span>
+          </el-popover>
         </div>
       </el-form-item>
 
@@ -151,7 +188,21 @@
             <span class="save" v-if="item.set_bool == true" @click="editShow(item,index)">保 存</span>
             <span class="del" @click="delShow(item,index)"></span>
             <span class="spanDel"></span>
-            <span class="addUser"></span>
+
+
+          <el-popover placement="left-start" trigger="click" popper-class="transferDia" >
+            <el-transfer
+              v-model="item.users"
+              :props="{
+                  key: 'user_id',
+                  label: 'user_name',
+                }"
+              :data="organDataAll"
+              :titles="['人员列表', '已选人员']"
+            ></el-transfer>
+            <span class="addUser"  slot="reference"></span>
+          </el-popover>
+
           </p>
         </div>
       </el-form-item>
@@ -169,13 +220,25 @@
 
       <el-form-item label="存档文件" prop="desc">
         <div class="inpuIcon">
-          {{ ruleForm.item_archive}}
-          {{ruleForm.item_archive_ids}}
-          <!-- <el-select placeholder="请选择活动区域" v-model="ruleForm.item_archive_ids" style="width: 90%;">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>-->
-          <span class="icon"></span>
+          <el-select v-model="filesArr" multiple style="width:90%;" placeholder="请选择">
+            <el-option
+              v-for="item in filesData"
+              :key="item.archive_id"
+              :label="item.archive_name"
+              :value="item.archive_id"
+              v-show="item.is_del == '0'"
+            ></el-option>
+          </el-select>
+          <labelMsg
+            :lableText="filesText"
+            :labelData="filesData"
+            :labelBool="filesBool"
+            @labelType="showfilesBool"
+            @closeType="closeFilesBool"
+            @closeLable="delFiles"
+            @addLable="saveFiles"
+            @addTitle="addFiles"
+          ></labelMsg>
         </div>
       </el-form-item>
 
@@ -216,7 +279,21 @@ export default {
   props: ["detailsData"],
   data() {
     return {
-      lableText:'类型标签管理',
+      transferSelect:[],
+      dialogVisible: false,
+      transferData: [],
+      transferValue: [],
+      mineStatus: [],
+      mineStatusValue: [],
+      defaultProps: {
+        children: "children",
+        label: "label"
+      },
+      lableText: "类型标签管理",
+      filesText: "存档文件类型管理",
+      filesArr: [],
+      filesData: [],
+      filesBool: false,
       seriesData: [],
       takesData: [],
       cancelBool: false,
@@ -288,10 +365,39 @@ export default {
       organData: [],
       labelData: [],
       labelArr: [],
-      seriseData: []
+      seriseData: [],
+      organArr: [],
+      organDataAll: []
     };
   },
   methods: {
+    transferBtn(){
+      this.dialogVisible = false
+      this.ruleForm.users = this.ruleForm.users.concat(this.organDataAll ) 
+    },
+    organizeChange(val) {
+      this.ruleForm.organize_id = val;
+      this.userAll();
+    },
+    /* 树图只选择一个 */
+    nodeClick(data, checked, node) {
+      this.$refs.tree.setCheckedNodes([data]);
+    },
+    handleCheckChange(data, checked, node) {
+      if (checked == true) {
+        this.$refs.tree.setCheckedNodes([data]);
+        let res = this.$refs.tree.getCheckedNodes(); //这里两个true，1. 是否只是叶子节点 2. 是否包含半选节点（就是使得选择的时候不包含父节点）
+        let arrLabel = [];
+        let arr = [];
+        res.forEach(item => {
+          arrLabel.push(item.organize_name);
+          arr.push(item);
+        });
+        this.mineStatusValue = arr;
+        this.mineStatus = arrLabel;
+        this.ruleForm.organize_id = this.mineStatusValue[0]["organize_id"];
+      }
+    },
     /*取消事项  确定按钮*/
     async cancelBtnDel() {
       let req = {
@@ -300,7 +406,6 @@ export default {
       const res = await this.$api.details.cancelItem(req);
       if (res.status == "success") {
         this.cancelBool = false;
-        console.log("取消成功");
       }
     },
     /*归属系列*/
@@ -311,7 +416,23 @@ export default {
       }
     },
     /*参与人员*/
-    userAll() {},
+    /* 参与人员列表 */
+    async userAll() {
+      let req = {
+        item_id: this.ruleForm.item_id,
+        organize_id: this.ruleForm.organize_id
+      };
+      const res = await this.$api.details.organizeUserLists(req);
+      if (res.status == "success") {
+        this.organDataAll =this.organDataAll.concat(res.data)
+        let obj = {}
+        this.organDataAll =  this.organDataAll.reduce((item, next) => {
+          obj[next.user_id] ? '' : obj[next.user_id] = true && item.push(next)
+          return item
+        }, [])
+        this.transferData = this.organDataAll
+      }
+    },
     /*取消时间提醒*/
     closeTimer() {
       this.ruleForm.notices = this.detailsData.notices;
@@ -358,10 +479,10 @@ export default {
       if (item.label_name == "") {
         this.$message("请输入标签名称");
       } else {
-        item.set_bool = false;
         if (item.label_type) {
           const res = await this.$api.details.labelAdd(item);
           if (res.status == "success") {
+            item.set_bool = false;
             this.labelLists();
             this.labelArr = [];
             this.$message("标签添加成功");
@@ -373,6 +494,7 @@ export default {
           };
           const res = await this.$api.details.labelEdit(req);
           if (res.status == "success") {
+            item.set_bool = false;
             this.$message("修改标签成功");
           }
         }
@@ -401,6 +523,66 @@ export default {
         set_bool: true
       };
       this.labelData.push(req);
+    },
+    /* 文件类型 */
+
+    /* 文件标签 */
+    async filesType() {
+      let req = {
+        archive_type: this.ruleForm.item_type,
+        item_id: this.ruleForm.item_id
+      };
+      const res = await this.$api.details.archiveList(req);
+      if (res.status == "success") {
+        res.data.forEach(i => {
+          if (i.is_del == "1") {
+            this.filesArr.push(i.archive_id);
+          }
+          i.set_bool = false;
+          i.label_name = i.archive_name;
+        });
+        this.filesData = res.data;
+      }
+    },
+
+    /* 保存文件标签 */
+    async saveFiles(item) {
+      if (item.label_name == "") {
+        this.$message("请输入标签名称");
+      } else {
+        item.archive_name = item.label_name;
+        const res = await this.$api.details.archiveAdd(item);
+        if (res.status == "success") {
+          item.set_bool = false;
+          this.filesType();
+          this.filesArr = [];
+          this.$message("标签添加成功");
+        }
+      }
+    },
+    /* 删除文件标签 */
+    async delFiles(item, index) {
+      this.labelData.splice(index, 1);
+      if (item.archive_id) {
+        let req = {
+          archive_id: item.archive_id
+        };
+        const res = await this.$api.details.archiveDelete(req);
+        if (res.status == "success") {
+          // this.labelLists()
+          this.$message("删除标签成功");
+        }
+      }
+    },
+    /* 新增文件标签 */
+    addFiles() {
+      let req = {
+        archive_type: this.ruleForm.item_type,
+        label_name: "",
+        is_del: 0,
+        set_bool: true
+      };
+      this.filesData.push(req);
     },
 
     /* 组织主体选中值 */
@@ -431,13 +613,35 @@ export default {
       const res = await this.$api.details.organization();
       if (res.status == "success") {
         this.organData = res.data;
+        this.organArr = this.dgSubject(res.data);
       }
     },
+    /* 循环出组织主体 */
+    dgSubject(data) {
+      let dataArray = [];
+      for (let i = 0; i < data.length; i++) {
+        let dataObj = {};
+        dataObj.organize_id = data[i].organize_id;
+        dataObj.organize_name = data[i].organize_name;
+        dataArray.push(dataObj);
+        let dataChild = data[i]["sub_organization"];
+        if (dataChild) {
+          for (let j = 0; j < dataChild.length; j++) {
+            let dataObj = {};
+            dataObj.organize_id = dataChild[j].organize_id;
+            dataObj.organize_name = dataChild[j].organize_name;
+            dataArray.push(dataObj);
+          }
+        }
+      }
+      return dataArray;
+    },
+
     /* 提交 */
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.arrData();
+          console.log(this.ruleForm);
         } else {
           console.log("error submit!!");
           return false;
@@ -478,22 +682,33 @@ export default {
     },
     closeType(val) {
       this.labelBool = val;
+    },
+    showfilesBool(val) {
+      this.filesBool = val;
+    },
+    closeFilesBool(val) {
+      this.filesBool = val;
     }
   },
   mounted() {
     this.ruleForm = JSON.parse(JSON.stringify(this.detailsData));
     this.takesData = JSON.parse(JSON.stringify(this.ruleForm.tasks));
+    this.mineStatus.push(this.ruleForm.organize_name);
+
     this.takesData.forEach(i => {
       i.set_bool = false;
     });
-
-    /* seriesData */
     this.ruleForm.series.forEach(i => {
       this.seriesData.push(i.series_id);
     });
 
+    this.ruleForm.users.forEach(i => {
+      this.transferValue.push(i.user_id);
+    });
+
     this.organ();
     this.labelLists();
+    this.filesType();
     this.seriesMenu();
   }
 };
