@@ -220,5 +220,25 @@ body,
       width: 100px;
     }
   }
+  .popover-tip{
+    margin:10px 0 5px;
+  }
+}
+.organ-page-title{
+  .el-input{
+    display: inline-block;
+    width:200px;
+    .el-input__inner{
+      height: 36px;
+      line-height: 36px;
+
+    }
+  }
+  .el-button--mini{
+    height: 36px;
+    margin-left:10px;
+    border: unset;
+    color:#3DA8FF;
+  }
 }
 </style>
