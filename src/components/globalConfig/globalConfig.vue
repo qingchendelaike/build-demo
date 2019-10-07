@@ -2,7 +2,7 @@
   <el-container class="container-box">
     <el-aside width="190px">
       <ul>
-        <li v-for="navItem in navList">
+        <li v-for="(navItem,index) in navList" :key="index">
           <div class="p-nav" :class="{'active':$route.path.indexOf(navItem.path)>-1}">{{navItem.p_name}}</div>
           <router-link
             v-for="(item,index) in navItem.indecChild"
@@ -146,16 +146,15 @@
         }
       }
     }
-    /deep/.el-main {
-      height: 100%;
-      background: rgba(246, 246, 246, 1);
-      border-radius: 3px;
-      padding: 23px 38px 23px 30px;
-    }
+   
   }
   .main-box {
-    position: relative;
-    padding: 20px 35px 20px 20px;
+   /*  position: relative;
+    padding: 20px 35px 20px 20px; */
+     /deep/.el-main {
+     
+      padding: 0;
+    }
   }
 
   /*css精灵图代码*/

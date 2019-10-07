@@ -124,8 +124,10 @@ export default {
   }
 }
 .main-box {
-  position: relative;
-  padding: 20px 35px 20px 20px;
+      position: relative;
+    padding: 20px 35px 20px 15px;
+    margin-left: 5px;
+    background: #f6f6f6;
   .drawer-switch {
     position: fixed;
     top: 99px;

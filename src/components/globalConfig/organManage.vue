@@ -1,5 +1,5 @@
 <template>
-  <div class="organ-container">
+  <div class="main-box organ-container">
     <div class="organ-aside">
       <div>组织名称
         <el-popover class="pb-popover"
@@ -211,8 +211,9 @@
 
 <style lang="scss" scoped>
   @import "../../assets/css/table.scss";
+  
   .organ-aside{
-    margin:0 20px;
+     margin: 35px  20px; 
     width:190px;
     display: inline-block;
     color:$color999999;
@@ -225,7 +226,6 @@
   }
   .organ-container{
     height: 100%;
-
     .organ-container-main{
       margin-left: 200px;
       background:rgba(246,246,246,1);
