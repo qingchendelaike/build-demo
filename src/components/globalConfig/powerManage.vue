@@ -18,7 +18,7 @@
           <el-popover
             trigger="click"
             :ref="`popedit-${scope.$index}`"
-            width="550"
+            width="500"
             placement="bottom"
             popper-class="popDel"
             @show="showEdit(scope)"
@@ -36,6 +36,7 @@
                 <el-input v-model="scope.row.remark" placeholder="请输入备注内容"></el-input>
               </el-form-item>
               <el-form-item label="菜单权限">
+                <div  style="height: 180px;overflow-x: auto;">
                 <el-tree
                   :data="treeData"
                   :ref="`addTree-${scope.$index}`"
@@ -44,6 +45,7 @@
                   node-key="power_id"
                   :props="defaultProps"
                 ></el-tree>
+                </div>
               </el-form-item>
 
               <el-form-item>
@@ -51,9 +53,10 @@
                   type="text"
                   @click="scope._self.$refs[`popedit-${scope.$index}`].doClose()"
                 >取消</el-button>-->
+                <div style="text-align: right;">
                 <el-button type="text" @click="handleClose(scope.$index, scope.row)">取消</el-button>
-
                 <el-button type="primary" @click="handleEdit(scope.$index, scope.row)">确定</el-button>
+                </div>
               </el-form-item>
             </el-form>
 
@@ -172,13 +175,11 @@ export default {
   methods: {
     showEdit(scope) {
       this.dataRow = JSON.parse(JSON.stringify(scope.row));
-      let req = "1,2,7,22,23,24,25,8,26,27,28,29,30";
-      this.checkTree = req.split(",");
-      // this.checkTree = scope.row.duty_authority.split(',')
+      this.checkTree = scope.row.duty_authority.split(",");
     },
     /* 取消 */
     handleClose(index, row) {
-      row = this.dataRow;
+      this.tableData.splice(index,1,this.dataRow)
       this.$refs[`popedit-${index}`].doClose();
     },
     /* 修改 */

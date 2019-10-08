@@ -105,8 +105,8 @@
                 <el-option label="截止前" value="3"></el-option>
                 <el-option label="截止后" value="4"></el-option>
               </el-select>
-              <el-input placeholder="请输入内容" v-model=" item.time + ''" class="popInp"></el-input>
-              <el-select v-model="item.time_type" class="popTimer" placeholder="请选择">
+              <el-input placeholder="请输入内容" v-model=" item.time" class="popInp"></el-input>
+              <el-select v-model="item.time_type+ ''" class="popTimer" placeholder="请选择">
                 <el-option label="分" value="1"></el-option>
                 <el-option label="小时" value="2"></el-option>
                 <el-option label="天" value="3"></el-option>
@@ -138,7 +138,6 @@
       <el-form-item label="参与人员" prop="users">
         <div class="usersBox">
           <span v-for="(item,index) in ruleForm.users" :key="index">{{item.user_name+'/'}}</span>
-
           <el-popover placement="left-start" popper-class="transferDia" v-model="dialogVisible">
             <el-select
               v-model="detailsData.organize_id"
@@ -166,7 +165,7 @@
               <el-button type="text" @click="dialogVisible = false">取消</el-button>
               <el-button type="primary" @click="transferBtn">确定</el-button>
             </div>
-            <span class="iconUser" @click="userAll" slot="reference"></span>
+            <span class="iconUser" @click="userAll" slot="reference" style="display: flex;"></span>
           </el-popover>
         </div>
       </el-form-item>
@@ -189,20 +188,19 @@
             <span class="del" @click="delShow(item,index)"></span>
             <span class="spanDel"></span>
 
-
-          <el-popover placement="left-start" trigger="click" popper-class="transferDia" >
-            <el-transfer
-              v-model="item.users"
-              :props="{
+            <el-popover placement="left-start" trigger="click" popper-class="transferDia">
+              <el-transfer
+                v-model="item.users"
+                :props="{
                   key: 'user_id',
                   label: 'user_name',
                 }"
-              :data="organDataAll"
-              :titles="['人员列表', '已选人员']"
-            ></el-transfer>
-            <span class="addUser"  slot="reference"></span>
-          </el-popover>
+                :data="organDataAll"
+                :titles="['人员列表', '已选人员']"
+              ></el-transfer>
 
+              <span class="addUser" slot="reference"></span>
+            </el-popover>
           </p>
         </div>
       </el-form-item>
@@ -260,11 +258,7 @@
         </el-popover>
 
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-        <el-radio-group v-model="radio">
-          <el-radio :label="1">
-            <span class="radioCheck">发送查阅通知，选中后提交即发送，请确认内容后操作</span>
-          </el-radio>
-        </el-radio-group>
+            <el-checkbox v-model="radio"><span class="radioCheck">发送查阅通知，选中后提交即发送，请确认内容后操作</span></el-checkbox>
       </el-form-item>
     </el-form>
   </div>
@@ -279,7 +273,7 @@ export default {
   props: ["detailsData"],
   data() {
     return {
-      transferSelect:[],
+      transferSelect: [],
       dialogVisible: false,
       transferData: [],
       transferValue: [],
@@ -298,7 +292,7 @@ export default {
       takesData: [],
       cancelBool: false,
       regionOptions: [],
-      radio: 1,
+      radio: false,
       visibleBool: false,
       labelBool: false,
       ruleForm: {
@@ -353,14 +347,6 @@ export default {
             trigger: "change"
           }
         ]
-        /*  labelArr: [
-                          {
-                              type: "string",
-                              required: true,
-                              message: "请选择类型标签",
-                              trigger: "change"
-                          }
-                      ]*/
       },
       organData: [],
       labelData: [],
@@ -371,9 +357,9 @@ export default {
     };
   },
   methods: {
-    transferBtn(){
-      this.dialogVisible = false
-      this.ruleForm.users = this.ruleForm.users.concat(this.organDataAll ) 
+    transferBtn() {
+      this.dialogVisible = false;
+      this.ruleForm.users = this.ruleForm.users.concat(this.organDataAll);
     },
     organizeChange(val) {
       this.ruleForm.organize_id = val;
@@ -406,6 +392,7 @@ export default {
       const res = await this.$api.details.cancelItem(req);
       if (res.status == "success") {
         this.cancelBool = false;
+        this.$router.go(-1);
       }
     },
     /*归属系列*/
@@ -424,18 +411,21 @@ export default {
       };
       const res = await this.$api.details.organizeUserLists(req);
       if (res.status == "success") {
-        this.organDataAll =this.organDataAll.concat(res.data)
-        let obj = {}
-        this.organDataAll =  this.organDataAll.reduce((item, next) => {
-          obj[next.user_id] ? '' : obj[next.user_id] = true && item.push(next)
-          return item
-        }, [])
-        this.transferData = this.organDataAll
+        this.organDataAll = this.organDataAll.concat(res.data);
+        let obj = {};
+        this.organDataAll = this.organDataAll.reduce((item, next) => {
+          obj[next.user_id]
+            ? ""
+            : (obj[next.user_id] = true && item.push(next));
+          return item;
+        }, []);
+        this.transferData = this.organDataAll;
       }
     },
     /*取消时间提醒*/
     closeTimer() {
-      this.ruleForm.notices = this.detailsData.notices;
+      let timerRes = JSON.parse(JSON.stringify(this.detailsData.notices));
+      this.ruleForm.notices = timerRes;
       this.visibleBool = false;
     },
     /*添加时间提醒*/
@@ -450,7 +440,8 @@ export default {
     },
     /*时间提醒确定*/
     tiemr(val) {
-      console.log(val);
+      this.ruleForm.notices = val;
+      this.visibleBool = false;
     },
     /* 类型标签 */
     async labelLists() {
@@ -562,7 +553,7 @@ export default {
     },
     /* 删除文件标签 */
     async delFiles(item, index) {
-      this.labelData.splice(index, 1);
+      this.filesData.splice(index, 1);
       if (item.archive_id) {
         let req = {
           archive_id: item.archive_id
@@ -641,13 +632,45 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this.ruleForm);
+          let item_task = JSON.parse(JSON.stringify(this.takesData));
+          item_task.forEach(i => {
+            i.users = i.users.join(",");
+          });
+          let req = {
+            item_name: this.ruleForm.item_name,
+            item_id: this.ruleForm.item_id,
+            organize_id: this.ruleForm.organize_id,
+            item_label_ids: this.ruleForm.item_label_ids,
+            article_year: this.ruleForm.article_year,
+            article_sn: this.ruleForm.article_sn,
+            start_time: this.ruleForm.start_time,
+            end_time: this.ruleForm.end_time,
+            item_space: this.ruleForm.item_space,
+            item_reason: this.ruleForm.item_reason,
+            item_flow: this.ruleForm.item_flow,
+            item_user: this.ruleForm.users,
+            item_task: item_task,
+            item_series: this.seriesData.join(","),
+            item_archive_ids: this.filesArr.join(","),
+            item_notice: this.ruleForm.notices,
+            is_send: this.radio
+          };
+
+          this.matterDetailsEdit(req);
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
+    /* 修改事项 */
+    async matterDetailsEdit(req) {
+      const res = await this.$api.details.editItem(req);
+      if (res.status == "success") {
+        this.$router.go(-1);
+      }
+    },
+
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
@@ -697,6 +720,7 @@ export default {
 
     this.takesData.forEach(i => {
       i.set_bool = false;
+      i.users = i.users.split(",");
     });
     this.ruleForm.series.forEach(i => {
       this.seriesData.push(i.series_id);
@@ -715,6 +739,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/deep/ .el-checkbox__inner{
+  border-radius: 50%;
+}
 .event-centen {
   width: 950px;
   height: auto;

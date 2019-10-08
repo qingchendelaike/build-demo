@@ -1,11 +1,11 @@
 <template>
   <div class="box-title">
-    <span class="box-text">职务权限管理</span>
+    <span class="box-text">{{titlePop}}</span>
     <div class="box-title-icon" v-if="down">
       <span class="box-icon"></span>
       <span>导出</span>
     </div>
-    <div class="box-title-icon" v-popover:queryEl @click="queryCondi">
+    <div class="box-title-icon" v-popover:queryEl @click="queryCondi" v-if="queryBool">
       <span class="query-icon"></span>
       <span>查询条件</span>
     </div>
@@ -30,6 +30,15 @@ export default {
     down: {
       type: Boolean,
       default: false
+    },
+    queryBool:{
+      type: Boolean,
+      default: true
+    },
+    titlePop:{
+      type: String,
+      default: '职务权限管理'
+      
     }
   },
   data() {

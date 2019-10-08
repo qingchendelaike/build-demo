@@ -37,6 +37,10 @@ export default {
     // return出去了一个promise
     return api.post('/item/cancelItem', params, header)
   },
+ /* 事项修改 */
+ editItem(params){
+  return api.post('/item/edit', params, header)
+},
 
   /*反馈下拉*/
   feedbackMenu(params) {

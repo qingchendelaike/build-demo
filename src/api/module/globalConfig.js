@@ -51,6 +51,14 @@ export default {
     // return出去了一个promise
     return api.post('/duty/edit', params,header)
   },
+
+  /* 党务用户 */
+  //用户列表
+  dutyUserLists(params) {
+    // return出去了一个promise
+    return api.get('/partyUser/lists', params,header)
+  },
+
   
 
 }
