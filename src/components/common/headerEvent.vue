@@ -161,7 +161,7 @@ export default {
           exportUrl += key + "=" + this.formData[key] + "&";
         });
         window.open(
-          `${window.location.protocol}//192.168.2.22:8020${this.exportsRouter}?${exportUrl}`
+          `${window.location.protocol}//192.168.1.114:8083${this.exportsRouter}?${exportUrl}`
         );
       }
     },

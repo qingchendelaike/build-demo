@@ -1,7 +1,7 @@
 <template>
   <div class="box-title">
     <span class="box-text">{{titlePop}}</span>
-    <div class="box-title-icon" v-if="down">
+    <div class="box-title-icon" v-if="down" @click="exports">
       <span class="box-icon"></span>
       <span>导出</span>
     </div>
@@ -39,7 +39,16 @@ export default {
       type: String,
       default: '职务权限管理'
       
+    },
+    queryForm:{
+      type:Object,
+      default:{}
+    },
+    exportsRouter:{
+      type:String,
+      default:''
     }
+
   },
   data() {
     return {
@@ -50,6 +59,23 @@ export default {
     };
   },
   methods: {
+     /* 导出表格 */
+    async exports() {
+      const res = await this.$api.allMatters.ticket(
+        localStorage.getItem("Token")
+      );
+
+      if (res.status == "success") {
+        this.queryForm.export_ticket = res.data
+        let exportUrl = "";
+        Object.keys(this.queryForm).map(key => {
+          exportUrl += key + "=" + this.queryForm[key] + "&";
+        });
+        window.open(
+          `${window.location.protocol}//192.168.1.114:8083${this.exportsRouter}?${exportUrl}`
+        );
+      }
+    },
     queryCondi() {
       this.queryPop = !this.queryPop;
     },

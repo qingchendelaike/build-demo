@@ -58,7 +58,35 @@ export default {
     // return出去了一个promise
     return api.get('/partyUser/lists', params,header)
   },
-
-  
-
+  // 职务下拉选项
+  dutyUserMenu(params) {
+    // return出去了一个promise
+    return api.get('/duty/menu', params,header)
+  },
+  // 组织务下拉选项
+  dutyUserOrgan(params) {
+    // return出去了一个promise
+    return api.get('/organization/menu', params,header)
+  },
+  //添加用户
+  partyUserAdd(params) {
+    // return出去了一个promise
+    return api.post('/partyUser/add', params,header)
+  },
+  //删除用户
+  partyUserDelete(params) {
+    // return出去了一个promise
+    return api.post('/partyUser/delete', params,header)
+  },
+  //用户个人信息
+  partyUserInfo(params) {
+    // return出去了一个promise
+    return api.get('/partyUser/getInfo', params,header)
+  },
+  //修改用户
+  partyUserEdit(params) {
+    // return出去了一个promise
+    return api.post('/partyUser/edit', params,header)
+  },
+/* 人员资料库 */
 }

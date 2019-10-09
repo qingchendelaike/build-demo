@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="nav">
-      <power-nav @queryAll="queryAll" class="powerNav"></power-nav>
+      <power-nav @queryAll="queryAll" class="powerNav" :queryForm="{}"></power-nav>
 
       <div class="box-title-icon" @click="add" v-popover:addEl>
         <i class="el-icon-plus"></i>
@@ -22,6 +22,7 @@
             placement="bottom"
             popper-class="popDel"
             @show="showEdit(scope)"
+            title="编辑职务"
           >
             <el-form label-width="100px">
               <el-form-item label="职务名称">
