@@ -8,6 +8,7 @@
         :titlePop="titlePop"
         :queryForm="exportForm"
         :exportsRouter="exportsRouter"
+        :form={}
       ></power-nav>
 
       <div class="box-title-icon" v-popover:queryEl @click="queryIcon">

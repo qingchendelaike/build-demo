@@ -163,6 +163,7 @@ body,
     p {
       line-height: 20px;
       margin-top: 15px !important;
+      text-align: center;
       cursor: pointer;
       &:last-child {
         border-top: 1px solid #e5e5e5;

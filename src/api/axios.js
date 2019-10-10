@@ -73,10 +73,14 @@ http.interceptors.response.use(response => {
       offset:500,
       duration:1500
     });
+    if(data.code=='1006'){
+      window.localStorage.clear()
+      router.push("/");
+    }
     if(data.retCode==400102){
       //登录超时
-      localStorage.removeItem('token');
-      router.push('/login');
+      window.localStorage.clear()
+      router.push('/');
     }
     return data;
   }

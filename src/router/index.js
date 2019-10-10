@@ -104,6 +104,11 @@ export default new Router({
           name: 'userManage',
           component: () => import('@/components/globalConfig/userManage.vue')
         }, {
+          /* 人员资料库验证 */
+          path: '/index/globalConfig/partyWork/userDataPwd',
+          name: 'userDataPwd',
+          component: () => import('@/components/globalConfig/userDataPwd.vue')
+        },{
           /* 人员资料库 */
           path: '/index/globalConfig/partyWork/userData',
           name: 'userData',

@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="nav">
-      <power-nav @queryAll="queryAll" class="powerNav" :queryForm="{}"></power-nav>
+      <power-nav @queryAll="queryAll" class="powerNav" :queryForm="{}" :form="formNav"></power-nav>
 
       <div class="box-title-icon" @click="add" v-popover:addEl>
         <i class="el-icon-plus"></i>
@@ -37,15 +37,16 @@
                 <el-input v-model="scope.row.remark" placeholder="请输入备注内容"></el-input>
               </el-form-item>
               <el-form-item label="菜单权限">
-                <div  style="height: 180px;overflow-x: auto;">
-                <el-tree
-                  :data="treeData"
-                  :ref="`addTree-${scope.$index}`"
-                  show-checkbox
-                  :default-checked-keys="checkTree"
-                  node-key="power_id"
-                  :props="defaultProps"
-                ></el-tree>
+                <div style="height: 180px;overflow-x: auto;">
+                  {{checkTree}}
+                  <el-tree
+                    :data="treeData"
+                    :ref="`addTree-${scope.$index}`"
+                    show-checkbox
+                    :default-checked-keys="checkTree"
+                    node-key="power_id"
+                    :props="defaultProps"
+                  ></el-tree>
                 </div>
               </el-form-item>
 
@@ -55,8 +56,8 @@
                   @click="scope._self.$refs[`popedit-${scope.$index}`].doClose()"
                 >取消</el-button>-->
                 <div style="text-align: right;">
-                <el-button type="text" @click="handleClose(scope.$index, scope.row)">取消</el-button>
-                <el-button type="primary" @click="handleEdit(scope.$index, scope.row)">确定</el-button>
+                  <el-button type="text" @click="handleClose(scope.$index, scope.row)">取消</el-button>
+                  <el-button type="primary" @click="handleEdit(scope.$index, scope.row)">确定</el-button>
                 </div>
               </el-form-item>
             </el-form>
@@ -147,6 +148,11 @@ export default {
   },
   data() {
     return {
+      formNav: {
+        labelName: "职务名称",
+        name: "",
+        placeName: "请输入职务名称"
+      },
       dataRow: {},
       checkTree: [],
       addVisible: false,
@@ -174,20 +180,23 @@ export default {
     };
   },
   methods: {
+    getCurrentNode(tree) {
+      console.log(tree);
+    },
     showEdit(scope) {
       this.dataRow = JSON.parse(JSON.stringify(scope.row));
       this.checkTree = scope.row.duty_authority.split(",");
     },
     /* 取消 */
     handleClose(index, row) {
-      this.tableData.splice(index,1,this.dataRow)
+      this.tableData.splice(index, 1, this.dataRow);
       this.$refs[`popedit-${index}`].doClose();
     },
     /* 修改 */
     async handleEdit(index, row) {
       row.duty_authority = this.$refs[`addTree-${index}`]
-          .getCheckedKeys()
-          .join(",")
+        .getCheckedKeys()
+        .join(",");
       const res = await this.$api.globalConfig.dutyEdit(row);
       if (res.status == "success") {
         this.$refs[`popedit-${index}`].doClose();

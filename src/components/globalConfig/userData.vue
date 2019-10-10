@@ -1,17 +1,52 @@
 <template>
   <div class="box">
     <div class="nav">
-      <power-nav class="powerNav"></power-nav>
-
+      <power-nav
+        class="powerNav"
+        :down="true"
+        :titlePop="titlePop"
+        :queryBool="false"
+        :queryForm="{}"
+        :form="{}"
+      ></power-nav>
     </div>
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="duty_name" label="职务名称"></el-table-column>
-      <el-table-column prop="duty_string" label="权限字符"></el-table-column>
-      <el-table-column prop="remark" label="备注"></el-table-column>
-      <el-table-column prop="created_at" label="创建时间"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column prop="user_name" label="姓名" fixed="left"></el-table-column>
+      <el-table-column prop="zh_sex" label="性别"></el-table-column>
+      <el-table-column prop="zh_identify" label="人员身份"></el-table-column>
+      <el-table-column prop="zh_status" label="人员状态"></el-table-column>
+
+      <el-table-column prop="zh_sex" label="所属组织"></el-table-column>
+      <el-table-column prop="zh_identify" label="党内职务"></el-table-column>
+      <el-table-column prop="zh_status" label="任期时间"></el-table-column>
+
+      <el-table-column prop="apply_time" label="入党申请书提交时间"></el-table-column>
+      <el-table-column prop="active_time" label="入党积极分子时间"></el-table-column>
+      <el-table-column prop="train_time" label="参与培训时间"></el-table-column>
+      <el-table-column prop="develop_time" label="发展对象时间"></el-table-column>
+      <el-table-column prop="party_time" label="入党时间"></el-table-column>
+      <el-table-column prop="formal_time" label="转正时间"></el-table-column>
+
+      <el-table-column prop="zh_sex" label="所属部门"></el-table-column>
+      <el-table-column prop="zh_identify" label="员工职级"></el-table-column>
+
+      <el-table-column prop="id_card" label="身份证号"></el-table-column>
+      <el-table-column prop="birth" label="出身年月"></el-table-column>
+      <el-table-column prop="age" label="年龄"></el-table-column>
+      <el-table-column prop="zh_nation" label="民族"></el-table-column>
+      <el-table-column prop="sources" label="籍贯"></el-table-column>
+      <el-table-column prop="graduation" label="毕业院校"></el-table-column>
+      <el-table-column prop="education" label="学历">
+        
+      </el-table-column>
+
+      <el-table-column prop="work_time" label="参与工作时间"></el-table-column>
+
+
+      <el-table-column label="操作" fixed="right">
         <template slot-scope="scope">
-          <el-popover
+           <span class="tableEdit" slot="reference"></span>
+          <!-- <el-popover
             trigger="click"
             :ref="`popedit-${scope.$index}`"
             width="500"
@@ -42,26 +77,7 @@
             </el-form>
 
             <span class="tableEdit" slot="reference"></span>
-          </el-popover>
-
-          <el-popover
-            trigger="click"
-            :ref="`popover-${scope.$index}`"
-            width="261"
-            placement="bottom-end"
-            popper-class="popDel"
-          >
-            <h4>删除职务</h4>
-            <p style="margin:10px;">确定删除该职务？该操作不可恢复。</p>
-            <div style="text-align: right; margin: 0">
-              <el-button
-                type="text"
-                @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
-              >取消</el-button>
-              <el-button type="primary" @click="handleDelete(scope.$index, scope.row)">确定</el-button>
-            </div>
-            <span class="tableDel" slot="reference"></span>
-          </el-popover>
+          </el-popover>-->
         </template>
       </el-table-column>
     </el-table>
@@ -78,44 +94,6 @@
         :total="page.total"
       ></el-pagination>
     </div>
-
-    <!-- 添加 -->
-   <!--  <el-popover
-      ref="addEl"
-      placement="bottom-start"
-      title="新增职务"
-      width="550px"
-      trigger="manual"
-      v-model="addVisible"
-    >
-      <el-form :model="addForm" :rules="rules" ref="addForm" label-width="100px">
-        <el-form-item label="职务名称" prop="name">
-          <el-input v-model="addForm.name" placeholder="请输入职务名称"></el-input>
-        </el-form-item>
-
-        <el-form-item label="权限字符" prop="power">
-          <el-input v-model="addForm.power" placeholder="请输入权限字符"></el-input>
-        </el-form-item>
-
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="addForm.remark" placeholder="请输入备注内容"></el-input>
-        </el-form-item>
-        <el-form-item label="菜单权限" prop="tree">
-          <el-tree
-            :data="treeData"
-            ref="addTree"
-            show-checkbox
-            node-key="power_id"
-            :props="defaultProps"
-          ></el-tree>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="text" @click="resetForm('addForm')">取消</el-button>
-          <el-button type="primary" @click="submitForm('addForm')">提交</el-button>
-        </el-form-item>
-      </el-form>
-    </el-popover> -->
   </div>
 </template>
 
@@ -127,8 +105,9 @@ export default {
   },
   data() {
     return {
-      content: "",
-      tableData:[],
+      titlePop: "人员资料库",
+      content: [],
+      tableData: [],
       page: {
         currentPage: 1,
         total: 0,
@@ -139,15 +118,23 @@ export default {
   methods: {
     async lists() {
       let params = {
-        content: this.content,
+        params: this.content,
         page: this.page.currentPage,
         page_limit: this.page.page_limit
       };
-      let res = await this.$api.globalConfig.dutyLists(params);
+      let res = await this.$api.globalConfig.partyUserList(params);
       if (res.status == "success") {
         this.tableData = res.data.lists;
         this.page.total = res.data.count;
       }
+    },
+    handleSizeChange(val) {
+      this.page.page_limit = val;
+      this.lists();
+    },
+    handleCurrentChange(val) {
+      this.page.currentPage = val;
+      this.lists();
     }
   },
   mounted() {

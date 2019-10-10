@@ -46,7 +46,7 @@
                 icon:"bg-set_icon_user"
               },
               {
-                path: "/index/globalConfig/partyWork/userData",
+                path: "/index/globalConfig/partyWork/userDataPwd",
                 name: "人员资料库",
                 icon:"bg-set_icon_userdata"
               }

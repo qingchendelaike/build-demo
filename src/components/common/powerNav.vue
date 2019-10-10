@@ -47,15 +47,29 @@ export default {
     exportsRouter:{
       type:String,
       default:''
+    },
+    form:{
+      labelName:{
+        type:String,
+        default:'职务名称'
+      },
+      name:{
+        type:String,
+         default:''
+      },
+      placeName:{
+        type:String,
+         default:'请输入职务名称'
+      }
     }
 
   },
   data() {
     return {
       queryPop: false,
-      form: {
+     /*  form: {
         name: ""
-      }
+      } */
     };
   },
   methods: {
