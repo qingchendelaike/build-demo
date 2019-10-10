@@ -89,4 +89,58 @@ export default {
     return api.post('/partyUser/edit', params,header)
   },
 /* 人员资料库 */
+
+/* 系统管理 */
+/* 系统角色 */
+//获取角色列表
+roleLists(params) {
+  // return出去了一个promise
+  return api.get('/role/lists', params,header)
+},
+//菜单权限
+rolePowerLists(params) {
+  // return出去了一个promise
+  return api.get('/role/powerLists', params,header)
+},
+//新增角色
+roleAdd(params) {
+  // return出去了一个promise
+  return api.post('/role/add', params,header)
+},
+//删除角色
+roleDelete(params) {
+  // return出去了一个promise
+  return api.post('/role/delete', params,header)
+},
+//修改角色
+roleEdit(params) {
+  // return出去了一个promise
+  return api.post('/role/edit', params,header)
+},
+/* 系统用户 */
+//获取用户列表
+systemUserLists(params) {
+  // return出去了一个promise
+  return api.get('/systemUser/lists', params,header)
+},
+//新增用户
+systemUserAdd(params) {
+  // return出去了一个promise
+  return api.post('/systemUser/add', params,header)
+},
+//删除用户
+systemUserDelete(params) {
+  // return出去了一个promise
+  return api.post('/systemUser/delete', params,header)
+},
+//修改用户
+systemUserEdit(params) {
+  // return出去了一个promise
+  return api.post('/systemUser/edit', params,header)
+},
+//角色权限
+roleMenu(params) {
+  // return出去了一个promise
+  return api.get('/role/menu', params,header)
+},
 }
