@@ -12,7 +12,6 @@
       </el-form-item>
       <el-form-item label="组织主体" prop="organize_id">
         <el-select v-model="mineStatus" placeholder="请选择组织主体" multiple>
-          <!-- //option展开高度太小，把height设置为auto就好啦 -->
           <el-option :value="mineStatusValue" style="height: auto">
             <el-tree
               :data="organData"

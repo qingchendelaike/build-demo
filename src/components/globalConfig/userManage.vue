@@ -100,7 +100,7 @@
             title="编辑党务用户"
             @show="showPop(scope)"
           >
-            <div style="height: 550px;overflow: auto;">
+            <div style="height: 520px;overflow: auto;">
               <el-form label-width="100px" :model="userInfo" :rules="rules" ref="userInfo">
                 <el-form-item label="真实姓名">
                   <el-input v-model="userInfo.user_name" placeholder="请输入真实姓名"></el-input>
@@ -150,7 +150,7 @@
                     </el-select>
                     <span class="delOrgin" @click="delOrgin(index,2)" v-if="orginJob.length>1"></span>
                   </div>
-                  <el-button type="text" @click="addOrgin(2)">添加</el-button>
+                  <el-button type="text" @click="addOrgin(2)">新增</el-button>
                 </el-form-item>
                 <el-form-item>
                   <div style="text-align: right;">
@@ -262,7 +262,7 @@
               </el-select>
               <span class="delOrgin" @click="delOrgin(index)" v-if="addForm.orginJob.length>1"></span>
             </div>
-            <el-button type="text" @click="addOrgin()">添加</el-button>
+            <el-button type="text" @click="addOrgin()">新增</el-button>
           </el-form-item>
           <el-form-item>
             <div style="text-align: right;">

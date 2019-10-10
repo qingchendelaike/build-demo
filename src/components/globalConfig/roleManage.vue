@@ -175,7 +175,7 @@ export default {
   },
   methods: {
     showEdit(scope) {
-      this.checkTree = []
+      this.$refs[`addTree-${scope.$index}`].setCheckedKeys([]);
       this.dataRow = JSON.parse(JSON.stringify(scope.row));
       this.checkTree = scope.row.role_authority.split(","); 
     },
@@ -183,7 +183,6 @@ export default {
     handleClose(index, row) {
       this.tableData.splice(index,1,this.dataRow)
       this.$refs[`popedit-${index}`].doClose();
-      
     },
     /* 修改 */
     async handleEdit(index, row) {

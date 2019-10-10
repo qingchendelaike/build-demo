@@ -38,7 +38,6 @@
               </el-form-item>
               <el-form-item label="菜单权限">
                 <div style="height: 180px;overflow-x: auto;">
-                  {{checkTree}}
                   <el-tree
                     :data="treeData"
                     :ref="`addTree-${scope.$index}`"
@@ -51,10 +50,6 @@
               </el-form-item>
 
               <el-form-item>
-                <!-- <el-button
-                  type="text"
-                  @click="scope._self.$refs[`popedit-${scope.$index}`].doClose()"
-                >取消</el-button>-->
                 <div style="text-align: right;">
                   <el-button type="text" @click="handleClose(scope.$index, scope.row)">取消</el-button>
                   <el-button type="primary" @click="handleEdit(scope.$index, scope.row)">确定</el-button>
@@ -180,12 +175,11 @@ export default {
     };
   },
   methods: {
-    getCurrentNode(tree) {
-      console.log(tree);
-    },
     showEdit(scope) {
+      this.$refs[`addTree-${scope.$index}`].setCheckedKeys([]);
       this.dataRow = JSON.parse(JSON.stringify(scope.row));
       this.checkTree = scope.row.duty_authority.split(",");
+
     },
     /* 取消 */
     handleClose(index, row) {

@@ -46,7 +46,7 @@
 
     <div class="text-title">
       <div class="title-box">参与人员</div>
-      <div class="title-conten">{{detailsData.users}}</div>
+      <div class="title-conten">{{detailsData.users | usersArr}}</div>
     </div>
 
     <div class="text-title">
@@ -58,7 +58,7 @@
 
     <div class="text-title">
       <div class="title-box">归属系列</div>
-      <div class="title-conten">{{detailsData.series}}</div>
+      <div class="title-conten">{{detailsData.series | series_name}}</div>
     </div>
 
     <div class="text-title">
@@ -67,14 +67,14 @@
     </div>
 
     <div v-if="detailsData.item_status == 3 || detailsData.item_status == 4">
-      <div class="text-title" v-if="detailsData.is_self || detailsData.is_special" >
+      <div class="text-title" v-if="detailsData.is_self || detailsData.is_special">
         <div class="title-box">事项备注</div>
         <div class="title-conten">
           <el-input type="textarea" :rows="3" placeholder="如有特殊情况说明，可添加事项备注" v-model="textarea"></el-input>
         </div>
       </div>
     </div>
-    <div class="text-title" v-if="detailsData.item_status == 5 || detailsData.is_special">
+    <div class="text-title" v-if=" detailsData.item_status == 5 && detailsData.is_special">
       <div class="title-box"></div>
       <div class="title-conten">
         <el-popover placement="top" width="340" height="185" v-model="visible">
@@ -89,159 +89,170 @@
       </div>
     </div>
 
-    <div v-if="detailsData.item_status == 3 || detailsData.item_status == 4">
-    <div class="text-title"  v-if="detailsData.is_self || detailsData.is_special">
-      <div class="title-box"></div>
-      <div class="title-conten">
-        <el-button type="primary" @click="threeSum">提交</el-button>
-        <p style="color:rgba(153,153,153,1);margin-top: 20px;">事项已办结，如有特殊说明，可添加事项备注</p>
+    <div v-if=" detailsData.item_status == 4 || detailsData.item_status == 3">
+      <div class="text-title" v-if="detailsData.is_self || detailsData.is_special">
+        <div class="title-box"></div>
+        <div class="title-conten">
+          <el-button type="primary" @click="threeSum">提交</el-button>
+          <p style="color:rgba(153,153,153,1);margin-top: 20px;">事项{{detailsData.zh_status}}，如有特殊说明，可添加事项备注</p>
+        </div>
       </div>
-    </div>
     </div>
   </div>
 </template>
 
 <script>
-    export default {
-        props: ["detailsData", "detailsTasks"],
-        data() {
-            return {
-                detailsType: "",
-                visible: false,
-                textarea: "",
-            };
-        },
-        methods: {
-            /* 提交备注 */
-            threeSum() {
-                let req = {
-                    item_id: this.detailsData.item_id,
-                    item_remark: this.textarea
-                };
-                this.$emit("threeSum", req);
-            },
-            /* 删除 */
-            delDetauls() {
-                let req = {
-                    item_id: this.detailsData.item_id
-                };
-                this.$emit("threeSum", req);
-            },
-            submitForm(formName) {
-                this.$refs[formName].validate(valid => {
-                    if (valid) {
-                        alert("submit!");
-                    } else {
-                        console.log("error submit!!");
-                        return false;
-                    }
-                });
-            },
-            resetForm(formName) {
-                this.$refs[formName].resetFields();
-            },
-            /* 会议类型 */
-            typeSw(key) {
-                switch (key) {
-                    case 1:
-                        return "会议";
-                        break;
-                    case 2:
-                        return "课程";
-                        break;
-                    case 3:
-                        return "活动";
-                        break;
-                    case 4:
-                        return "项目";
-                        break;
-                    default:
-                        break;
-                }
-            },
-        },
-        filters: {
-            typeSw(key) {
-                switch (key) {
-                    case 1:
-                        return "会议";
-                        break;
-                    case 2:
-                        return "课程";
-                        break;
-                    case 3:
-                        return "活动";
-                        break;
-                    case 4:
-                        return "项目";
-                        break;
-                    default:
-                        break;
-                }
-            }
-        },
+export default {
+  props: ["detailsData", "detailsTasks"],
+  data() {
+    return {
+      detailsType: "",
+      visible: false,
+      textarea: ""
     };
+  },
+  methods: {
+    /* 提交备注 */
+    threeSum() {
+      let req = {
+        item_id: this.detailsData.item_id,
+        item_remark: this.textarea
+      };
+      this.$emit("threeSum", req);
+    },
+    /* 删除 */
+    delDetauls() {
+      let req = {
+        item_id: this.detailsData.item_id
+      };
+      this.$emit("threeSum", req);
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    /* 会议类型 */
+    typeSw(key) {
+      switch (key) {
+        case 1:
+          return "会议";
+          break;
+        case 2:
+          return "课程";
+          break;
+        case 3:
+          return "活动";
+          break;
+        case 4:
+          return "项目";
+          break;
+        default:
+          break;
+      }
+    }
+  },
+  filters: {
+    typeSw(key) {
+      switch (key) {
+        case 1:
+          return "会议";
+          break;
+        case 2:
+          return "课程";
+          break;
+        case 3:
+          return "活动";
+          break;
+        case 4:
+          return "项目";
+          break;
+        default:
+          break;
+      }
+    },
+    usersArr(key) {
+      let userName = "";
+      key.forEach((i, index) => {
+        if ((index + 1) == key.length) {
+          userName += i.user_name;
+        } else {
+          userName += i.user_name + "/";
+        }
+      });
+      return userName;
+    },
+    series_name(key) {
+      let userName = "";
+      key.forEach((i, index) => {
+        if ((index + 1) == key.length) {
+          userName += i.series_name;
+        } else {
+          userName += i.series_name + ",";
+        }
+      });
+      return userName;
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-  .event-centen {
-    width: 950px;
-    height: auto;
-    margin: 0 auto;
+.event-centen {
+  width: 950px;
+  height: auto;
+  margin: 0 auto;
 
-    .details-centen {
-      background: #ffffff;
-      box-sizing: border-box;
-      padding: 40px 183px 40px 164px;
+  .details-centen {
+    background: #ffffff;
+    box-sizing: border-box;
+    padding: 40px 183px 40px 164px;
 
-      .text-title {
-        display: flex;
-        margin-bottom: 20px;
+    .text-title {
+      display: flex;
+      margin-bottom: 20px;
 
-        .title-box {
-          width: 87px;
-        }
+      .title-box {
+        width: 87px;
+      }
 
-        .title-conten {
-          flex: 1;
+      .title-conten {
+        flex: 1;
 
-          &.tasks {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 0 20px;
-            border: 1px solid #e5e5e5;
-            border-radius: 3px;
+        &.tasks {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 0 20px;
+          border: 1px solid #e5e5e5;
+          border-radius: 3px;
 
-            p {
-              border-bottom: 1px solid rgba(229, 229, 229, 1);
-              padding: 9px 0;
+          p {
+            border-bottom: 1px solid rgba(229, 229, 229, 1);
+            padding: 9px 0;
 
-              &:last-child {
-                border-bottom: none;
-              }
+            &:last-child {
+              border-bottom: none;
             }
           }
-
-          .statusThree {
-            height: 17px;
-            font-size: 12px;
-            color: rgba(153, 153, 153, 1);
-            line-height: 17px;
-            margin-top: 20px;
-          }
         }
-      }
-    }
 
-    .status {
-      margin: 15px 0 10px 0;
-
-      span {
-        &:first-child {
-          margin-right: 20px;
+        .statusThree {
+          height: 17px;
+          font-size: 12px;
+          color: rgba(153, 153, 153, 1);
+          line-height: 17px;
+          margin-top: 20px;
         }
       }
     }
   }
 
+  .status {
+    margin: 15px 0 10px 0;
+
+    span {
+      &:first-child {
+        margin-right: 20px;
+      }
+    }
+  }
+}
 </style>
