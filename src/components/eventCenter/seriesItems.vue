@@ -203,7 +203,7 @@ export default {
   methods: {
     /* 事项详情 */
     itemDeatils(val){
-      this.$router.push({path:'/index/detailsEvent/initiateDetails',query:{'item_id':val.item_id}})
+      this.$router.push({path:'/index/eventSummary/detailsEvent/initiateDetails',query:{'item_id':val.item_id}})
     },
     /* 事项添加取消 */
     matterClose() {

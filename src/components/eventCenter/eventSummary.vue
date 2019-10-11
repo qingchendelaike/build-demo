@@ -21,7 +21,7 @@
           v-for="(item,index) in dataMarrts"
           tag="div"
           class="drawer-box"
-          :to="item.value"
+          :to="item.value+'?item_id='+item.id"
           :key="index"
         >
           <img :src="item.icon" alt />
@@ -61,23 +61,27 @@ export default {
       ],
       dataMarrts: [
         {
-          value: "/",
+          value: "/index/eventSummary/launchFrom",
           key: "会议",
+          id:1,
           icon: require("../../assets/img/meeting.png")
         },
         {
-          value: "/",
+          value: "/index/eventSummary/launchFrom",
           key: "课程",
+           id:2,
           icon: require("../../assets/img/course.png")
         },
         {
-          value: "/",
+          value: "/index/eventSummary/launchFrom",
           key: "活动",
+          id:3,
           icon: require("../../assets/img/activity.png")
         },
         {
-          value: "/",
+          value: "/index/eventSummary/launchFrom",
           key: "项目方案",
+          id:4,
           icon: require("../../assets/img/plan.png")
         }
       ]

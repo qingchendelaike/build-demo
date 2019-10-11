@@ -4,7 +4,7 @@
       <el-header>
         <div class="header-router">
           <a class="header-title">党建工作系统</a>
-          <a  v-for="(item,index) in routerMsg" :class="{'router-link-exact-active':$route.path.indexOf(item.path)>-1}" @click="activeLink(index,item.path)">{{item.name}}</a>
+          <a  v-for="(item,index) in routerMsg" :key="index" :class="{'router-link-exact-active':$route.path.indexOf(item.path)>-1}" @click="activeLink(index,item.path)">{{item.name}}</a>
         <!--          <router-link-->
         <!--            v-for="(item,index) in routerMsg"-->
         <!--            :to="item.path"-->

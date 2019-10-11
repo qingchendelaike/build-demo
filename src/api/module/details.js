@@ -133,7 +133,9 @@ export default {
     // return出去了一个promise
     return api.get('/partyUser/itemOrganizeUserLists', params, header)
   },
-
-
-
+/* 事项添加 */
+addItem(params) {
+  // return出去了一个promise
+  return api.post('/item/add', params, header)
+},
 }

@@ -4,6 +4,7 @@
       <div>组织名称
         <el-popover class="pb-popover"
                     placement="right"
+                    v-model="visibleOrign"
                     width="430" trigger="click" @show="initParam">
           <h3 class="pb-popover-title">添加组织</h3>
           <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
@@ -11,20 +12,22 @@
               <el-input v-model="ruleForm.organize_name"></el-input>
             </el-form-item>
             <el-form-item  style="text-align: right; margin: 0">
-              <el-button type="text">取消</el-button>
+              <el-button type="text" @click="visibleOrign = false">取消</el-button>
               <el-button type="primary" @click="onSubmit(0)">提交</el-button>
             </el-form-item>
           </el-form>
-          <span class="add-icon-span fr" slot="reference"><i class="el-icon-plus"></i>添加组织 </span>
+          <span class="add-icon-span fr" style="cursor: pointer;" slot="reference"><i class="el-icon-plus"></i>添加组织 </span>
         </el-popover>
 
       </div>
       <div class="tree-com">
         <el-tree id="organTree" :data="organList" ref="tree" :props="defaultProps" node-key="organize_id" default-expand-all  :expand-on-click-node="false" @node-click="handleNodeClick">
+        
          <span class="custom-tree-node" slot-scope="{ node, data }">
            <span>{{ node.label }}</span>
            <el-popover class="pb-popover"
                        placement="right"
+                       :ref="`popover-${data.organize_id}`"
                        width="430" trigger="click" @show="initParam">
               <h3 class="pb-popover-title">添加下级组织</h3>
               <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
@@ -32,7 +35,7 @@
                   <el-input v-model="ruleForm.organize_name"></el-input>
                </el-form-item>
                <el-form-item  style="text-align: right; margin: 0">
-                  <el-button type="text">取消</el-button>
+                  <el-button type="text" @click="onClose(`popover-${data.organize_id}`)">取消</el-button>
                   <el-button type="primary" @click="onSubmit(data.organize_id)">提交</el-button>
                </el-form-item>
               </el-form>
@@ -95,6 +98,7 @@
   export default {
     data() {
       return {
+        visibleOrign:false,
         visible:false,
         organList: [],
         tableData:[],//表格数据
@@ -128,10 +132,12 @@
         //默认选中树形第一条
         let treeNode=document.getElementById('organTree').getElementsByClassName('el-tree-node');
         document.getElementById('organTree').getElementsByClassName('el-tree-node')[0].classList.add("is-current");
-        console.log(treeNode.length)
       },500)
     },
     methods: {
+      onClose(val){
+        this.$refs[val].doClose()
+      },
       showEditInput(){
         this.showEdit=true;
       },

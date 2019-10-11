@@ -44,23 +44,29 @@ export default new Router({
       },
       /* 事项详情 */
       {
-        path: '/index/detailsEvent',
+        path: '/index/eventSummary/detailsEvent',
         name: 'detailsEvent',
         component: () => import('@/components/detailsEvent/index.vue'),
         children:[{
-          path: '/index/detailsEvent/initiateDetails',
+          path: '/index/eventSummary/detailsEvent/initiateDetails',
           name: 'initiateDetails',
           component: () => import('@/components/detailsEvent/initiateDetails.vue'),
         },{
-          path: '/index/detailsEvent/uploadFiles',
+          path: '/index/eventSummary/detailsEvent/uploadFiles',
           name: 'uploadFiles',
           component: () => import('@/components/detailsEvent/uploadFiles.vue'),
         },{
-          path: '/index/detailsEvent/participation',
+          path: '/index/eventSummary/detailsEvent/participation',
           name: 'participation',
           component: () => import('@/components/detailsEvent/participation.vue'),
         }]
-      }
+      },
+      /* 发起会议 */
+       {
+        path: '/index/eventSummary/launchFrom',
+        name: 'launchFrom',
+        component: () => import('@/components/detailsEvent/launchFrom.vue'),
+      },
       /* 个人信息 */
       , {
         path: 'person',

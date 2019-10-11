@@ -147,5 +147,36 @@ export default {
   partyUserList(params) {
     // return出去了一个promise
     return api.get('/partyUser/userLists', params, header)
-  }
+  },
+  //获取指定用户信息
+  userInfo(params) {
+    // return出去了一个promise
+    return api.get('/partyUser/userInfo', params, header)
+  },
+  //民族组织下拉
+  nationLists(params) {
+    // return出去了一个promise
+    return api.get('/base/nationLists', params, header)
+  },
+  //公司下拉
+  companyLists(params) {
+    // return出去了一个promise
+    return api.get('/base/companyLists', params, header)
+  },
+  //部门下拉
+  departmentLists(params) {
+    // return出去了一个promise
+    return api.get('/base/departmentLists', params, header)
+  },
+  //职级下拉
+  rankLists(params) {
+    // return出去了一个promise
+    return api.get('/base/rankLists', params, header)
+  },
+  //修改人员资料
+  partyEditUserInfo(params) {
+    // return出去了一个promise
+    return api.post('/partyUser/editUserInfo', params, header)
+  },
+  
 }

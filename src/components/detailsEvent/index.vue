@@ -20,15 +20,15 @@ export default {
       detailsData:[],
       detailsTree:[
         {
-          url:'/index/detailsEvent/initiateDetails',
+          url:'/index/eventSummary/detailsEvent/initiateDetails',
           name:'发起详情'
         },
         {
-          url:'/index/detailsEvent/participation',
+          url:'/index/eventSummary/detailsEvent/participation',
           name:'参与反馈'
         },
         {
-          url:'/index/detailsEvent/uploadFiles',
+          url:'/index/eventSummary/detailsEvent/uploadFiles',
           name:'上传文件'
         }
       ]

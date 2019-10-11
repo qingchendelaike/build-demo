@@ -111,6 +111,7 @@
                 <el-option label="小时" value="2"></el-option>
                 <el-option label="天" value="3"></el-option>
               </el-select>
+               <span class="label Close" @click="closeTimer(index)"></span>
             </div>
 
             <div style="text-align: right; margin: 0">
@@ -162,6 +163,7 @@
                 }"
               :data="transferData"
               :titles="['人员列表', '已选人员']"
+               @change="transferChange"
             ></el-transfer>
             <div style="width: 100%;text-align: right;margin: 30px 30px 10px 0;">
               <el-button type="text" @click="dialogVisible = false">取消</el-button>
@@ -173,7 +175,7 @@
       </el-form-item>
 
       <el-form-item :label="typeSw(detailsData.item_type)+'任务'" prop="desc">
-        <div class="usersBox" style="margin:10px;">
+        <div class="usersBox" >
           <span class="iconTasks" @click="iconTasks"></span>
         </div>
         <div class="tasksBox" v-show="takesData.length > 0">
@@ -357,13 +359,22 @@ export default {
       labelArr: [],
       seriseData: [],
       organArr: [],
-      organDataAll: []
+      organDataAll: [],
+      transferUser_id:[]
     };
   },
   methods: {
+     transferChange(val){
+      this.transferUser_id = val
+    },
     transferBtn() {
       this.dialogVisible = false;
-      this.ruleForm.users = this.ruleForm.users.concat(this.organDataAll);
+      this.ruleForm.users = []
+      this.organDataAll.forEach(i=>{
+        if(this.transferUser_id.indexOf(i.user_id)>=0){
+          this.ruleForm.users.push(i);
+        }
+      })
     },
     organizeChange(val) {
       this.ruleForm.organize_id = val;
@@ -426,9 +437,13 @@ export default {
         this.transferData = this.organDataAll;
       }
     },
+    /* 删除时间提醒 */
+    closeTimer(index) {
+      this.ruleForm.notices.splice(index, 1);
+    },
     /*取消时间提醒*/
-    closeTimer() {
-      let timerRes = JSON.parse(JSON.stringify(this.detailsData.notices));
+    cancelTimer() {
+       let timerRes = JSON.parse(JSON.stringify(this.detailsData.notices));
       this.ruleForm.notices = timerRes;
       this.visibleBool = false;
     },
@@ -729,7 +744,8 @@ export default {
     this.ruleForm.series.forEach(i => {
       this.seriesData.push(i.series_id);
     });
-
+    this.labelArr = this.ruleForm.item_label.split(',')
+   this.filesArr = this.ruleForm.item_archive.split(',')
     this.ruleForm.users.forEach(i => {
       this.transferValue.push(i.user_id);
     });
@@ -839,10 +855,12 @@ export default {
 .pop {
   display: flex;
   margin-bottom: 10px;
+  align-items: center;
 }
 
 .usersBox {
   display: flex;
+  height: 40px;
   align-items: center;
   span {
     &.iconUser {
@@ -913,6 +931,18 @@ export default {
       }
     }
   }
+}
+
+.label {
+  width: 60px;
+  margin-left: 10px;
+  cursor: pointer;
+  height: 25px;
+  background: url("../../assets/img/css_sprites.png") no-repeat;
+}
+
+.Close {
+  background-position: -146px -56px;
 }
 
 .radioCheck {
