@@ -21,7 +21,7 @@
             </el-popover>
           </div>
           <el-card v-for="(eventItem,index) in item.item_lists" :key="index" v-show="index==0" :class="eventItem.item_status|itemStatusColor()">
-            <span class="event-title">
+            <span class="event-title" @click="itemDeatils(eventItem)" style="cursor: pointer;">
               <img class="event-icon" :src="eventItem.item_type|imgType()" alt="">
               {{eventItem.item_name}}
             </span>
@@ -160,11 +160,9 @@
         if(scrollTop+divHeight>=wholeHeight){
           axios.get("../static/data.json").then((res)=>{
             let nextData=res.data;
-            console.log(nextData);
             for(let i=0;i<nextData.length;i++){
               _this.modelData.push(nextData[i]);
             }
-            console.log(_this.modelData);
           })
 
         }
@@ -180,6 +178,10 @@
       }
     },
     methods:{
+      /* 事项详情 */
+    itemDeatils(val){
+      this.$router.push({path:'/index/eventSummary/detailsEvent/initiateDetails',query:{'item_id':val.item_id}})
+    },
       isToday(str){
         let d = new Date(str.replace(/-/g,"/"));
         let todaysDate = new Date();
@@ -225,7 +227,6 @@
       },
       async getInitData(){
         let res=await this.$api.eventRecord.getData({});
-        console.log(res);
         if(res.status=="success"){
           this.modelData=res.data;
         }
@@ -244,7 +245,6 @@
         //选择日期，刷新值
         alert(this.value1);
         let res=await  axios.get("../static/data.json");
-        console.log(res.data);
         this.modelData=res.data;
         //居中当前选择的日期
         let tTop=document.querySelector(".today").offsetTop;

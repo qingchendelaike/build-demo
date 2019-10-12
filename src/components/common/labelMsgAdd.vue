@@ -74,7 +74,7 @@ span {
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  margin-bottom: 17px;
+  margin-bottom: 10px;
 
   span {
     cursor: pointer;

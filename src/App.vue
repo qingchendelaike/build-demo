@@ -11,9 +11,19 @@ export default {
     $route(to, from) {
       if (
         to.path == "/index/person/personMSg" ||
-        to.path == "/index/detailsEvent"
+        to.path == "/index/eventSummary/launchFrom" ||
+        to.path == "/index/eventSummary/detailsEvent/initiateDetails"
       ) {
-        let pxH = to.path == "/index/person/personMSg" ? 126 : 226;
+        let pxH = 0;
+        if (to.path == "/index/person/personMSg") {
+          pxH = 126;
+        } else if (to.path == "/index/eventSummary/launchFrom") {
+          pxH = 326;
+        } else if (
+          to.path == "/index/eventSummary/detailsEvent/initiateDetails"
+        ) {
+          pxH = 430;
+        }
         this.$nextTick(() => {
           this.$api.common.maxHeight("person-box", pxH);
         });
@@ -104,7 +114,7 @@ body,
     font-size: 12px;
     color: rgba(153, 153, 153, 1);
     line-height: 17px;
-    margin:18px 0 10px 0;
+    margin: 18px 0 10px 0;
   }
 }
 
@@ -185,7 +195,7 @@ body,
     margin-top: 12px;
     .el-tree-node {
       position: relative;
-      &.is-current>.el-tree-node__content{
+      &.is-current > .el-tree-node__content {
         background-color: #fff;
       }
       .el-tree-node__content {
@@ -221,25 +231,24 @@ body,
       width: 100px;
     }
   }
-  .popover-tip{
-    margin:10px 0 5px;
+  .popover-tip {
+    margin: 10px 0 5px;
   }
 }
-.organ-page-title{
-  .el-input{
+.organ-page-title {
+  .el-input {
     display: inline-block;
-    width:200px;
-    .el-input__inner{
+    width: 200px;
+    .el-input__inner {
       height: 36px;
       line-height: 36px;
-
     }
   }
-  .el-button--mini{
+  .el-button--mini {
     height: 36px;
-    margin-left:10px;
+    margin-left: 10px;
     border: unset;
-    color:#3DA8FF;
+    color: #3da8ff;
   }
 }
 </style>

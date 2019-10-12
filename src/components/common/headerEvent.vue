@@ -239,17 +239,7 @@ export default {
       vertical-align: bottom;
     }
   }
-  .time_label {
-    height: 16px;
-    font-size: 11px;
-    font-weight: 400;
-    color: rgba(221, 45, 30, 1);
-    line-height: 16px;
-    background: rgba(254, 235, 239, 1);
-    border-radius: 3px;
-    margin-left: 21px;
-    padding: 2px;
-  }
+
   .is_task {
     width: 20px;
     height: 20px;

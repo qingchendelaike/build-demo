@@ -10,8 +10,8 @@
       <el-form-item :label="typeSw(detailsData.item_type)+'名称'" prop="item_name">
         <el-input placeholder="给会议起个名字吧" v-model="ruleForm.item_name"></el-input>
       </el-form-item>
-      <el-form-item label="组织主体" prop="organize_id">
-        <el-select v-model="mineStatus" placeholder="请选择组织主体" multiple>
+      <el-form-item label="组织主体" prop="mineStatus">
+        <el-select v-model="ruleForm.mineStatus" placeholder="请选择组织主体" multiple style="width:100%;">
           <!-- //option展开高度太小，把height设置为auto就好啦 -->
           <el-option :value="mineStatusValue" style="height: auto">
             <el-tree
@@ -36,7 +36,7 @@
       <el-form-item label="类型标签" prop="labelArr">
         <div class="inpuIcon">
           <!--collapse-tags -->
-          <el-select v-model="labelArr" multiple style="width:90%;" placeholder="请选择">
+          <el-select v-model="ruleForm.labelArr" multiple style="width:90%;" placeholder="请选择类型标签" >
             <el-option
               v-for="item in labelData"
               :key="item.label_id"
@@ -72,6 +72,7 @@
           <el-form-item prop="start_time">
             <el-date-picker
               v-model="ruleForm.start_time"
+              format="yyyy-MM-dd HH:mm"
               value-format="yyyy-MM-dd HH:mm"
               type="datetime"
               placeholder="选择日期时间"
@@ -84,6 +85,7 @@
             <el-date-picker
               v-model="ruleForm.end_time"
               type="datetime"
+              format="yyyy-MM-dd HH:mm"
               value-format="yyyy-MM-dd HH:mm"
               placeholder="选择日期时间"
             ></el-date-picker>
@@ -111,7 +113,7 @@
                 <el-option label="小时" value="2"></el-option>
                 <el-option label="天" value="3"></el-option>
               </el-select>
-               <span class="label Close" @click="closeTimer(index)"></span>
+              <span class="label Close" @click="closeTimer(index)"></span>
             </div>
 
             <div style="text-align: right; margin: 0">
@@ -163,7 +165,7 @@
                 }"
               :data="transferData"
               :titles="['人员列表', '已选人员']"
-               @change="transferChange"
+              @change="transferChange"
             ></el-transfer>
             <div style="width: 100%;text-align: right;margin: 30px 30px 10px 0;">
               <el-button type="text" @click="dialogVisible = false">取消</el-button>
@@ -174,8 +176,8 @@
         </div>
       </el-form-item>
 
-      <el-form-item :label="typeSw(detailsData.item_type)+'任务'" prop="desc">
-        <div class="usersBox" >
+      <el-form-item :label="typeSw(detailsData.item_type)+'任务'">
+        <div class="usersBox">
           <span class="iconTasks" @click="iconTasks"></span>
         </div>
         <div class="tasksBox" v-show="takesData.length > 0">
@@ -209,7 +211,7 @@
         </div>
       </el-form-item>
 
-      <el-form-item label="归属系列" prop="desc">
+      <el-form-item label="归属系列">
         <el-select v-model="seriesData" multiple placeholder="请选择归属系列" style="width:100%;">
           <el-option
             v-for="item in seriseData"
@@ -220,9 +222,9 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="存档文件" prop="desc">
+      <el-form-item label="存档文件" prop="filesArr">
         <div class="inpuIcon">
-          <el-select v-model="filesArr" multiple style="width:90%;" placeholder="请选择">
+          <el-select v-model="ruleForm.filesArr" multiple style="width:90%;" placeholder="请选择存档文件">
             <el-option
               v-for="item in filesData"
               :key="item.archive_id"
@@ -283,7 +285,6 @@ export default {
       dialogVisible: false,
       transferData: [],
       transferValue: [],
-      mineStatus: [],
       mineStatusValue: [],
       defaultProps: {
         children: "children",
@@ -291,7 +292,6 @@ export default {
       },
       lableText: "类型标签管理",
       filesText: "存档文件类型管理",
-      filesArr: [],
       filesData: [],
       filesBool: false,
       seriesData: [],
@@ -302,6 +302,9 @@ export default {
       visibleBool: false,
       labelBool: false,
       ruleForm: {
+        labelArr: [],
+        mineStatus: [],
+        filesArr: [],
         item_name: "",
         item_label: "",
         item_label_ids: "",
@@ -316,9 +319,8 @@ export default {
         item_archive: "",
         item_archive_ids: "",
         create_user_name: "",
-        organize_name2: [1, 4],
         zh_status: "",
-        users: ""
+        users: [],
       },
       rules: {
         item_name: [
@@ -333,10 +335,19 @@ export default {
         item_space: [
           { required: true, message: "请输入会议地点", trigger: "blur" }
         ],
-
         organize_name: [
           { required: true, message: "请选择活动区域", trigger: "change" }
         ],
+        mineStatus: [
+          { required: true, message: "请选择组织主体", trigger: "change" }
+        ],
+        labelArr: [
+          { required: true, message: "请选择类型标签", trigger: "change" }
+        ],
+        filesArr: [
+          { required: true, message: "请选择存档文件", trigger: "change" }
+        ],
+        users: [{ required: true, message: "请选择参与人员" }],
         start_time: [
           {
             type: "string",
@@ -356,25 +367,24 @@ export default {
       },
       organData: [],
       labelData: [],
-      labelArr: [],
       seriseData: [],
       organArr: [],
       organDataAll: [],
-      transferUser_id:[]
+      transferUser_id: []
     };
   },
   methods: {
-     transferChange(val){
-      this.transferUser_id = val
+    transferChange(val) {
+      this.transferUser_id = val;
     },
     transferBtn() {
       this.dialogVisible = false;
-      this.ruleForm.users = []
-      this.organDataAll.forEach(i=>{
-        if(this.transferUser_id.indexOf(i.user_id)>=0){
+      this.ruleForm.users = [];
+      this.organDataAll.forEach(i => {
+        if (this.transferUser_id.indexOf(i.user_id) >= 0) {
           this.ruleForm.users.push(i);
         }
-      })
+      });
     },
     organizeChange(val) {
       this.ruleForm.organize_id = val;
@@ -395,7 +405,7 @@ export default {
           arr.push(item);
         });
         this.mineStatusValue = arr;
-        this.mineStatus = arrLabel;
+        this.ruleForm.mineStatus = arrLabel;
         this.ruleForm.organize_id = this.mineStatusValue[0]["organize_id"];
       }
     },
@@ -443,7 +453,7 @@ export default {
     },
     /*取消时间提醒*/
     cancelTimer() {
-       let timerRes = JSON.parse(JSON.stringify(this.detailsData.notices));
+      let timerRes = JSON.parse(JSON.stringify(this.detailsData.notices));
       this.ruleForm.notices = timerRes;
       this.visibleBool = false;
     },
@@ -472,7 +482,7 @@ export default {
       if (res.status == "success") {
         res.data.forEach(i => {
           if (i.is_del == "1") {
-            this.labelArr.push(i.label_id);
+            this.ruleForm.labelArr.push(i.label_id);
           }
           i.set_bool = false;
         });
@@ -489,12 +499,18 @@ export default {
       if (item.label_name == "") {
         this.$message("请输入标签名称");
       } else {
-        if (item.label_type) {
+
+         const res = await this.$api.details.labelAdd(item);
+          if (res.status == "success") {
+            item.set_bool = false;
+            this.labelLists();
+            this.$message("标签添加成功");
+          }
+       /*  if (item.label_type) {
           const res = await this.$api.details.labelAdd(item);
           if (res.status == "success") {
             item.set_bool = false;
             this.labelLists();
-            this.labelArr = [];
             this.$message("标签添加成功");
           }
         } else {
@@ -507,7 +523,7 @@ export default {
             item.set_bool = false;
             this.$message("修改标签成功");
           }
-        }
+        } */
       }
     },
     /* 删除标签 */
@@ -546,7 +562,7 @@ export default {
       if (res.status == "success") {
         res.data.forEach(i => {
           if (i.is_del == "1") {
-            this.filesArr.push(i.archive_id);
+            this.ruleForm.filesArr.push(i.archive_id);
           }
           i.set_bool = false;
           i.label_name = i.archive_name;
@@ -565,7 +581,7 @@ export default {
         if (res.status == "success") {
           item.set_bool = false;
           this.filesType();
-          this.filesArr = [];
+          // this.ruleForm.filesArr = [];
           this.$message("标签添加成功");
         }
       }
@@ -658,7 +674,7 @@ export default {
           let req = {
             item_name: this.ruleForm.item_name,
             item_id: this.ruleForm.item_id,
-            organize_id: this.ruleForm.organize_id,
+            organize_id: this.ruleForm.mineStatus,
             item_label_ids: this.ruleForm.item_label_ids,
             article_year: this.ruleForm.article_year,
             article_sn: this.ruleForm.article_sn,
@@ -670,7 +686,7 @@ export default {
             item_user: this.ruleForm.users,
             item_task: item_task,
             item_series: this.seriesData.join(","),
-            item_archive_ids: this.filesArr.join(","),
+            item_archive_ids: this.ruleForm.filesArr.join(","),
             item_notice: this.ruleForm.notices,
             is_send: this.radio
           };
@@ -733,19 +749,48 @@ export default {
     }
   },
   mounted() {
-    this.ruleForm = JSON.parse(JSON.stringify(this.detailsData));
-    this.takesData = JSON.parse(JSON.stringify(this.ruleForm.tasks));
-    this.mineStatus.push(this.ruleForm.organize_name);
+    let datailsObject = JSON.parse(JSON.stringify(this.detailsData));
+    this.ruleForm.item_name = datailsObject.item_name;
+    this.ruleForm.item_label = datailsObject.item_label;
+    this.ruleForm.item_id = datailsObject.item_id;
+    this.ruleForm.label_type = datailsObject.item_type;
+    this.ruleForm.item_label_ids = datailsObject.item_label_ids;
+    this.ruleForm.article_year = datailsObject.article_year;
+    this.ruleForm.article_sn = datailsObject.article_sn;
+    this.ruleForm.item_sn = datailsObject.item_sn;
+    this.ruleForm.start_time = datailsObject.start_time;
+    this.ruleForm.end_time = datailsObject.end_time;
+    this.ruleForm.item_reason = datailsObject.item_reason;
+    this.ruleForm.item_flow = datailsObject.item_flow;
+    this.ruleForm.item_space = datailsObject.item_space;
+    this.ruleForm.item_archive = datailsObject.item_archive;
+    this.ruleForm.item_archive_ids = datailsObject.item_archive_ids;
+    this.ruleForm.create_user_name = datailsObject.create_user_name;
+    this.ruleForm.zh_status = datailsObject.zh_status;
+    this.ruleForm.users = datailsObject.users;
+    this.ruleForm.organize_name = datailsObject.organize_name;
+    this.ruleForm.tasks =  datailsObject.tasks;
+    this.ruleForm.series = datailsObject.series
+    this.ruleForm.notices = datailsObject.notices
+   
+   this.takesData = JSON.parse(JSON.stringify(this.ruleForm.tasks));
+    this.ruleForm.mineStatus.push(this.ruleForm.organize_name);
 
     this.takesData.forEach(i => {
       i.set_bool = false;
       i.users = i.users.split(",");
     });
+
     this.ruleForm.series.forEach(i => {
       this.seriesData.push(i.series_id);
     });
-    this.labelArr = this.ruleForm.item_label.split(',')
-   this.filesArr = this.ruleForm.item_archive.split(',')
+    this.ruleForm.item_label_ids.split(",").forEach(i => {
+      this.ruleForm.labelArr.push(parseInt(i));
+    });
+    this.ruleForm.item_archive_ids.split(",").forEach(i => {
+      this.ruleForm.filesArr.push(parseInt(i));
+    });
+
     this.ruleForm.users.forEach(i => {
       this.transferValue.push(i.user_id);
     });

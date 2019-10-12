@@ -5,10 +5,12 @@ Vue.use(Router)
 
 export default new Router({
   routes: [{
+    /* 登录 */
     path: '/',
     name: 'login',
     component: () => import('@/components/login.vue')
   }, {
+    /* 首页 */
     path: '/index',
     name: 'index',
     component: () => import('@/components/index.vue'),
@@ -47,40 +49,47 @@ export default new Router({
         path: '/index/eventSummary/detailsEvent',
         name: 'detailsEvent',
         component: () => import('@/components/detailsEvent/index.vue'),
-        children:[{
+        children: [{
+          /* 发起详情 */
           path: '/index/eventSummary/detailsEvent/initiateDetails',
           name: 'initiateDetails',
           component: () => import('@/components/detailsEvent/initiateDetails.vue'),
-        },{
+        }, {
+          /* 上传文件 */
           path: '/index/eventSummary/detailsEvent/uploadFiles',
           name: 'uploadFiles',
           component: () => import('@/components/detailsEvent/uploadFiles.vue'),
-        },{
+        }, {
+          /* 参与反馈 */
           path: '/index/eventSummary/detailsEvent/participation',
           name: 'participation',
           component: () => import('@/components/detailsEvent/participation.vue'),
         }]
       },
       /* 发起会议 */
-       {
+      {
         path: '/index/eventSummary/launchFrom',
         name: 'launchFrom',
         component: () => import('@/components/detailsEvent/launchFrom.vue'),
       },
-      /* 个人信息 */
+      /* 个人信息父类 */
       , {
         path: 'person',
         name: 'person',
         component: () => import('@/components/personal/index.vue'),
-        children: [{
-          path: 'adminPerson',
-          name: 'adminPerson',
-          component: () => import('@/components/personal/adminPerson.vue'),
-        }, {
-          path: 'personMSg',
-          name: 'personMSg',
-          component: () => import('@/components/personal/personMSg.vue'),
-        }]
+        children: [
+          /* 账号密码 */
+          {
+            path: 'adminPerson',
+            name: 'adminPerson',
+            component: () => import('@/components/personal/adminPerson.vue'),
+          }, 
+          /*个人信息*/
+          {
+            path: 'personMSg',
+            name: 'personMSg',
+            component: () => import('@/components/personal/personMSg.vue'),
+          }]
       },
       /* 大事记 */
       {
@@ -114,12 +123,12 @@ export default new Router({
           path: '/index/globalConfig/partyWork/userDataPwd',
           name: 'userDataPwd',
           component: () => import('@/components/globalConfig/userDataPwd.vue')
-        },{
+        }, {
           /* 人员资料库 */
           path: '/index/globalConfig/partyWork/userData',
           name: 'userData',
           component: () => import('@/components/globalConfig/userData.vue')
-        },{
+        }, {
           /* 系统角色管理 */
           path: '/index/globalConfig/system/roleManage',
           name: 'roleManage',
@@ -132,5 +141,5 @@ export default new Router({
         }]
       }
     ]
-  }, ]
+  },]
 })

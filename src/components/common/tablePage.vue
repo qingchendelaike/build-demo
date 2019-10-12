@@ -4,7 +4,8 @@
     <el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName">
       <el-table-column prop="item_name" label="事项" width="300px;">
         <template slot-scope="scope">
-          <span>{{ scope.row.item_name }}</span>
+          <span @click="itemDeatils(scope.row)" style="cursor: pointer;">{{ scope.row.item_name }}</span>
+
           <span class="time_label" v-show="scope.row.time_label">{{ scope.row.time_label }}</span>
         </template>
       </el-table-column>
@@ -42,6 +43,10 @@
 export default {
   props: ["tableData", "page"],
   methods: {
+    /* 事项详情 */
+    itemDeatils(val){
+      this.$router.push({path:'/index/eventSummary/detailsEvent/initiateDetails',query:{'item_id':val.item_id}})
+    },
     //分页
     handleSizeChange(val) {
       this.$emit("handleSizeChange", val);
@@ -69,4 +74,15 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "../../assets/css/table.scss";
+  .time_label {
+    height: 16px;
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(221, 45, 30, 1);
+    line-height: 16px;
+    background: rgba(254, 235, 239, 1);
+    border-radius: 3px;
+    margin-left: 21px;
+    padding: 2px;
+  }
 </style>

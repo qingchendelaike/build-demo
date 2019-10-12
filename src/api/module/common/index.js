@@ -22,8 +22,8 @@ export default {
   /* 判断高度是否超出body */
   maxHeight(idBox, maxH) {
     if(idBox){
-      let Dmheight = document.body.clientHeight - 106;
-      let dmPersonBox = document.getElementById(idBox).clientHeight;
+      let Dmheight = document.body.offsetHeight - 106;
+      let dmPersonBox = document.getElementById(idBox).offsetHeight;
       if (dmPersonBox > Dmheight) {
         document.body.style.height = dmPersonBox + maxH + "px";
       } else {

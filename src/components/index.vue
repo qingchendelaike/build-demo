@@ -4,14 +4,13 @@
       <el-header>
         <div class="header-router">
           <a class="header-title">党建工作系统</a>
-          <a  v-for="(item,index) in routerMsg" :key="index" :class="{'router-link-exact-active':$route.path.indexOf(item.path)>-1}" @click="activeLink(index,item.path)">{{item.name}}</a>
-        <!--          <router-link-->
-        <!--            v-for="(item,index) in routerMsg"-->
-        <!--            :to="item.path"-->
-        <!--            :key="index"-->
-        <!--            tag="span"-->
-        <!--          >{{item.name}}</router-link>-->
-  </div>
+          <a
+            v-for="(item,index) in routerMsg"
+            :key="index"
+            :class="{'router-link-exact-active':$route.path.indexOf(item.path)>-1}"
+            @click="activeLink(index,item.path)"
+          >{{item.name}}</a>
+        </div>
         <div class="userMsg">
           <span class="user-waring"></span>
           <img :src="defaultImg" class="user-icon" alt />
@@ -40,11 +39,11 @@ export default {
       userName: "",
       type: 2,
       defaultImg: require("../assets/img/defaultIcon.png"),
-      activeIndex:1,
+      activeIndex: 1,
       routerMsg: [
         {
           path: "/index/recordList",
-          name: "大事记"
+          name: "大事记",
         },
         {
           path: "/index/eventSummary",
@@ -73,9 +72,9 @@ export default {
         }
       });
     },
-    activeLink(index,path){
-      this.activeIndex=index;
-      this.$router.push(path)
+    activeLink(index, path) {
+      this.activeIndex = index;
+      this.$router.push(path);
     }
   },
   mounted() {
@@ -124,7 +123,7 @@ export default {
         cursor: pointer;
         font-size: 15px;
         font-weight: 600;
-        color:#000;
+        color: #000;
         text-decoration: none;
         &.header-title {
           @extend .fontSizeAuxiliary;

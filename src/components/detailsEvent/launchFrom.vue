@@ -17,8 +17,8 @@
             <el-form-item :label="typeSw(this.$route.query.item_id)+'名称'" prop="item_name">
               <el-input placeholder="给会议起个名字吧" v-model="ruleForm.item_name"></el-input>
             </el-form-item>
-            <el-form-item label="组织主体" prop="organize_id">
-              <el-select v-model="mineStatus" placeholder="请选择组织主体" multiple>
+            <el-form-item label="组织主体" prop="mineStatus">
+              <el-select v-model="ruleForm.mineStatus" placeholder="请选择组织主体" multiple style="width:100%;">
                 <el-option :value="mineStatusValue" style="height: auto">
                   <el-tree
                     :data="organData"
@@ -41,7 +41,7 @@
             </el-form-item>
             <el-form-item label="类型标签" prop="labelArr">
               <div class="inpuIcon">
-                <el-select v-model="labelArr" multiple style="width:90%;" placeholder="请选择">
+                <el-select v-model="ruleForm.labelArr" multiple style="width:90%;" placeholder="请选择类型标签">
                   <el-option
                     v-for="item in labelData"
                     :key="item.label_id"
@@ -75,6 +75,7 @@
                 <el-form-item prop="start_time">
                   <el-date-picker
                     v-model="ruleForm.start_time"
+                    format="yyyy-MM-dd HH:mm"
                     value-format="yyyy-MM-dd HH:mm"
                     type="datetime"
                     placeholder="选择日期时间"
@@ -87,6 +88,7 @@
                   <el-date-picker
                     v-model="ruleForm.end_time"
                     type="datetime"
+                    format="yyyy-MM-dd HH:mm"
                     value-format="yyyy-MM-dd HH:mm"
                     placeholder="选择日期时间"
                   ></el-date-picker>
@@ -152,7 +154,10 @@
 
             <el-form-item label="参与人员" prop="users">
               <div class="usersBox" style="  height: 40px;">
-                <span v-for="(item,index) in ruleForm.users" :key="index">{{item.user_name+'/'}}</span>
+                <span v-for="(item,index) in ruleForm.users" :key="index">
+                 {{item.user_name+'/'}}
+
+                </span>
                 <el-popover
                   placement="left-start"
                   popper-class="transferDia"
@@ -192,7 +197,7 @@
               </div>
             </el-form-item>
 
-            <el-form-item :label="typeSw(this.$route.query.item_id)+'任务'" prop="desc">
+            <el-form-item :label="typeSw(this.$route.query.item_id)+'任务'" >
               <div class="usersBox" style="margin:10px;">
                 <span class="iconTasks" @click="iconTasks"></span>
               </div>
@@ -227,7 +232,7 @@
               </div>
             </el-form-item>
 
-            <el-form-item label="归属系列" prop="desc">
+            <el-form-item label="归属系列">
               <el-select v-model="seriesData" multiple placeholder="请选择归属系列" style="width:100%;">
                 <el-option
                   v-for="item in seriseData"
@@ -238,9 +243,9 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="存档文件" prop="desc">
+            <el-form-item label="存档文件" prop="filesArr">
               <div class="inpuIcon">
-                <el-select v-model="filesArr" multiple style="width:90%;" placeholder="请选择">
+                <el-select v-model="ruleForm.filesArr" multiple style="width:90%;" placeholder="请选择存档文件">
                   <el-option
                     v-for="item in filesData"
                     :key="item.archive_id"
@@ -285,7 +290,6 @@ export default {
       dialogVisible: false,
       transferData: [],
       transferValue: [],
-      mineStatus: [],
       mineStatusValue: [],
       defaultProps: {
         children: "children",
@@ -293,7 +297,6 @@ export default {
       },
       lableText: "类型标签管理",
       filesText: "存档文件类型管理",
-      filesArr: [],
       filesData: [],
       filesBool: false,
       seriesData: [],
@@ -304,6 +307,8 @@ export default {
       labelBool: false,
 
       ruleForm: {
+        filesArr: [],
+        mineStatus: [],
         item_name: "",
         item_label: "",
         item_label_ids: "",
@@ -320,7 +325,8 @@ export default {
         create_user_name: "",
         zh_status: "",
         users: [],
-        organize_id: ""
+        organize_id: "",
+        labelArr: [],
       },
       rules: {
         item_name: [
@@ -335,10 +341,15 @@ export default {
         item_space: [
           { required: true, message: "请输入会议地点", trigger: "blur" }
         ],
-
         organize_name: [
           { required: true, message: "请选择活动区域", trigger: "change" }
         ],
+        mineStatus: [
+          { required: true, message: "请选择组织主体", trigger: "change" }
+        ],
+        labelArr:[{ required: true, message: "请选择类型标签", trigger: "change" }],
+        filesArr:[{ required: true, message: "请选择存档文件", trigger: "change" }],
+        users:[ { required: true, message: "请选择参与人员" }],
         start_time: [
           {
             type: "string",
@@ -358,7 +369,6 @@ export default {
       },
       organData: [],
       labelData: [],
-      labelArr: [],
       seriseData: [],
       organArr: [],
       organDataAll: [],
@@ -401,7 +411,7 @@ export default {
           arr.push(item);
         });
         this.mineStatusValue = arr;
-        this.mineStatus = arrLabel;
+        this.ruleForm.mineStatus = arrLabel;
         this.ruleForm.organize_id = this.mineStatusValue[0]["organize_id"];
       }
     },
@@ -416,7 +426,6 @@ export default {
     /* 参与人员列表 */
     async userAll() {
       let req = {
-        item_id: this.$route.query.item_id,
         organize_id: this.ruleForm.organize_id
       };
       const res = await this.$api.details.organizeUserLists(req);
@@ -481,7 +490,7 @@ export default {
         if (res.status == "success") {
           item.set_bool = false;
           this.labelLists();
-          this.labelArr = [];
+          // this.ruleForm.labelArr = [];
           this.$message("标签添加成功");
         }
       }
@@ -520,9 +529,6 @@ export default {
       const res = await this.$api.details.archiveList(req);
       if (res.status == "success") {
         res.data.forEach(i => {
-          if (i.is_del == "1") {
-            this.filesArr.push(i.archive_id);
-          }
           i.set_bool = false;
           i.label_name = i.archive_name;
         });
@@ -540,7 +546,7 @@ export default {
         if (res.status == "success") {
           item.set_bool = false;
           this.filesType();
-          this.filesArr = [];
+          // this.ruleForm.filesArr = [];
           this.$message("标签添加成功");
         }
       }
@@ -628,7 +634,7 @@ export default {
             item_name: this.ruleForm.item_name,
             item_id: this.$route.query.item_id,
             organize_id: this.ruleForm.organize_id,
-            item_label_ids: this.labelArr.join(','),
+            item_label_ids: this.ruleForm.labelArr.join(','),
             article_year: this.ruleForm.article_year,
             article_sn: this.ruleForm.article_sn,
             start_time: this.ruleForm.start_time,
@@ -639,7 +645,7 @@ export default {
             item_user: this.ruleForm.users,
             item_task: item_task,
             item_series: this.seriesData.join(","),
-            item_archive_ids: this.filesArr.join(","),
+            item_archive_ids: this.ruleForm.filesArr.join(","),
             item_notice:  this.noticesData,
           };
           this.matterDetailsAdd(req);
