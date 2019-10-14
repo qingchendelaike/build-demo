@@ -72,7 +72,7 @@
           <el-form-item prop="start_time">
             <el-date-picker
               v-model="ruleForm.start_time"
-              format="yyyy-MM-dd HH:mm"
+              format="yyyy.MM.dd HH:mm"
               value-format="yyyy-MM-dd HH:mm"
               type="datetime"
               placeholder="选择日期时间"
@@ -85,7 +85,7 @@
             <el-date-picker
               v-model="ruleForm.end_time"
               type="datetime"
-              format="yyyy-MM-dd HH:mm"
+              format="yyyy.MM.dd HH:mm"
               value-format="yyyy-MM-dd HH:mm"
               placeholder="选择日期时间"
             ></el-date-picker>
@@ -432,7 +432,7 @@ export default {
     async userAll() {
       let req = {
         item_id: this.ruleForm.item_id,
-        organize_id: this.ruleForm.organize_id
+        organize_id: this.detailsData.organize_id
       };
       const res = await this.$api.details.organizeUserLists(req);
       if (res.status == "success") {
@@ -611,10 +611,6 @@ export default {
       this.filesData.push(req);
     },
 
-    /* 组织主体选中值 */
-    handleChange(val) {
-      console.log(val, "");
-    },
     /* 会议类型 */
     typeSw(key) {
       switch (key) {
@@ -675,7 +671,7 @@ export default {
             item_name: this.ruleForm.item_name,
             item_id: this.ruleForm.item_id,
             organize_id: this.ruleForm.mineStatus,
-            item_label_ids: this.ruleForm.item_label_ids,
+            item_label_ids: this.ruleForm.labelArr.join(','),
             article_year: this.ruleForm.article_year,
             article_sn: this.ruleForm.article_sn,
             start_time: this.ruleForm.start_time,

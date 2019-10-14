@@ -35,7 +35,8 @@
             </div>
             <label class="msgError" v-if="errMsg">{{errMsg}}</label>
           </div>
-          <button @click="btnLogin">提 交</button>
+         <!--  <button @click="btnLogin" v-loading="loginSum" >提 交</button> -->
+         <el-button type="primary" @click="btnLogin" :loading="loginSum">提 交</el-button>
         </div>
       </div>
 
@@ -58,7 +59,7 @@
           </el-select>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button type="danger" @click="dangerBtn">进入系统</el-button>
+          <el-button type="danger" @click="dangerBtn" :loading="dangerSum">进入系统</el-button>
         </span>
       </el-dialog>
     </div>
@@ -73,6 +74,8 @@ export default {
   data() {
     return {
       activeClass: 0,
+      loginSum:false,
+      dangerSum:false,
       activeBool: false,
       identifyCodes: "1234567890",
       identifyCode: "",
@@ -101,25 +104,18 @@ export default {
       this.activeClass = key;
     },
     async btnLogin() {
-/*       let userInfo = {
-        user_img: "",
-        user_name: "111",
-        user_phon: "15007221944",
-        user_email: "527809907@qq.com",
-        type: 1
-      };
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
-      this.$router.push("/index/eventSummary/allMatters"); */
-
+      this.loginSum = true
       if (!this.from.account || !this.from.password) {
         this.errMsg = "账号密码不可为空";
         this.refreshCode();
+        this.loginSum = false
         return;
       }
 
       if (this.codeNum != this.identifyCode) {
         this.errMsg = "请输入正确的验证码";
         this.refreshCode();
+        this.loginSum = false
         return;
       }
       const req = {
@@ -128,16 +124,16 @@ export default {
       };
       const res = await this.$api.userLogin.login(req);
       if (res.status == "success") {
+          this.loginSum = false
           this.$store.dispatch("setMenu", res.data);
         if (res.data.type == 1) {
           if (res.data.is_more_duty == 0) {
              const power = await this.$api.userLogin.loginPower();
             if(power.status == "success"){
+              this.$store.dispatch("setMenu", power.data);
               this.$router.push("/index/eventSummary/allMatters");
             }
-
           } else if (res.data.is_more_duty == 1) {
-
             this.activeBool = true;
             this.dataCookie = res.data.cookie;
             let data = res.data.organize_duty;
@@ -156,7 +152,9 @@ export default {
     },
     /*进入系统 */
     async dangerBtn() {
+      this.dangerSum = true;
       if (!this.subject) {
+         this.dangerSum = false;
         this.$message({
           showClose: true,
           message: "请选择职务",
@@ -172,7 +170,8 @@ export default {
         };
         const res = await this.$api.userLogin.chooseLogin(req);
         if (res.status == "success") {
-            this.$store.dispatch("setMenu", res.data);
+          this.dangerSum = false;
+          this.$store.dispatch("setMenu", res.data);
           this.$router.push("/index/eventSummary/allMatters");
         }
       }

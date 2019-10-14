@@ -113,7 +113,6 @@
 
 <script>
 const md5 = require("md5");
-import { userPhon } from "../../utils/locaUserInfol";
 export default {
   data() {
     return {
@@ -189,16 +188,11 @@ export default {
     }
   },
   mounted() {
-    this.form.phone = userPhon;
+    this.form.phone = this.$api.common.user().userPhon;
     this.comprehensiveBasic();
 
     let ch = document.body.clientHeight;
     let per = document.getElementById("personMsg").clientHeight;
-/*     console.log(per + 106, '')
-    if (per > ch) {
-      document.html.style.height = (per + 106) + "px";
-      document.body.style.height = (per + 106)+"px";
-    } */
   }
 };
 </script>

@@ -5,11 +5,12 @@ const storeData = {
     mutations: {
       'SET_MENU': (state, menuData) => {
         state.menuData = menuData
-        if(state.menuData){
-          console.info(state.menuData , '')
+        if(state.menuData['power_lists']){
+          sessionStorage.setItem('userpower_lists',JSON.stringify(state.menuData.power_lists))
+          return false;
         }
         if(state.menuData['user_name']){
-          localStorage.setItem('Token',state.menuData.token);
+          sessionStorage.setItem('Token',state.menuData.token);
           let userInfo = {
             user_img:state.menuData.head_img_url,
             user_name:state.menuData.user_name,
@@ -17,13 +18,13 @@ const storeData = {
             user_email:state.menuData.email,
             type:state.menuData.type
           }
-          localStorage.setItem('userInfo',JSON.stringify(userInfo))
+          sessionStorage.setItem('userInfo',JSON.stringify(userInfo))
         }else{
-          localStorage.setItem('Token',state.menuData.token);
+          sessionStorage.setItem('Token',state.menuData.token);
         }
       },
       'SET_SIGN_OUT':()=>{
-        window.localStorage.clear()
+        window.sessionStorage.clear()
       }
     }
   }

@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import { userName, type, userPhon } from "@/utils/locaUserInfol";
 const md5 = require("md5");
 export default {
   props: ["form", "formData"],
@@ -331,8 +330,10 @@ export default {
     }
   },*/
   mounted() {
-    this.userName = userName;
-    this.userPhon = userPhon;
+  /*   this.userName = userName;
+    this.userPhon = userPhon; */
+     this.userName =this.$api.common.user().userName;
+    this.userPhon = this.$api.common.user().userPhon;
   }
 };
 </script>

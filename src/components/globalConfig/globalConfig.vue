@@ -3,13 +3,13 @@
     <el-aside width="190px">
       <ul>
         <li v-for="(navItem,index) in navList" :key="index">
-          <div class="p-nav" :class="{'active':$route.path.indexOf(navItem.path)>-1}">{{navItem.p_name}}</div>
+          <div class="p-nav" :class="{'active':$route.path.indexOf(navItem.url)>-1}">{{navItem.power_name}}</div>
           <router-link
-            v-for="(item,index) in navItem.indecChild"
-            :to="item.path"
+            v-for="(item,index) in navItem.sub_power"
+            :to="item.url"
             :key="index"
             tag="div"
-          > <i class="nav-icon" :class="item.icon"></i> {{item.name}}</router-link>
+          > <i class="nav-icon" :class="item.icon"></i> {{item.power_name}}</router-link>
         </li>
 
       </ul>
@@ -71,8 +71,10 @@
 
       };
     },
-    methods: {
+    mounted(){
+      this.navList = this.$api.common.user().userpower_lists[2]['sub_power']
 
+      // this.navList = this.$api.common.user().userpower_lists[0]['sub_power']
     }
   };
 </script>

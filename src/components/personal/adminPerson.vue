@@ -105,7 +105,6 @@
 
 
 <script>
-import { userName, type, userPhon, userEmail } from "@/utils/locaUserInfol";
 import changePwd from "../common/changePwd";
 export default {
   components: {
@@ -458,7 +457,7 @@ export default {
     },
     /* 党务修改下一步 */
     nextDwEmailBtn(key) {
-      this.rebuileComponents()
+      this.rebuileComponents();
       this.dwEmailData.bool = false;
       this.nextDwEmailData.bool = key;
     },
@@ -473,10 +472,10 @@ export default {
     }
   },
   mounted() {
-    this.userName = userName;
-    this.type = type;
-    this.userPhon = userPhon;
-    this.userEmail = userEmail;
+    this.userName = this.$api.common.user().userName;
+    this.type = this.$api.common.user().type;
+    this.userPhon = this.$api.common.user().userPhon;
+    this.userEmail = this.$api.common.user().userEmail;
   }
 };
 </script>

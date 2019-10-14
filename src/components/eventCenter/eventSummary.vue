@@ -3,10 +3,11 @@
     <el-aside width="190px">
       <router-link
         v-for="(item,index) in indecChild"
-        :to="item.path"
+        :to="item.url"
         :key="index"
+        v-show="item.show_menu == false"
         tag="div"
-      >{{item.name}}</router-link>
+      >{{item.power_name}}</router-link>
     </el-aside>
     <el-main class="main-box">
       <router-view></router-view>
@@ -91,7 +92,10 @@ export default {
     drawer() {
       this.drawerBool = !this.drawerBool;
     }
-  }
+  },
+  mounted(){
+ this.indecChild = this.$api.common.user().userpower_lists[1]['sub_power'][0]['sub_power']
+  },
 };
 </script>
 

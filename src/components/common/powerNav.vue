@@ -76,7 +76,7 @@ export default {
      /* 导出表格 */
     async exports() {
       const res = await this.$api.allMatters.ticket(
-        localStorage.getItem("Token")
+        sessionStorage.getItem("Token")
       );
 
       if (res.status == "success") {

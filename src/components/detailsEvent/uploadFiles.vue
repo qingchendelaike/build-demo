@@ -200,7 +200,6 @@
 
             createStateFilter(queryString) {
                 return state => {
-                    console.log(state)
                     return (
                         state.user_name.toLowerCase().indexOf(queryString.toLowerCase()) >= 0
                     );
@@ -212,7 +211,7 @@
             /*下载文件*/
             async dow(row) {
                 const res = await this.$api.allMatters.ticket(
-                    localStorage.getItem("Token")
+                    sessionStorage.getItem("Token")
                 );
                 if (res.status == "success") {
                     window.open(

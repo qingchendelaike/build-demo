@@ -23,8 +23,8 @@ http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 // 添加请求拦截器
 http.interceptors.request.use(config => {
   /* 添加请求token */
-  if (localStorage.getItem('Token')) {
-    config.headers['Token'] = localStorage.getItem('Token');
+  if (sessionStorage.getItem('Token')) {
+    config.headers['Token'] = sessionStorage.getItem('Token');
   }
   if (config.method === 'post' || config.method === 'put') {
     // post、put 提交时，将对象转换为string, 为处理Java后台解析问题
@@ -74,12 +74,12 @@ http.interceptors.response.use(response => {
       duration:1500
     });
     if(data.code=='1006'){
-      window.localStorage.clear()
+      window.sessionStorage.clear()
       router.push("/");
     }
     if(data.retCode==400102){
       //登录超时
-      window.localStorage.clear()
+      window.sessionStorage.clear()
       router.push('/');
     }
     return data;
@@ -93,11 +93,13 @@ http.interceptors.response.use(response => {
     }
 
   } else {
+    console.log(error)
     // 此处整理错误信息格式
     info = {
-      code: status,
+     /*  code: status,
       data: data,
-      msg: statusText
+      msg: statusText */
+      msg:'请求失败。'
     }
   }
   //统一处理错误返回提示

@@ -5,6 +5,11 @@ Vue.use(Router)
 
 export default new Router({
   routes: [{
+    /* 邮寄会议反馈 */
+    path: '/metting',
+    name: 'metting',
+    component: () => import('@/components/h5/meetingPC.vue')
+  },{
     /* 登录 */
     path: '/',
     name: 'login',

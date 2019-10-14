@@ -66,7 +66,6 @@
 </template>
 
 <script>
-import { userName, userImg, type } from "@/utils/locaUserInfol";
 import updataImg from "@/components/common/updataImg";
 export default {
   components: {
@@ -98,9 +97,9 @@ export default {
       const res = await this.$api.common.uploadImg(formdata);
       if (res.status == "success") {
         this.userImg = this.defaultIcon = res.data.file_url;
-        let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        let userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
         userInfo.user_img = this.userImg;
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
         this.imgVisible = false;
       }
     },
@@ -109,7 +108,7 @@ export default {
       this.imgVisible = false;
       this.num = 100;
       this.imgsPubilc();
-      this.userImg = userImg;
+      this.userImg = this.$api.common.user().userImg;
     },
     /* 放大图像 */
     maxImg() {
@@ -137,10 +136,10 @@ export default {
     }
   },
   mounted() {
-    this.userName = userName;
-    this.type = type;
-    if (userImg) {
-      this.userImg = this.defaultIcon = userImg;
+        this.userName =this.$api.common.user().userName;
+    this.type = this.$api.common.user().type;
+    if (this.$api.common.user().userImg) {
+      this.userImg = this.defaultIcon = this.$api.common.user().userImg;
     } else {
       this.defaultIcon = this.userImg;
     }

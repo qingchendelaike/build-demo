@@ -152,7 +152,7 @@ export default {
     /* 导出表格 */
     async exports(val) {
       const res = await this.$api.allMatters.ticket(
-        localStorage.getItem("Token")
+        sessionStorage.getItem("Token")
       );
       if (res.status == "success") {
         this.formData.export_ticket = res.data;
@@ -171,7 +171,7 @@ export default {
     /* 主体 */
     async subject() {
       const res = await this.$api.allMatters.organization(
-        localStorage.getItem("Token")
+        sessionStorage.getItem("Token")
       );
       if (res.status == "success") {
         let data = res.data;

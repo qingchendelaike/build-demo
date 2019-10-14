@@ -7,9 +7,10 @@
           <a
             v-for="(item,index) in routerMsg"
             :key="index"
-            :class="{'router-link-exact-active':$route.path.indexOf(item.path)>-1}"
-            @click="activeLink(index,item.path)"
-          >{{item.name}}</a>
+            v-show="item.show_menu== false"
+            :class="{'router-link-exact-active':$route.path.indexOf(item.url)>-1}"
+            @click="activeLink(index,item.url)"
+          >{{item.power_name}}</a>
         </div>
         <div class="userMsg">
           <span class="user-waring"></span>
@@ -32,7 +33,6 @@
 </template>
 
 <script>
-import { userName, userImg, type } from "@/utils/locaUserInfol";
 export default {
   data() {
     return {
@@ -40,28 +40,7 @@ export default {
       type: 2,
       defaultImg: require("../assets/img/defaultIcon.png"),
       activeIndex: 1,
-      routerMsg: [
-        {
-          path: "/index/recordList",
-          name: "大事记",
-        },
-        {
-          path: "/index/eventSummary",
-          name: "事项中心"
-        },
-        {
-          path: "/index/globalConfig",
-          name: "全局设置"
-        },
-        {
-          path: "/index/styleZone",
-          name: "学习空间"
-        },
-        {
-          path: "/index/dataView",
-          name: "数据概览"
-        }
-      ]
+      routerMsg: {}
     };
   },
   methods: {
@@ -78,9 +57,10 @@ export default {
     }
   },
   mounted() {
-    this.userName = userName;
-    this.type = type;
-    this.defaultImg = userImg;
+    this.userName =this.$api.common.user().userName;
+    this.type = this.$api.common.user().type;
+    this.defaultImg = this.$api.common.user().userImg;
+    this.routerMsg = this.$api.common.user().userpower_lists;
   }
 };
 </script>

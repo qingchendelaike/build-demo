@@ -235,7 +235,7 @@
         }
       },
       async getData(){
-        let res=await  axios.get("../static/data.json");
+        let res=await this.$api.eventRecord.getData({});
         return res.data;
       },
       toggleDate(){
@@ -243,8 +243,8 @@
       },
       async refreshData(){
         //选择日期，刷新值
-        alert(this.value1);
-        let res=await  axios.get("../static/data.json");
+        // alert(this.value1);
+        let res=await this.$api.eventRecord.getData({});
         this.modelData=res.data;
         //居中当前选择的日期
         let tTop=document.querySelector(".today").offsetTop;
