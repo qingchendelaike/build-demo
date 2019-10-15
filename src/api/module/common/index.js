@@ -55,4 +55,10 @@ export default {
   changeDetail(params){
     return api.get('/item/changeDetail', params, header)
   },
+  wxLogin(params){
+    return api.post('/partyUser/checkAccount', params, header)
+  },
+  webAuth(params){
+    return api.get('/wechat/webAuth', params, header)
+  },
 }

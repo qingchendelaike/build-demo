@@ -7,6 +7,25 @@
 
 <script>
 export default {
+  data() {
+    return {
+      power: []
+    };
+  },
+  methods: {
+    forList(arr) {
+      for (let i = 0; i < arr.length; i++) {
+        this.power.push({
+          power_name: arr[i]["power_name"],
+          url: arr[i]["url"],
+          show_menu: arr[i]["show_menu"]
+        });
+        if (arr[i]["sub_power"].length > 0) {
+          this.forList(arr[i]["sub_power"]);
+        }
+      }
+    }
+  },
   watch: {
     $route(to, from) {
       if (
@@ -31,6 +50,27 @@ export default {
         this.$nextTick(() => {
           this.$api.common.maxHeight();
         });
+      }
+      if (to.path != "/") {
+        let roterList = this.$api.common.user().userpower_lists;
+        this.forList(roterList);
+        for (let i = 0; i < this.power.length; i++) {
+          if (to.path == this.power[i]["url"]) {
+            if (this.power[i]["show_menu"] == false) {
+              this.$router.push("*");
+              break;
+            }
+          }
+        }
+      }
+      if(to.path == "/wxLogin" || to.path == "/wxError" || to.path == "/wxSuccess"){
+        document.getElementById('app').style.minWidth = "0";
+        document.querySelector("html").style.minWidth = "0";
+        document.querySelector("body").style.minWidth = "0";
+      }else{
+        document.getElementById('app').style.minWidth = "1200px";
+        document.querySelector("html").style.minWidth = "1200px";
+        document.querySelector("body").style.minWidth = "1200px";
       }
     }
   }

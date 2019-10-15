@@ -5,7 +5,7 @@
         v-for="(item,index) in indecChild"
         :to="item.url"
         :key="index"
-        v-show="item.show_menu == false"
+        v-show="item.show_menu == true"
         tag="div"
       >{{item.power_name}}</router-link>
     </el-aside>
@@ -42,24 +42,7 @@ export default {
   data() {
     return {
       drawerBool: false,
-      indecChild: [
-        {
-          path: "/index/eventSummary/allMatters",
-          name: "所有事项"
-        },
-        {
-          path: "/index/eventSummary/seriesItems",
-          name: "系列事项"
-        },
-        {
-          path: "/index/eventSummary/ieXecute",
-          name: "我执行的"
-        },
-        {
-          path: "/index/eventSummary/iLaunched",
-          name: "我发起的"
-        }
-      ],
+      indecChild: [],
       dataMarrts: [
         {
           value: "/index/eventSummary/launchFrom",
@@ -94,7 +77,7 @@ export default {
     }
   },
   mounted(){
- this.indecChild = this.$api.common.user().userpower_lists[1]['sub_power'][0]['sub_power']
+    this.indecChild = this.$api.common.user().userpower_lists[1]['sub_power'][0]['sub_power']
   },
 };
 </script>

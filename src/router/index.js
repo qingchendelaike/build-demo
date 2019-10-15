@@ -10,6 +10,21 @@ export default new Router({
     name: 'metting',
     component: () => import('@/components/h5/meetingPC.vue')
   },{
+    /* 微信登录授权 */
+    path: '/wxLogin',
+    name: 'wxLogin',
+    component: () => import('@/components/h5/wxLogin.vue')
+  },,{
+    /* 微信登录成功 */
+    path: '/wxSuccess',
+    name: 'wxSuccess',
+    component: () => import('@/components/h5/wxSuccess.vue')
+  },{
+    /* 微信登录失败 */
+    path: '/wxError',
+    name: 'wxError',
+    component: () => import('@/components/h5/wxError.vue')
+  },{
     /* 登录 */
     path: '/',
     name: 'login',
@@ -146,5 +161,9 @@ export default new Router({
         }]
       }
     ]
-  },]
+  },{
+    path:'*',
+    name: 'error',
+    component: () => import('@/components/404.vue'),
+  }]
 })

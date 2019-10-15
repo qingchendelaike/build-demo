@@ -3,11 +3,12 @@
     <el-aside width="190px">
       <ul>
         <li v-for="(navItem,index) in navList" :key="index">
-          <div class="p-nav" :class="{'active':$route.path.indexOf(navItem.url)>-1}">{{navItem.power_name}}</div>
+          <div class="p-nav" :class="{'active':$route.path.indexOf(navItem.url)>-1}" v-show="navItem.show_menu == true">{{navItem.power_name}}</div>
           <router-link
             v-for="(item,index) in navItem.sub_power"
             :to="item.url"
             :key="index"
+            v-show="item.show_menu == true"
             tag="div"
           > <i class="nav-icon" :class="item.icon"></i> {{item.power_name}}</router-link>
         </li>

@@ -7,6 +7,7 @@ const storeData = {
         state.menuData = menuData
         if(state.menuData['power_lists']){
           sessionStorage.setItem('userpower_lists',JSON.stringify(state.menuData.power_lists))
+          sessionStorage.setItem('Token',state.menuData.token);
           return false;
         }
         if(state.menuData['user_name']){
