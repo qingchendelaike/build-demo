@@ -1,0 +1,307 @@
+<template>
+  <div class="boxall">
+    <div class="box">
+      <div class="box-text">
+        <div class="text-title">
+          <div class="title-box">
+            会议名称
+            <p v-if="this.msg[this.msg.change['item_name']]"></p>
+          </div>
+          <div class="title-conten">{{msg.item_name}}</div>
+        </div>
+
+        <div class="text-title">
+          <div class="title-box">
+            发起人
+            <p
+              v-if="this.msg[this.msg.change['create_user_name']]"
+            >{{this.msg[this.msg.change['create_user_name']]}}</p>
+          </div>
+          <div class="title-conten">{{msg.create_user_name}}</div>
+        </div>
+
+        <div class="text-title">
+          <div class="title-box">
+            组织主体
+            <p v-if="this.msg[this.msg.change['organize_name']]"></p>
+          </div>
+          <div class="title-conten">{{msg.organize_name}}</div>
+        </div>
+
+        <div class="text-title">
+          <div class="title-box">
+            类型标签
+            <p v-if="this.msg[this.msg.change['item_label_ids']]"></p>
+          </div>
+          <div class="title-conten">{{msg.item_label}}</div>
+        </div>
+
+        <div class="text-title">
+          <div class="title-box">
+            发文文号
+            <p
+              v-if="this.msg[this.msg.change['article_year']] || this.msg[this.msg.change['article_sn']]"
+            ></p>
+          </div>
+          <div class="title-conten">粤时代司党（{{msg.article_year}}）{{msg.article_sn}}号</div>
+        </div>
+
+        <div class="text-title">
+          <div class="title-box">
+            发文编号
+            <p v-if="this.msg[this.msg.change['item_sn']]"></p>
+          </div>
+          <div class="title-conten">{{msg.item_sn}}</div>
+        </div>
+        <div class="text-title">
+          <div class="title-box">
+            会议时间
+            <p
+              v-if="this.msg[this.msg.change['start_time']] || this.msg[this.msg.change['end_time']]"
+            ></p>
+          </div>
+          <div class="title-conten">{{msg.start_time}} - {{msg.end_time}}</div>
+        </div>
+        <div class="text-title">
+          <div class="title-box">
+            会议地点
+            <p v-if="this.msg[this.msg.change['item_space']]"></p>
+          </div>
+          <div class="title-conten">{{msg.item_space}}</div>
+        </div>
+        <div class="text-title">
+          <div class="title-box">
+            会议原因
+            <p v-if="this.msg[this.msg.change['item_reason']]"></p>
+          </div>
+          <div class="title-conten">{{msg.item_reason}}</div>
+        </div>
+        <div class="text-title">
+          <div class="title-box">
+            会议流程
+            <p v-if="this.msg[this.msg.change['item_flow']]"></p>
+          </div>
+          <div class="title-conten">{{msg.item_flow}}</div>
+        </div>
+
+        <div class="text-title">
+          <div class="title-box">
+            参与人员
+            <p v-if="this.msg[this.msg.change['users']]"></p>
+          </div>
+          <div class="title-conten">
+            <span v-for="(item,index) in msg.users" :key="index">
+              {{item.user_name}}
+              <span v-if="index <= msg.users.length && msg.users.length > 1">/</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="text-title">
+          <div class="title-box">
+            会议任务
+            <p v-if="this.msg[this.msg.change['tasks']]"></p>
+          </div>
+          <div class="title-conten borderFall" v-if="msg.tasks.length > 0">
+            <span v-for="(item,index) in msg.tasks" :key="index">{{item.content}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <el-button
+      class="btn"
+      @click="handleClick"
+      v-if="msg.item_status == 1 || msg.item_status == 2 || msg.item_status == 3"
+      :disabled="disabled"
+      :class="{ btGround:type == true}"
+    >{{msgBtn}}</el-button>
+    <div v-show="pop" class="pop">
+      <p
+        v-for="(item,index) in detailsData"
+        :key="index"
+        @click="clickName(item,index)"
+        :class="{ detailsGround:changeLeftBackground == index}"
+      >{{item.feed_name}}</p>
+    </div>
+    <div v-show="pop" class="popBox"></div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      type: false,
+      msg: "",
+      msgBtn: "提交参与反馈",
+      disabled: false,
+      pop: false,
+      value: "",
+      changeLeftBackground: -1,
+      feed_name: "",
+      detailsData: [
+        { feed_name: "未反馈", feed_id: 0, more_remark: 0, isSet: false }
+      ]
+    };
+  },
+
+  methods: {
+    clickName(item, index) {
+      this.changeLeftBackground = index;
+      this.disabled = false;
+      this.value = item.feed_id;
+      this.feed_name = item.feed_name;
+      this.type = false;
+    },
+    /* 反馈列表*/
+    async menu() {
+      const res = await this.$api.details.feedbackMenu();
+      if (res.status == "success") {
+        this.detailsData.push(...res.data);
+      }
+    },
+    handleClick() {
+      if (this.msgBtn == "提交参与反馈") {
+        this.disabled = true;
+        this.pop = true;
+        this.type = true;
+        this.msgBtn = "提交";
+      } else if ((this.msgBtn = "提交")) {
+        this.sum();
+      }
+    },
+    async h5() {
+      let url = "http://www.tfcaijing.com/?p=173-8-1-27-0-1",
+        reqBody = url
+          .split("?")[1]
+          .split("=")[1]
+          .split("-");
+      let req = {
+        item_id: reqBody[0],
+        user_id: reqBody[1],
+        duty_id: reqBody[2],
+        change_id: reqBody[3],
+        push_id: reqBody[4],
+        type: reqBody[5]
+      };
+      let res = await this.$api.common.webChangeDetail(req);
+      if (res.status == "success") {
+        this.msg = res.data;
+      }
+    },
+    async sum() {
+      if (this.value != "") {
+        let /* url = window.location.href, */ url =
+            "http://www.tfcaijing.com/?p=173-8-1-27-0-1",
+          reqBody = url
+            .split("?")[1]
+            .split("=")[1]
+            .split("-");
+        let req = {
+          item_id: reqBody[0],
+          user_id: reqBody[1],
+          feed_id: this.value
+        };
+        let res = await this.$api.common.webFeedback(req);
+        if (res.status == "success") {
+          this.pop = false;
+          this.type = "";
+          this.msgBtn = "已确定" + this.feed_name + "参与";
+          this.disabled = true;
+          this.type = true;
+        }
+      } else {
+        this.$message("请选择反馈事项");
+      }
+    }
+  },
+  mounted() {
+    this.h5();
+    this.menu();
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.boxall {
+  background: #eeeeee;
+  .text-title {
+    width: 100%;
+    display: inline-block;
+    background: #ffffff;
+    margin-bottom: 20px;
+    border-radius: 0 0 30px 30px;
+    box-sizing: border-box;
+    padding: 20px;
+    .title-box {
+      font-size: 15px;
+      color: gray;
+      margin-bottom: 10px;
+      position: relative;
+      p {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: #5ca7ff;
+        border-radius: 50%;
+        position: absolute;
+        top: 0px;
+      }
+    }
+    .title-conten {
+      font-size: 16px;
+    }
+    &:last-child {
+      margin-bottom: 50px;
+    }
+  }
+  .btn {
+    width: 90%;
+    position: fixed;
+    background: #5ca7ff;
+    height: 50px;
+    bottom: 10px;
+    left: 5%;
+    z-index: 9999;
+    color: #ffffff;
+    font-size: 14px;
+  }
+  .pop {
+    background: #ffffff;
+    width: 90%;
+    position: fixed;
+    bottom: 70px;
+    left: 5%;
+    z-index: 99;
+    border-radius: 5px;
+    p {
+      text-align: center;
+      line-height: 40px;
+      border-bottom: 1px solid #eeeeee;
+      font-size: 15px;
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+  .popBox {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9;
+    background: #000;
+    opacity: 0.5;
+  }
+}
+.detailsGround {
+  color: #5ca7ff;
+}
+.btGround {
+  color: #c0c4cc !important;
+  background: #eeeeee!important;
+}
+</style>

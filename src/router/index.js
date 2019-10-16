@@ -25,6 +25,11 @@ export default new Router({
     name: 'wxError',
     component: () => import('@/components/h5/wxError.vue')
   },{
+    /* H5详情 */
+    path: '/h5Details',
+    name: 'h5Details',
+    component: () => import('@/components/h5/h5Details.vue')
+  },{
     /* 登录 */
     path: '/',
     name: 'login',

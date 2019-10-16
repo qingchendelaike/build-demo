@@ -3,7 +3,7 @@
     <div class="box">
       <div class="box-title">
         <div class="tit">会议详情</div>
-        <div>
+        <div v-if="msg.item_status == 1 || msg.item_status == 2 || msg.item_status == 3">
           参与者：
           <el-select v-model="value" placeholder="请选择">
             <el-option
@@ -113,7 +113,8 @@ export default {
       }
     },
     async h5() {
-      let url = window.location.href,
+      /* let url = window.location.href, */
+      let url = 'http://www.tfcaijing.com/?p=168-8-1-0-0-1',
         reqBody = url
           .split("?")[1]
           .split("=")[1]

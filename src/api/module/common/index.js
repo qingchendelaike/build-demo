@@ -37,13 +37,15 @@ export default {
   user() {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     let userpower_lists = JSON.parse(sessionStorage.getItem('userpower_lists'))
-    return {
-      userName: userInfo.user_name,
-      userImg: userInfo.user_img,
-      type: userInfo.type,
-      userPhon: userInfo.user_phon,
-      userEmail: userInfo.user_email,
-      userpower_lists:userpower_lists.power_lists
+    if(userInfo && userpower_lists){
+      return {
+        userName: userInfo.user_name,
+        userImg: userInfo.user_img,
+        type: userInfo.type,
+        userPhon: userInfo.user_phon,
+        userEmail: userInfo.user_email,
+        userpower_lists:userpower_lists.power_lists
+      }
     }
   },
   webDetail(params){
@@ -60,5 +62,8 @@ export default {
   },
   webAuth(params){
     return api.get('/wechat/webAuth', params, header)
+  },
+  webChangeDetail(params){
+    return api.get('/item/changeDetail', params, header)
   },
 }

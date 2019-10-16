@@ -52,23 +52,30 @@ export default {
         });
       }
       if (to.path != "/") {
-        let roterList = this.$api.common.user().userpower_lists;
-        this.forList(roterList);
-        for (let i = 0; i < this.power.length; i++) {
-          if (to.path == this.power[i]["url"]) {
-            if (this.power[i]["show_menu"] == false) {
-              this.$router.push("*");
-              break;
+        if (this.$api.common.user()) {
+          let roterList = this.$api.common.user().userpower_lists;
+          this.forList(roterList);
+          for (let i = 0; i < this.power.length; i++) {
+            if (to.path == this.power[i]["url"]) {
+              if (this.power[i]["show_menu"] == false) {
+                this.$router.push("*");
+                break;
+              }
             }
           }
         }
       }
-      if(to.path == "/wxLogin" || to.path == "/wxError" || to.path == "/wxSuccess"){
-        document.getElementById('app').style.minWidth = "0";
+      if (
+        to.path == "/wxLogin" ||
+        to.path == "/wxError" ||
+        to.path == "/wxSuccess" ||
+        to.path == "/h5Details"
+      ) {
+        document.getElementById("app").style.minWidth = "0";
         document.querySelector("html").style.minWidth = "0";
         document.querySelector("body").style.minWidth = "0";
-      }else{
-        document.getElementById('app').style.minWidth = "1200px";
+      } else {
+        document.getElementById("app").style.minWidth = "1200px";
         document.querySelector("html").style.minWidth = "1200px";
         document.querySelector("body").style.minWidth = "1200px";
       }

@@ -93,14 +93,15 @@ http.interceptors.response.use(response => {
     }
 
   } else {
-    console.log(error)
     // 此处整理错误信息格式
     info = {
      /*  code: status,
       data: data,
       msg: statusText */
-      msg:'请求失败。'
+      msg:'请求失败。',
+      code:'error'
     }
+    return info;
   }
   //统一处理错误返回提示
   Message({

@@ -148,6 +148,8 @@ export default {
         } else if (res.data.type == 2) {
           this.$router.push("/index/eventSummary/allMatters");
         }
+      }else{
+        this.loginSum = false
       }
     },
     /*进入系统 */
@@ -166,14 +168,16 @@ export default {
         let req = {
           cookie: this.dataCookie,
           organize_id: this.subject.split("-")[0],
-          duty_id: this.subject.split("-")[0]
+          duty_id: this.subject.split("-")[1]
         };
         const res = await this.$api.userLogin.chooseLogin(req);
         if (res.status == "success") {
           this.dangerSum = false;
           this.$store.dispatch("setMenu", res.data);
           this.$router.push("/index/eventSummary/allMatters");
-        }
+        }else{
+          this.dangerSum = false
+      }
       }
     },
     handleClose() {
