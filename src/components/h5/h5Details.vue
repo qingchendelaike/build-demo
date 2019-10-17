@@ -172,7 +172,7 @@ export default {
       }
     },
     async h5() {
-      let url = "http://www.tfcaijing.com/?p=173-8-1-27-0-1",
+      let url = window.location.href,/* "http://www.tfcaijing.com/?p=173-8-1-27-0-1", */
         reqBody = url
           .split("?")[1]
           .split("=")[1]
@@ -188,12 +188,19 @@ export default {
       let res = await this.$api.common.webChangeDetail(req);
       if (res.status == "success") {
         this.msg = res.data;
+        if (this.msg.is_feed) {
+          this.pop = false;
+          this.type = "";
+          this.msgBtn = "已参与反馈";
+          this.disabled = true;
+          this.type = true;
+        }
       }
     },
     async sum() {
       if (this.value != "") {
-        let /* url = window.location.href, */ url =
-            "http://www.tfcaijing.com/?p=173-8-1-27-0-1",
+        let url = window.location.href, /* url =
+            "http://www.tfcaijing.com/?p=173-8-1-27-0-1", */
           reqBody = url
             .split("?")[1]
             .split("=")[1]
@@ -302,6 +309,6 @@ export default {
 }
 .btGround {
   color: #c0c4cc !important;
-  background: #eeeeee!important;
+  background: #eeeeee !important;
 }
 </style>

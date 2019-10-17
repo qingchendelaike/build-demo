@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     async onSubmit() {
-      let res = this.$api.common.wxLogin({
+      let res = await this.$api.common.wxLogin({
         account: this.form.name,
         password: md5(this.form.pwd)
       });

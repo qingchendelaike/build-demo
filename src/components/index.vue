@@ -15,7 +15,7 @@
           <router-link
             v-for="(item,index) in routerMsg"
             :key="index"
-            v-show="item.show_menu== true"
+            v-show="item.show_menu== true && item.power_name !='额外提醒' "
             :class="{'router-link-exact-active':$route.path.indexOf(item.url)>-1}"
             @click="activeLink(index,item.url)"
             :to="item.url"
@@ -23,7 +23,17 @@
           >{{item.power_name}}</router-link>
         </div>
         <div class="userMsg">
-          <span class="user-waring"></span>
+
+          <router-link
+            v-for="(item,index) in routerMsg"
+            :key="index"
+            v-show="item.show_menu== true && item.power_name =='额外提醒' "
+            :class="{'router-link-exact-active':$route.path.indexOf(item.url)>-1}"
+            @click="activeLink(index,item.url)"
+            :to="item.url"
+            tag="a"
+          > <span class="user-waring"></span></router-link>
+         
           <img :src="defaultImg" class="user-icon" alt />
           <span class="user-name">{{userName}}</span>
           <span class="select-icon" v-popover:popoverPse></span>
