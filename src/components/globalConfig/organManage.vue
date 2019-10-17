@@ -185,7 +185,7 @@
         this.page.page_limit = val;
         this.getOrganizeUserLists();
       },
-      handleCurrentChange(){
+      handleCurrentChange(val){
         this.page.currentPage = val;
         this.getOrganizeUserLists();
       },

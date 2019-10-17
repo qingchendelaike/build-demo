@@ -2,7 +2,9 @@
     <div class="imgBox">
         <div>
         <img src="../assets/img/404.png" alt="">
-        <p>您没有这个页面权限或网络错误</p>
+        <p>您没有这个页面权限或网络错误 
+            <router-link tag="a" to="/">返回登录页,重新登录</router-link>
+        </p>
         </div>
     </div>
 </template>

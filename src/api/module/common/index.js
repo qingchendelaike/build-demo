@@ -44,7 +44,7 @@ export default {
         type: userInfo.type,
         userPhon: userInfo.user_phon,
         userEmail: userInfo.user_email,
-        userpower_lists:userpower_lists.power_lists
+        userpower_lists:userpower_lists
       }
     }
   },
