@@ -331,7 +331,7 @@ export default {
         name: [{ required: true, message: "请输入真实姓名", trigger: "blur" }],
         phone: [{ required: true, message: "请输入手机号码", trigger: "blur" }],
         pwd: [{ required: true, message: "请输入登录密码", trigger: "blur" }],
-        email: [{ required: true, message: "请输入电子邮箱", trigger: "blur" }],
+      /*   email: [{ required: true, message: "请输入电子邮箱", trigger: "blur" }], */
         code: [{ required: true, message: "请选择人物身份", trigger: "change" }]
       },
       userInfo: {},

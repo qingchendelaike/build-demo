@@ -36,7 +36,7 @@
       <el-form-item label="类型标签" prop="labelArr">
         <div class="inpuIcon">
           <!--collapse-tags -->
-          <el-select v-model="ruleForm.labelArr" multiple style="width:90%;" placeholder="请选择类型标签" >
+          <el-select v-model="ruleForm.labelArr" multiple class="selcectType" placeholder="请选择类型标签" >
             <el-option
               v-for="item in labelData"
               :key="item.label_id"
@@ -47,6 +47,7 @@
           </el-select>
 
           <labelMsg
+          v-if="is_special"
             :lableText="lableText"
             :labelData="labelData"
             :labelBool="labelBool"
@@ -109,7 +110,7 @@
               </el-select>
               <el-input placeholder="请输入内容" v-model=" item.time" class="popInp"></el-input>
               <el-select v-model="item.time_type+ ''" class="popTimer" placeholder="请选择">
-                <el-option label="分" value="1"></el-option>
+                <el-option label="分钟" value="1"></el-option>
                 <el-option label="小时" value="2"></el-option>
                 <el-option label="天" value="3"></el-option>
               </el-select>
@@ -224,7 +225,7 @@
 
       <el-form-item label="存档文件" prop="filesArr">
         <div class="inpuIcon">
-          <el-select v-model="ruleForm.filesArr" multiple style="width:90%;" placeholder="请选择存档文件">
+          <el-select v-model="ruleForm.filesArr" multiple class="selcectType" placeholder="请选择存档文件">
             <el-option
               v-for="item in filesData"
               :key="item.archive_id"
@@ -234,6 +235,7 @@
             ></el-option>
           </el-select>
           <labelMsg
+          v-if="is_special"
             :lableText="filesText"
             :labelData="filesData"
             :labelBool="filesBool"
@@ -370,7 +372,8 @@ export default {
       seriseData: [],
       organArr: [],
       organDataAll: [],
-      transferUser_id: []
+      transferUser_id: [],
+      is_special:false
     };
   },
   methods: {
@@ -795,6 +798,7 @@ export default {
     this.labelLists();
     this.filesType();
     this.seriesMenu();
+    this.is_special = this.$api.common.user().is_special
   }
 };
 </script>
@@ -828,17 +832,20 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+.selcectType{
+  flex: 1;
+}
   span {
     display: inline-block;
-    width: 25px;
+    width: 50px;
+    text-align: right;
     height: 25px;
-    background: url("../../assets/img/details_sprites.png") no-repeat;
+   /* background: url("../../assets/img/details_sprites.png") no-repeat;
 
-    &.icon {
+    /* &.icon {
       background-position: -56px -10px;
       cursor: pointer;
-    }
+    } */
   }
 }
 

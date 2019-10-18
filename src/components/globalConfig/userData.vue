@@ -3,14 +3,14 @@
     <div class="nav">
       <power-nav
         class="powerNav"
-        :down="true"
+        :down="false"
         :titlePop="titlePop"
         :queryBool="false"
         :queryForm="{}"
         :form="{}"
       ></power-nav>
 
-      <div class="box-title-icon" v-popover:queryEl @click="queryCondi">
+      <!-- <div class="box-title-icon" v-popover:queryEl @click="queryCondi">
         <span class="query-icon"></span>
         <span>查询条件</span>
       </div>
@@ -63,24 +63,24 @@
             </el-select>
           </el-col>
           <el-col :span="8">
-            <!--  <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="value" placeholder="请选择">
               <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
-            </el-select>-->
+            </el-select>
 
             
           </el-col>
         </el-row>
-      </el-popover>
+      </el-popover> -->
     </div>
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="user_name" label="姓名" fixed="left"></el-table-column>
+      <el-table-column prop="user_name" label="姓名" fixed="left" width="100"></el-table-column>
       <el-table-column prop="zh_sex" label="性别"></el-table-column>
-      <el-table-column prop="zh_identify" label="人员身份"></el-table-column>
+      <el-table-column prop="zh_identify" label="人员身份" width="160"></el-table-column>
       <el-table-column prop="zh_status" label="人员状态"></el-table-column>
       <el-table-column prop="zh_sex" label="所属组织">
         <template slot-scope="scope">{{scope.row.organize_duty[0]}}</template>
@@ -91,26 +91,26 @@
       <el-table-column prop="zh_status" label="任期时间">
         <template slot-scope="scope">{{scope.row.organize_duty[2]}}</template>
       </el-table-column>
-      <el-table-column prop="apply_time" label="入党申请书提交时间"></el-table-column>
-      <el-table-column prop="active_time" label="入党积极分子时间"></el-table-column>
-      <el-table-column prop="train_time" label="参与培训时间"></el-table-column>
-      <el-table-column prop="develop_time" label="发展对象时间"></el-table-column>
-      <el-table-column prop="party_time" label="入党时间"></el-table-column>
-      <el-table-column prop="formal_time" label="转正时间"></el-table-column>
+      <el-table-column prop="apply_time" label="入党申请书提交时间" width="150"></el-table-column>
+      <el-table-column prop="active_time" label="入党积极分子时间" width="150"></el-table-column>
+      <el-table-column prop="train_time" label="参与培训时间" width="150"></el-table-column>
+      <el-table-column prop="develop_time" label="发展对象时间" width="150"></el-table-column>
+      <el-table-column prop="party_time" label="入党时间" width="150"></el-table-column>
+      <el-table-column prop="formal_time" label="转正时间" width="150"></el-table-column>
       <el-table-column prop="zh_sex" label="所属部门">
         <template slot-scope="scope">{{scope.row.company_rank[0]}}</template>
       </el-table-column>
       <el-table-column prop="zh_identify" label="员工职级">
         <template slot-scope="scope">{{scope.row.company_rank[1]}}</template>
       </el-table-column>
-      <el-table-column prop="id_card" label="身份证号"></el-table-column>
-      <el-table-column prop="birth" label="出身年月"></el-table-column>
+      <el-table-column prop="id_card" label="身份证号" width="180"></el-table-column>
+      <el-table-column prop="birth" label="出身年月" width="130"></el-table-column>
       <el-table-column prop="age" label="年龄"></el-table-column>
       <el-table-column prop="zh_nation" label="民族"></el-table-column>
-      <el-table-column prop="sources" label="籍贯"></el-table-column>
-      <el-table-column prop="graduation" label="毕业院校"></el-table-column>
+      <el-table-column prop="sources" label="籍贯"  width="130"></el-table-column>
+      <el-table-column prop="graduation" label="毕业院校"  width="270"></el-table-column>
       <el-table-column prop="zh_education" label="学历"></el-table-column>
-      <el-table-column prop="work_time" label="参与工作时间"></el-table-column>
+      <el-table-column prop="work_time" label="参与工作时间" width="150"></el-table-column>
       <el-table-column label="操作" fixed="right">
         <template slot-scope="scope">
           <el-popover

@@ -86,7 +86,7 @@ export default {
           exportUrl += key + "=" + this.queryForm[key] + "&";
         });
         window.open(
-          `${window.location.protocol}//192.168.1.114:8083${this.exportsRouter}?${exportUrl}`
+          `http://newtools.free.idcfengye.com/${this.exportsRouter}?${exportUrl}`
         );
       }
     },

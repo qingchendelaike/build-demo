@@ -15,7 +15,7 @@
             class="demo-ruleForm"
           >
             <el-form-item :label="typeSw(this.$route.query.item_id)+'名称'" prop="item_name">
-              <el-input placeholder="给会议起个名字吧" v-model="ruleForm.item_name"></el-input>
+              <el-input :placeholder="'给'+typeSw(this.$route.query.item_id)+'起个名字吧'" v-model="ruleForm.item_name"></el-input>
             </el-form-item>
             <el-form-item label="组织主体" prop="mineStatus">
               <el-select v-model="ruleForm.mineStatus" placeholder="请选择组织主体" multiple style="width:100%;">
@@ -41,7 +41,7 @@
             </el-form-item>
             <el-form-item label="类型标签" prop="labelArr">
               <div class="inpuIcon">
-                <el-select v-model="ruleForm.labelArr" multiple style="width:90%;" placeholder="请选择类型标签">
+                <el-select v-model="ruleForm.labelArr" multiple  class="selcectType" placeholder="请选择类型标签">
                   <el-option
                     v-for="item in labelData"
                     :key="item.label_id"
@@ -50,6 +50,7 @@
                   ></el-option>
                 </el-select>
                 <labelMsgAdd
+                  v-if="is_special"
                   :lableText="lableText"
                   :labelData="labelData"
                   :labelBool="labelBool"
@@ -78,6 +79,7 @@
                     format="yyyy-MM-dd HH:mm"
                     value-format="yyyy-MM-dd HH:mm"
                     type="datetime"
+                    :picker-options="pickerOptions0"
                     placeholder="选择日期时间"
                   ></el-date-picker>
                 </el-form-item>
@@ -90,6 +92,7 @@
                     type="datetime"
                     format="yyyy-MM-dd HH:mm"
                     value-format="yyyy-MM-dd HH:mm"
+                    :picker-options="pickerOptions1"
                     placeholder="选择日期时间"
                   ></el-date-picker>
                 </el-form-item>
@@ -112,7 +115,7 @@
                     </el-select>
                     <el-input placeholder="请输入内容" v-model=" item.time" class="popInp"></el-input>
                     <el-select v-model="item.time_type" class="popTimer" placeholder="请选择">
-                      <el-option label="分" value="1"></el-option>
+                      <el-option label="分钟" value="1"></el-option>
                       <el-option label="小时" value="2"></el-option>
                       <el-option label="天" value="3"></el-option>
                     </el-select>
@@ -131,7 +134,7 @@
             </el-form-item>
 
             <el-form-item :label="typeSw(this.$route.query.item_id)+'地点'" prop="item_space">
-              <el-input placeholder="请输入会议地点" v-model="ruleForm.item_space"></el-input>
+              <el-input :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'地点'" v-model="ruleForm.item_space"></el-input>
             </el-form-item>
 
             <el-form-item :label="typeSw(this.$route.query.item_id)+'原因'" prop="item_reason">
@@ -139,7 +142,7 @@
                 type="textarea"
                 :rows="3"
                 v-model="ruleForm.item_reason"
-                placeholder="请输入会议原因"
+                :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'原因'"
               ></el-input>
             </el-form-item>
 
@@ -148,7 +151,7 @@
                 type="textarea"
                 :rows="3"
                 v-model="ruleForm.item_flow"
-                placeholder="请输入会议流程"
+                :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'流程'"
               ></el-input>
             </el-form-item>
 
@@ -245,7 +248,7 @@
 
             <el-form-item label="存档文件" prop="filesArr">
               <div class="inpuIcon">
-                <el-select v-model="ruleForm.filesArr" multiple style="width:90%;" placeholder="请选择存档文件">
+                <el-select class="selcectType" v-model="ruleForm.filesArr" multiple placeholder="请选择存档文件">
                   <el-option
                     v-for="item in filesData"
                     :key="item.archive_id"
@@ -255,6 +258,7 @@
                 </el-select>
 
                 <labelMsgAdd
+                 v-if="is_special"
                   :lableText="filesText"
                   :labelData="filesData"
                   :labelBool="filesBool"
@@ -286,6 +290,7 @@ export default {
   },
   data() {
     return {
+      is_special:false,
       transferSelect: [],
       dialogVisible: false,
       transferData: [],
@@ -374,7 +379,25 @@ export default {
       organDataAll: [],
       item_key: "",
       noticesData: [],
-      transferUser_id:[]
+      transferUser_id:[],
+      //日期控件
+      pickerOptions0: {
+        // 限制结束日期不能大于开始日期
+        disabledDate: time => {
+          if (this.ruleForm.end_time != "") {
+            return (
+              time.getTime() > new Date(this.ruleForm.end_time).getTime()
+            );
+          } 
+        }
+      },
+      pickerOptions1: {
+        disabledDate: time => {
+          return (
+            time.getTime() < new Date(this.ruleForm.start_time).getTime() 
+          );
+        }
+      },
     };
   },
   methods: {
@@ -709,6 +732,7 @@ export default {
     this.labelLists();
     this.filesType();
     this.seriesMenu();
+    this.is_special = this.$api.common.user().is_special
   }
 };
 </script>
@@ -742,17 +766,20 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+.selcectType{
+  flex: 1;
+}
   span {
     display: inline-block;
-    width: 25px;
+    width: 50px;
     height: 25px;
-    background: url("../../assets/img/details_sprites.png") no-repeat;
+    text-align: right;
+   /*  background: url("../../assets/img/details_sprites.png") no-repeat;
 
     &.icon {
       background-position: -56px -10px;
       cursor: pointer;
-    }
+    } */
   }
 }
 
@@ -894,7 +921,6 @@ export default {
 .eventDeatils {
   width: 100%;
   min-width: 1200px;
-  height: 100%;
   box-sizing: border-box;
   padding: 20px;
   .event-box {

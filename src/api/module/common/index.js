@@ -22,7 +22,7 @@ export default {
   /* 判断高度是否超出body */
   maxHeight(idBox, maxH) {
     if (idBox) {
-      let Dmheight = document.body.offsetHeight - 106;
+      let Dmheight = document.body.offsetHeight - 86;
       let dmPersonBox = document.getElementById(idBox).offsetHeight;
       if (dmPersonBox > Dmheight) {
         document.body.style.height = dmPersonBox + maxH + "px";
@@ -37,6 +37,7 @@ export default {
   user() {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     let userpower_lists = JSON.parse(sessionStorage.getItem('userpower_lists'))
+    let is_special = JSON.parse(sessionStorage.getItem('is_special'))
     if(userInfo && userpower_lists){
       return {
         userName: userInfo.user_name,
@@ -44,7 +45,8 @@ export default {
         type: userInfo.type,
         userPhon: userInfo.user_phon,
         userEmail: userInfo.user_email,
-        userpower_lists:userpower_lists
+        userpower_lists:userpower_lists,
+        is_special :is_special
       }
     }
   },

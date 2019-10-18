@@ -23,7 +23,7 @@
             <el-input v-model="formData.item_name" placeholder="请输入事项名称"></el-input>
           </el-form-item>
           <el-form-item label="主体" prop="organize_id">
-            <el-select style="width: 100%;" v-model="formData.organize_id" placeholder="请选择事项状态">
+            <el-select style="width: 100%;" v-model="formData.organize_id" placeholder="请选择组织主体">
               <el-option
                 v-for="(item,index) in popData"
                 :label="item.organize_name"
@@ -58,8 +58,8 @@
           <el-form-item label="时间">
             <el-col :span="11">
               <el-date-picker
-                format="yyyy-MM-dd HH:mm"
-                value-format="yyyy-MM-dd HH:mm"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
                 type="datetime"
                 placeholder="选择开始日期"
                 v-model="formData.start_time"
@@ -70,8 +70,8 @@
             <el-col :span="11">
               <el-date-picker
                 type="datetime"
-                value-format="yyyy-MM-dd HH:mm"
-                format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd"
+                format="yyyy-MM-dd"
                 placeholder="选择结束时间"
                 v-model="formData.end_time"
                 style="width: 100%;"
@@ -161,7 +161,7 @@ export default {
           exportUrl += key + "=" + this.formData[key] + "&";
         });
         window.open(
-          `${window.location.protocol}//192.168.1.114:8083${this.exportsRouter}?${exportUrl}`
+          `http://newtools.free.idcfengye.com/${this.exportsRouter}?${exportUrl}`
         );
       }
     },
@@ -202,6 +202,9 @@ export default {
     }
   },
   mounted() {
+    let data = new Date().getFullYear();
+    this.formData.start_time = data+'-01-01'
+    this.formData.end_time = data+'-12-31';
     this.subject();
   }
 };

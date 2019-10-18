@@ -37,7 +37,7 @@ export default {
   methods:{
      /* 返回系统事项 */
     callBack() {
-      this.$router.go(-1)
+      this.$router.push('/index/eventSummary/allMatters')
     },
 
   },
@@ -50,7 +50,6 @@ export default {
 .eventDeatils {
   width: 100%;
   min-width: 1200px;
-  height: 100%;
   box-sizing: border-box;
   padding: 20px;
   .event-box {

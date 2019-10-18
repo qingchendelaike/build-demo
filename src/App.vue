@@ -33,24 +33,11 @@ export default {
         to.path == "/index/eventSummary/launchFrom" ||
         to.path == "/index/eventSummary/detailsEvent/initiateDetails"
       ) {
-        let pxH = 0;
-        if (to.path == "/index/person/personMSg") {
-          pxH = 126;
-        } else if (to.path == "/index/eventSummary/launchFrom") {
-          pxH = 326;
-        } else if (
-          to.path == "/index/eventSummary/detailsEvent/initiateDetails"
-        ) {
-          pxH = 430;
-        }
-        this.$nextTick(() => {
-          this.$api.common.maxHeight("person-box", pxH);
-        });
+        document.body.style.height = "auto";
       } else {
-        this.$nextTick(() => {
-          this.$api.common.maxHeight();
-        });
+        document.body.style.height = "100%";
       }
+
       if (to.path != "/") {
         if (this.$api.common.user()) {
           let roterList = this.$api.common.user().userpower_lists;
@@ -59,6 +46,8 @@ export default {
             if (to.path == this.power[i]["url"]) {
               if (this.power[i]["show_menu"] == false) {
                 this.$router.push("*");
+                break;
+              } else {
                 break;
               }
             }

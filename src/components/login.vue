@@ -28,6 +28,7 @@
                 v-model.trim="codeNum"
                 class="code"
                 placeholder="请输入验证码"
+                @keyup.enter="btnLogin"
               />
               <div @click="refreshCode">
                 <identify :identifyCode="identifyCode"></identify>
@@ -36,7 +37,7 @@
             <label class="msgError" v-if="errMsg">{{errMsg}}</label>
           </div>
          <!--  <button @click="btnLogin" v-loading="loginSum" >提 交</button> -->
-         <el-button type="primary" @click="btnLogin" :loading="loginSum">提 交</el-button>
+         <el-button type="primary" @click="btnLogin" :loading="loginSum" >提 交</el-button>
         </div>
       </div>
 
@@ -59,7 +60,7 @@
           </el-select>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button type="danger" @click="dangerBtn" :loading="dangerSum">进入系统</el-button>
+          <el-button type="danger" @click="dangerBtn"  :loading="dangerSum">进入系统</el-button>
         </span>
       </el-dialog>
     </div>

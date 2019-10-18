@@ -9,9 +9,9 @@ let http = axios.create({
 })
 //设置baseURL
 // http.defaults.baseURL = window.location.protocol+'//swift.tfcaijing.com';//正式库
-// http.defaults.baseURL = 'https://swift.tfcaijing.com';//正式库
+ http.defaults.baseURL = 'http://newtools.free.idcfengye.com';//正式库
 // http.defaults.baseURL = window.location.protocol+'//192.168.2.241:8020';//梦霞本地
-   http.defaults.baseURL = window.location.protocol+'//192.168.1.114:8083';//测试
+// http.defaults.baseURL = window.location.protocol+'//192.168.1.114:8083';//测试
 //  http.defaults.baseURL = 'http://mytest.tfcaijing.com:8083';//外网
 // http.defaults.baseURL = 'http://192.168.1.68:8890';//霖霖服务器
 // http.defaults.baseURL = 'http://192.168.0.23:8890';//振聪服务器

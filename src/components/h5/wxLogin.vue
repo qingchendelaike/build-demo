@@ -33,7 +33,7 @@ export default {
       });
 
       if (res.status == "success") {
-        window.location.href = `${window.location.protocol}//192.168.1.114:8083/wechat/webAuth?account=${this.form.name}`
+        window.location.href = `http://newtools.free.idcfengye.com/wechat/webAuth?account=${this.form.name}`
       }
     }
   }

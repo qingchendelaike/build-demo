@@ -215,7 +215,7 @@
                 );
                 if (res.status == "success") {
                     window.open(
-                        `${window.location.protocol}//192.168.1.114:8083/item/downloadFile?download_ticket=${res.data}&file_id=${row.file_id}`
+                        `http://newtools.free.idcfengye.com/item/downloadFile?download_ticket=${res.data}&file_id=${row.file_id}`
                     );
                 }
             },
