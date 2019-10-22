@@ -16,6 +16,7 @@
 
 <script>
 const md5 = require("md5");
+import {BASE_URL} from '@/api/utils'
 export default {
   data() {
     return {
@@ -33,7 +34,7 @@ export default {
       });
 
       if (res.status == "success") {
-        window.location.href = `http://newtools.free.idcfengye.com/wechat/webAuth?account=${this.form.name}`
+        window.location.href = `${BASE_URL}/wechat/webAuth?account=${this.form.name}`
       }
     }
   }

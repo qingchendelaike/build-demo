@@ -68,4 +68,7 @@ export default {
   webChangeDetail(params){
     return api.get('/item/changeDetail', params, header)
   },
+  decryptUrlString(params){
+    return api.get('/base/decryptUrlString', params, header)
+  },
 }

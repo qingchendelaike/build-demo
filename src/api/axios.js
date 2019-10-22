@@ -2,14 +2,17 @@ import axios from 'axios'
 import qs from 'qs'
 import { Message } from 'element-ui'
 import router from '../router'
+import {BASE_URL} from './utils'
 // 创建 axios 实例
 let http = axios.create({
   // headers: {'Content-Type': 'application/json'},
+  baseURL:BASE_URL,
   timeout: 60000
 })
+
 //设置baseURL
 // http.defaults.baseURL = window.location.protocol+'//swift.tfcaijing.com';//正式库
- http.defaults.baseURL = 'http://newtools.free.idcfengye.com';//正式库
+//  http.defaults.baseURL = 'http://newtools.free.idcfengye.com';//正式库
 // http.defaults.baseURL = window.location.protocol+'//192.168.2.241:8020';//梦霞本地
 // http.defaults.baseURL = window.location.protocol+'//192.168.1.114:8083';//测试
 //  http.defaults.baseURL = 'http://mytest.tfcaijing.com:8083';//外网

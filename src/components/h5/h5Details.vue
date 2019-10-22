@@ -172,7 +172,33 @@ export default {
       }
     },
     async h5() {
-      let url = window.location.href,/* "http://www.tfcaijing.com/?p=173-8-1-27-0-1", */
+      let url = window.location.href,
+        reqBody = url.split("?")[1].split("=")[1];
+      let resUrl = await this.$api.common.decryptUrlString({
+        unique_str: reqBody
+      });
+      if (resUrl.status == "success") {
+        let req = {
+          item_id: resUrl.data.item_id,
+          user_id: resUrl.data.user_id,
+          duty_id: resUrl.data.duty_id,
+          change_id: resUrl.data.chang_id,
+          push_id: resUrl.data.push_id,
+          type: resUrl.data.type
+        };
+        let res = await this.$api.common.webChangeDetail(req);
+        if (res.status == "success") {
+          this.msg = res.data;
+          if (this.msg.is_feed) {
+            this.pop = false;
+            this.type = "";
+            this.msgBtn = "已参与反馈";
+            this.disabled = true;
+            this.type = true;
+          }
+        }
+      }
+      /* let url = window.location.href,
         reqBody = url
           .split("?")[1]
           .split("=")[1]
@@ -195,12 +221,31 @@ export default {
           this.disabled = true;
           this.type = true;
         }
-      }
+      } */
     },
     async sum() {
       if (this.value != "") {
-        let url = window.location.href, /* url =
-            "http://www.tfcaijing.com/?p=173-8-1-27-0-1", */
+        let url = window.location.href,
+          reqBody = url.split("?")[1].split("=")[1];
+        let resUrl = await this.$api.common.decryptUrlString({
+          unique_str: reqBody
+        });
+        if (resUrl.status == "success") {
+          let req = {
+            item_id: resUrl.data.item_id,
+            user_id: resUrl.data.user_id,
+            feed_id: this.value
+          };
+          let res = await this.$api.common.webFeedback(req);
+          if (res.status == "success") {
+            this.pop = false;
+            this.type = "";
+            this.msgBtn = "已确定" + this.feed_name + "参与";
+            this.disabled = true;
+            this.type = true;
+          }
+        }
+        /* let url = window.location.href
           reqBody = url
             .split("?")[1]
             .split("=")[1]
@@ -209,7 +254,7 @@ export default {
           item_id: reqBody[0],
           user_id: reqBody[1],
           feed_id: this.value
-        };
+        }; 
         let res = await this.$api.common.webFeedback(req);
         if (res.status == "success") {
           this.pop = false;
@@ -217,7 +262,7 @@ export default {
           this.msgBtn = "已确定" + this.feed_name + "参与";
           this.disabled = true;
           this.type = true;
-        }
+        }*/
       } else {
         this.$message("请选择反馈事项");
       }

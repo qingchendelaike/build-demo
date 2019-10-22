@@ -116,6 +116,7 @@
 </template>
 
 <script>
+import {BASE_URL} from '@/api/utils'
 export default {
   props: [
     "headerTitle",
@@ -161,7 +162,7 @@ export default {
           exportUrl += key + "=" + this.formData[key] + "&";
         });
         window.open(
-          `http://newtools.free.idcfengye.com/${this.exportsRouter}?${exportUrl}`
+          `${BASE_URL}/${this.exportsRouter}?${exportUrl}`
         );
       }
     },
@@ -205,7 +206,7 @@ export default {
     let data = new Date().getFullYear();
     this.formData.start_time = data+'-01-01'
     this.formData.end_time = data+'-12-31';
-    this.subject();
+    this.subject()
   }
 };
 </script>

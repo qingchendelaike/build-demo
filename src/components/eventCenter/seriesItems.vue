@@ -257,13 +257,15 @@ export default {
     /* 事项添加弹窗 */
     matterAddPop(index, row) {
       this.dialogVisible = true;
+      console.log(row)
       this.matterData.series_id = row.series_id;
       this.matterList();
     },
     /* 查询所有事项列表 */
     async matterList() {
       let res = await this.$api.allMatters.matterSeriesList({
-        year: this.diaFormData.year
+        year: this.diaFormData.year,
+        series_id:this.matterData.series_id
       });
       if (res.status == "success") {
         this.transferData = this.restaurants = res.data;

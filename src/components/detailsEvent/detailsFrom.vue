@@ -205,7 +205,6 @@
                 :data="organDataAll"
                 :titles="['人员列表', '已选人员']"
               ></el-transfer>
-
               <span class="addUser" slot="reference"></span>
             </el-popover>
           </p>
@@ -502,31 +501,12 @@ export default {
       if (item.label_name == "") {
         this.$message("请输入标签名称");
       } else {
-
          const res = await this.$api.details.labelAdd(item);
           if (res.status == "success") {
             item.set_bool = false;
             this.labelLists();
             this.$message("标签添加成功");
           }
-       /*  if (item.label_type) {
-          const res = await this.$api.details.labelAdd(item);
-          if (res.status == "success") {
-            item.set_bool = false;
-            this.labelLists();
-            this.$message("标签添加成功");
-          }
-        } else {
-          let req = {
-            label_id: item.label_id,
-            label_name: item.label_name
-          };
-          const res = await this.$api.details.labelEdit(req);
-          if (res.status == "success") {
-            item.set_bool = false;
-            this.$message("修改标签成功");
-          }
-        } */
       }
     },
     /* 删除标签 */
@@ -749,6 +729,7 @@ export default {
   },
   mounted() {
     let datailsObject = JSON.parse(JSON.stringify(this.detailsData));
+
     this.ruleForm.item_name = datailsObject.item_name;
     this.ruleForm.item_label = datailsObject.item_label;
     this.ruleForm.item_id = datailsObject.item_id;
@@ -774,7 +755,6 @@ export default {
    
    this.takesData = JSON.parse(JSON.stringify(this.ruleForm.tasks));
     this.ruleForm.mineStatus.push(this.ruleForm.organize_name);
-
     this.takesData.forEach(i => {
       i.set_bool = false;
       i.users = i.users.split(",");

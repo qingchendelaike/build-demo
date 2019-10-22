@@ -126,6 +126,7 @@
 </template>
 
 <script>
+import {BASE_URL} from '@/api/utils'
     export default {
         data() {
             return {
@@ -215,7 +216,7 @@
                 );
                 if (res.status == "success") {
                     window.open(
-                        `http://newtools.free.idcfengye.com/item/downloadFile?download_ticket=${res.data}&file_id=${row.file_id}`
+                        `${BASE_URL}/item/downloadFile?download_ticket=${res.data}&file_id=${row.file_id}`
                     );
                 }
             },

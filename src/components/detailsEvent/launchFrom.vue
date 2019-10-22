@@ -416,6 +416,7 @@ export default {
       })
     },
     organizeChange(val) {
+      console.log(val)
       this.ruleForm.organize_id = val;
       this.userAll();
     },
@@ -656,7 +657,7 @@ export default {
           let req = {
             item_name: this.ruleForm.item_name,
             item_id: this.$route.query.item_id,
-            organize_id: this.ruleForm.organize_id,
+            organize_id: this.mineStatusValue[0]["organize_id"],
             item_label_ids: this.ruleForm.labelArr.join(','),
             article_year: this.ruleForm.article_year,
             article_sn: this.ruleForm.article_sn,

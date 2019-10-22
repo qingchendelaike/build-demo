@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import {BASE_URL} from '@/api/utils'
 export default {
   props: {
     down: {
@@ -86,7 +87,7 @@ export default {
           exportUrl += key + "=" + this.queryForm[key] + "&";
         });
         window.open(
-          `http://newtools.free.idcfengye.com/${this.exportsRouter}?${exportUrl}`
+          `${BASE_URL}/${this.exportsRouter}?${exportUrl}`
         );
       }
     },
