@@ -7,7 +7,11 @@
         :key="index"
         v-show="item.show_menu == true"
         tag="div"
-      >{{item.power_name}}</router-link>
+      >
+        <span :class="[{'selectMatters':$route.path.indexOf(item.url)>-1},'matters']"></span>
+        
+        {{item.power_name}}
+      </router-link>
     </el-aside>
     <el-main class="main-box">
       <router-view></router-view>
@@ -31,7 +35,6 @@
       </el-drawer>
 
       <div @click="drawer" :class="[drawerBool==true?'drawerLeft':'drawerRight','drawer-switch']">
-        <i class="el-icon-plus"></i>
       </div>
     </el-main>
   </el-container>
@@ -47,25 +50,25 @@ export default {
         {
           value: "/index/eventSummary/launchFrom",
           key: "会议",
-          id:1,
+          id: 1,
           icon: require("../../assets/img/meeting.png")
         },
         {
           value: "/index/eventSummary/launchFrom",
           key: "课程",
-           id:2,
+          id: 2,
           icon: require("../../assets/img/course.png")
         },
         {
           value: "/index/eventSummary/launchFrom",
           key: "活动",
-          id:3,
+          id: 3,
           icon: require("../../assets/img/activity.png")
         },
         {
           value: "/index/eventSummary/launchFrom",
           key: "项目方案",
-          id:4,
+          id: 4,
           icon: require("../../assets/img/plan.png")
         }
       ]
@@ -76,9 +79,11 @@ export default {
       this.drawerBool = !this.drawerBool;
     }
   },
-  mounted(){
-    this.indecChild = this.$api.common.user().userpower_lists[1]['sub_power'][0]['sub_power']
-  },
+  mounted() {
+    this.indecChild = this.$api.common.user().userpower_lists[1][
+      "sub_power"
+    ][0]["sub_power"];
+  }
 };
 </script>
 
@@ -92,7 +97,8 @@ export default {
     box-shadow: 6px 0px 5px 0px rgba(236, 236, 236, 1);
     border-radius: 3px;
     div {
-      text-align: center;
+      display: flex;
+      justify-content: center;
       font-size: 15px;
       font-weight: 400;
       color: rgba(153, 153, 153, 1);
@@ -105,6 +111,50 @@ export default {
       &.router-link-active {
         color: #000;
       }
+      span {
+        display: inline-block;
+        width: 19px;
+        height: 19px;
+        margin-right: 11px;
+        /* 所有事项 */
+        &.matters {
+          background: url("../../assets/img/navslide_sprites.png") -142px -73px
+            no-repeat;
+        }
+        &.selectMatters {
+          background: url("../../assets/img/navslide_sprites.png") -109px -40px
+            no-repeat;
+        }
+        /* 系列事项 */
+        &.seriesItems {
+          background: url("../../assets/img/navslide_sprites.png") -110px -6px
+            no-repeat;
+        }
+        &.selectSeriesItems {
+          background: url("../../assets/img/navslide_sprites.png") -7px -76px
+            no-repeat;
+        }
+
+        /* 我发起的 */
+        &.launched {
+          background: url("../../assets/img/navslide_sprites.png") -7px -6px
+            no-repeat;
+        }
+        &.selectLaunched {
+          background: url("../../assets/img/navslide_sprites.png") -41px -5px
+            no-repeat;
+        }
+
+        /* 我执行的 */
+        &.eXecute {
+          background: url("../../assets/img/navslide_sprites.png") -40px -40px
+            no-repeat;
+        }
+        &.selectEXecute {
+          background: url("../../assets/img/navslide_sprites.png") -76px -6px
+            no-repeat;
+        }
+      }
     }
   }
   /deep/.el-main {
@@ -115,10 +165,10 @@ export default {
   }
 }
 .main-box {
-      position: relative;
-    padding: 20px 35px 20px 15px;
-    margin-left: 5px;
-    background: #f6f6f6;
+  position: relative;
+  padding: 20px 35px 20px 15px;
+  margin-left: 5px;
+  background: #f6f6f6;
   .drawer-switch {
     position: fixed;
     top: 99px;
@@ -126,11 +176,7 @@ export default {
     width: 46px;
     height: 46px;
     z-index: 999999;
-    background: linear-gradient(
-      270deg,
-      rgba(221, 45, 30, 1) 0%,
-      rgba(248, 84, 74, 1) 100%
-    );
+    background: url("../../assets/img/additem.png") 100% 100% no-repeat;
     border-radius: 3px 0px 0px 3px;
     display: flex;
     justify-content: center;

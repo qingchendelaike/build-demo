@@ -3,9 +3,7 @@
     <div class="box">
       <div class="box-title">
         <div class="tit">会议详情</div>
-        <div
-          v-if=" (msg.item_status == 1 && msg.is_feed == false) || (msg.item_status == 2 && msg.is_feed == false) || (msg.item_status == 3 && msg.is_feed == false) "
-        >
+        <div v-if=" (msg.item_status == 1 && msg.is_feed == false) || (msg.item_status == 2 && msg.is_feed == false) || (msg.item_status == 3 && msg.is_feed == false)" >
           参与者：
           <el-select v-model="value" placeholder="请选择">
             <el-option
@@ -115,74 +113,27 @@ export default {
       }
     },
     async h5() {
-      /* let url = window.location.href,
-        reqBody = url
-          .split("?")[1]
-          .split("=")[1]
-          .split("-");
-      let req = {
-        item_id: reqBody[0],
-        user_id: reqBody[1],
-        duty_id: reqBody[2],
-        change_id: reqBody[3],
-        push_id: reqBody[4],
-        type: reqBody[5]
-      };
-      let res = await this.$api.common.webDetail(req);
-      if (res.status == "success") {
-        this.msg = res.data;
-      } */
       let url = window.location.href,
         reqBody = url.split("?")[1].split("=")[1];
-      let resUrl = await this.$api.common.decryptUrlString({
+      let res = await this.$api.common.webDetail({
         unique_str: reqBody
       });
-      if (resUrl.status == "success") {
-        let req = {
-          item_id: resUrl.data.item_id,
-          user_id: resUrl.data.user_id,
-          duty_id: resUrl.data.duty_id,
-          change_id: resUrl.data.chang_id,
-          push_id: resUrl.data.push_id,
-          type: resUrl.data.type
-        };
-        let res = await this.$api.common.webDetail(req);
-        if (res.status == "success") {
-          this.msg = res.data;
-        }
+
+      if (res.status == "success") {
+        this.msg = res.data;
       }
     },
     async sum() {
       if (this.value != "") {
-        /*  let url = window.location.href,
-          reqBody = url
-            .split("?")[1]
-            .split("=")[1]
-            .split("-");
-        let req = {
-          item_id: reqBody[0],
-          user_id: reqBody[1],
-          feed_id: this.value
-        };
-        let res = await this.$api.common.webFeedback(req);
-        if (res.status == "success") {
-          this.bool = false;
-        } */
         let url = window.location.href,
           reqBody = url.split("?")[1].split("=")[1];
-        let resUrl = await this.$api.common.decryptUrlString({
-          unique_str: reqBody
-        });
-        if (resUrl.status == "success") {
           let req = {
-            item_id: resUrl.data.item_id,
-            user_id: resUrl.data.user_id,
+            unique_str: reqBody,
             feed_id: this.value
           };
           let res = await this.$api.common.webFeedback(req);
           if (res.status == "success") {
             this.bool = false;
-          }
         }
       } else {
         this.$message("请选择反馈事项");

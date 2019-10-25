@@ -15,10 +15,18 @@
             class="demo-ruleForm"
           >
             <el-form-item :label="typeSw(this.$route.query.item_id)+'名称'" prop="item_name">
-              <el-input :placeholder="'给'+typeSw(this.$route.query.item_id)+'起个名字吧'" v-model="ruleForm.item_name"></el-input>
+              <el-input
+                :placeholder="'给'+typeSw(this.$route.query.item_id)+'起个名字吧'"
+                v-model="ruleForm.item_name"
+              ></el-input>
             </el-form-item>
             <el-form-item label="组织主体" prop="mineStatus">
-              <el-select v-model="ruleForm.mineStatus" placeholder="请选择组织主体" multiple style="width:100%;">
+              <el-select
+                v-model="ruleForm.mineStatus"
+                placeholder="请选择组织主体"
+                multiple
+                style="width:100%;"
+              >
                 <el-option :value="mineStatusValue" style="height: auto">
                   <el-tree
                     :data="organData"
@@ -41,7 +49,12 @@
             </el-form-item>
             <el-form-item label="类型标签" prop="labelArr">
               <div class="inpuIcon">
-                <el-select v-model="ruleForm.labelArr" multiple  class="selcectType" placeholder="请选择类型标签">
+                <el-select
+                  v-model="ruleForm.labelArr"
+                  multiple
+                  class="selcectType"
+                  placeholder="请选择类型标签"
+                >
                   <el-option
                     v-for="item in labelData"
                     :key="item.label_id"
@@ -113,7 +126,7 @@
                       <el-option label="截止前" value="3"></el-option>
                       <el-option label="截止后" value="4"></el-option>
                     </el-select>
-                    <el-input placeholder="请输入内容" v-model=" item.time" class="popInp"></el-input>
+                    <el-input placeholder="请输入内容" v-model.number=" item.time" class="popInp"></el-input>
                     <el-select v-model="item.time_type" class="popTimer" placeholder="请选择">
                       <el-option label="分钟" value="1"></el-option>
                       <el-option label="小时" value="2"></el-option>
@@ -134,7 +147,10 @@
             </el-form-item>
 
             <el-form-item :label="typeSw(this.$route.query.item_id)+'地点'" prop="item_space">
-              <el-input :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'地点'" v-model="ruleForm.item_space"></el-input>
+              <el-input
+                :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'地点'"
+                v-model="ruleForm.item_space"
+              ></el-input>
             </el-form-item>
 
             <el-form-item :label="typeSw(this.$route.query.item_id)+'原因'" prop="item_reason">
@@ -157,10 +173,7 @@
 
             <el-form-item label="参与人员" prop="users">
               <div class="usersBox" style="  height: 40px;">
-                <span v-for="(item,index) in ruleForm.users" :key="index">
-                 {{item.user_name+'/'}}
-
-                </span>
+                <span>{{ruleForm.users | filterUser}}</span>
                 <el-popover
                   placement="left-start"
                   popper-class="transferDia"
@@ -192,7 +205,7 @@
                     @change="transferChange"
                   ></el-transfer>
                   <div style="width: 100%;text-align: right;margin: 30px 30px 10px 0;">
-                    <el-button type="text" @click="dialogVisible = false">取消</el-button>
+                    <el-button type="text" @click="transferBtnClose">取消</el-button>
                     <el-button type="primary" @click="transferBtn">确定</el-button>
                   </div>
                   <span class="iconUser" slot="reference" style="display: flex;"></span>
@@ -200,7 +213,7 @@
               </div>
             </el-form-item>
 
-            <el-form-item :label="typeSw(this.$route.query.item_id)+'任务'" >
+            <el-form-item :label="typeSw(this.$route.query.item_id)+'任务'">
               <div class="usersBox" style="margin:10px;">
                 <span class="iconTasks" @click="iconTasks"></span>
               </div>
@@ -218,18 +231,29 @@
                   <span class="del" @click="delShow(item,index)"></span>
                   <span class="spanDel"></span>
 
-                  <el-popover placement="left-start" trigger="click" popper-class="transferDia">
+                  <el-popover
+                    placement="left-start"
+                    trigger="click"
+                    popper-class="transferDia"
+                    :ref="`popover-${index}`"
+                  >
                     <el-transfer
                       v-model="item.users"
                       :props="{
                         key: 'user_id',
                         label: 'user_name',
                       }"
-                      :data="organDataAll"
+                      :data="ruleForm.users"
                       :titles="['人员列表', '已选人员']"
                     ></el-transfer>
 
-                    <span class="addUser" slot="reference"></span>
+                    <div style="width: 100%;text-align: right;margin: 30px 30px 10px 0;">
+                      <el-button type="text" @click="startPopBoolClose(`popover-${index}`)">取消</el-button>
+                      <el-button type="primary" @click="startPopBoolSub(`popover-${index}`)">确定</el-button>
+                    </div>
+                    <span class="addUser" @click="startClickPop" slot="reference">
+                      <img style="width:100%;height:100%;" v-show="item.users.length > 0" src="../../assets/img/icon_addmembers_on.png" alt="">
+                    </span>
                   </el-popover>
                 </p>
               </div>
@@ -248,7 +272,12 @@
 
             <el-form-item label="存档文件" prop="filesArr">
               <div class="inpuIcon">
-                <el-select class="selcectType" v-model="ruleForm.filesArr" multiple placeholder="请选择存档文件">
+                <el-select
+                  class="selcectType"
+                  v-model="ruleForm.filesArr"
+                  multiple
+                  placeholder="请选择存档文件"
+                >
                   <el-option
                     v-for="item in filesData"
                     :key="item.archive_id"
@@ -258,7 +287,7 @@
                 </el-select>
 
                 <labelMsgAdd
-                 v-if="is_special"
+                  v-if="is_special"
                   :lableText="filesText"
                   :labelData="filesData"
                   :labelBool="filesBool"
@@ -290,7 +319,7 @@ export default {
   },
   data() {
     return {
-      is_special:false,
+      is_special: false,
       transferSelect: [],
       dialogVisible: false,
       transferData: [],
@@ -331,7 +360,7 @@ export default {
         zh_status: "",
         users: [],
         organize_id: "",
-        labelArr: [],
+        labelArr: []
       },
       rules: {
         item_name: [
@@ -352,9 +381,13 @@ export default {
         mineStatus: [
           { required: true, message: "请选择组织主体", trigger: "change" }
         ],
-        labelArr:[{ required: true, message: "请选择类型标签", trigger: "change" }],
-        filesArr:[{ required: true, message: "请选择存档文件", trigger: "change" }],
-        users:[ { required: true, message: "请选择参与人员" }],
+        labelArr: [
+          { required: true, message: "请选择类型标签", trigger: "change" }
+        ],
+        filesArr: [
+          { required: true, message: "请选择存档文件", trigger: "change" }
+        ],
+        users: [{ required: true, message: "请选择参与人员" }],
         start_time: [
           {
             type: "string",
@@ -379,44 +412,55 @@ export default {
       organDataAll: [],
       item_key: "",
       noticesData: [],
-      transferUser_id:[],
+      transferUser_id: [],
+      startPop: [],
+      organizeValue: "",
       //日期控件
       pickerOptions0: {
         // 限制结束日期不能大于开始日期
         disabledDate: time => {
           if (this.ruleForm.end_time != "") {
-            return (
-              time.getTime() > new Date(this.ruleForm.end_time).getTime()
-            );
-          } 
+            return time.getTime() > new Date(this.ruleForm.end_time).getTime();
+          }
         }
       },
       pickerOptions1: {
         disabledDate: time => {
-          return (
-            time.getTime() < new Date(this.ruleForm.start_time).getTime() 
-          );
+          return time.getTime() < new Date(this.ruleForm.start_time).getTime();
         }
-      },
+      }
     };
   },
   methods: {
+    startPopBoolClose(val) {
+      this.$refs[val][0].doClose();
+      this.takesData = this.startPop;
+    },
+    startPopBoolSub(val) {
+      this.$refs[val][0].doClose();
+    },
+    startClickPop() {
+      this.startPop = JSON.parse(JSON.stringify(this.takesData));
+    },
     /* 返回系统事项 */
     callBack() {
-      this.$router.push("/index/eventSummary/seriesItems");
+      this.$router.push('/index/eventSummary/allMatters');
     },
 
+    transferBtnClose() {
+      this.transferValue = this.organizeValue;
+      this.dialogVisible = false;
+    },
     transferBtn() {
       this.dialogVisible = false;
-      this.ruleForm.users = []
-      this.organDataAll.forEach(i=>{
-        if(this.transferUser_id.indexOf(i.user_id)>=0){
+      this.ruleForm.users = [];
+      this.organDataAll.forEach(i => {
+        if (this.transferUser_id.indexOf(i.user_id) >= 0) {
           this.ruleForm.users.push(i);
         }
-      })
+      });
     },
     organizeChange(val) {
-      console.log(val)
       this.ruleForm.organize_id = val;
       this.userAll();
     },
@@ -449,6 +493,7 @@ export default {
     /*参与人员*/
     /* 参与人员列表 */
     async userAll() {
+      this.organizeValue = JSON.parse(JSON.stringify(this.transferValue));
       let req = {
         organize_id: this.ruleForm.organize_id
       };
@@ -650,18 +695,27 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let item_task = JSON.parse(JSON.stringify(this.takesData));
-          item_task.forEach(i => {
-            i.users = i.users.join(",");
-          });
+          let item_task = JSON.parse(JSON.stringify(this.takesData)),taskBool = false;
+          for (let i = 0; i < item_task.length; i++) {
+            if(item_task[i]['users'].length  == 0){
+              taskBool = true
+              break;
+            }
+            item_task[i]['users'] = item_task[i]['users'].join(",")
+          }
+          if(taskBool){
+            this.$message("请为任务添加指定人")
+            return ;
+          }
           let req = {
             item_name: this.ruleForm.item_name,
             item_id: this.$route.query.item_id,
             organize_id: this.mineStatusValue[0]["organize_id"],
-            item_label_ids: this.ruleForm.labelArr.join(','),
+            item_label_ids: this.ruleForm.labelArr.join(","),
             article_year: this.ruleForm.article_year,
             article_sn: this.ruleForm.article_sn,
             start_time: this.ruleForm.start_time,
+            item_sn:this.ruleForm.item_sn,
             end_time: this.ruleForm.end_time,
             item_space: this.ruleForm.item_space,
             item_reason: this.ruleForm.item_reason,
@@ -670,7 +724,7 @@ export default {
             item_task: item_task,
             item_series: this.seriesData.join(","),
             item_archive_ids: this.ruleForm.filesArr.join(","),
-            item_notice:  this.noticesData,
+            item_notice: this.noticesData
           };
           this.matterDetailsAdd(req);
         }
@@ -683,8 +737,8 @@ export default {
         this.$router.go(-1);
       }
     },
-    transferChange(val){
-      this.transferUser_id = val
+    transferChange(val) {
+      this.transferUser_id = val;
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -694,7 +748,8 @@ export default {
       let req = {
         set_bool: true,
         content: "",
-        task_id: ""
+        task_id: "",
+        users:[]
       };
       this.takesData.push(req);
     },
@@ -727,13 +782,28 @@ export default {
       this.filesBool = val;
     }
   },
+  filters: {
+    filterUser(val) {
+      let num = val.length,
+        str = "";
+      for (let i = 0; i < val.length; i++) {
+        if (i == num - 1 || i > 6) {
+          str += val[i].user_name + " 等" + num + "人";
+          break;
+        } else {
+          str += val[i].user_name + "/";
+        }
+      }
+      return str;
+    }
+  },
   mounted() {
     this.item_key = this.$route.query.item_id;
     this.organ();
     this.labelLists();
     this.filesType();
     this.seriesMenu();
-    this.is_special = this.$api.common.user().is_special
+    this.is_special = this.$api.common.user().is_special;
   }
 };
 </script>
@@ -767,15 +837,15 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-.selcectType{
-  flex: 1;
-}
+  .selcectType {
+    flex: 1;
+  }
   span {
     display: inline-block;
     width: 50px;
     height: 25px;
     text-align: right;
-   /*  background: url("../../assets/img/details_sprites.png") no-repeat;
+    /*  background: url("../../assets/img/details_sprites.png") no-repeat;
 
     &.icon {
       background-position: -56px -10px;

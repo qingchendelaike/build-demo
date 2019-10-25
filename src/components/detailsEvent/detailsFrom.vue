@@ -36,7 +36,7 @@
       <el-form-item label="类型标签" prop="labelArr">
         <div class="inpuIcon">
           <!--collapse-tags -->
-          <el-select v-model="ruleForm.labelArr" multiple class="selcectType" placeholder="请选择类型标签" >
+          <el-select v-model="ruleForm.labelArr" multiple class="selcectType" placeholder="请选择类型标签">
             <el-option
               v-for="item in labelData"
               :key="item.label_id"
@@ -47,7 +47,7 @@
           </el-select>
 
           <labelMsg
-          v-if="is_special"
+            v-if="is_special"
             :lableText="lableText"
             :labelData="labelData"
             :labelBool="labelBool"
@@ -101,14 +101,14 @@
               </span>
             </p>
 
-            <div class="pop" v-for="(item,index) in ruleForm.notices" :key="index">
+            <div class="pop" v-for="(item,index) in noticesData" :key="index">
               <el-select v-model=" item.send_type + ''" class="popOver" placeholder="请选择">
                 <el-option label="开始前" value="1"></el-option>
                 <el-option label="开始后" value="2"></el-option>
                 <el-option label="截止前" value="3"></el-option>
                 <el-option label="截止后" value="4"></el-option>
               </el-select>
-              <el-input placeholder="请输入内容" v-model=" item.time" class="popInp"></el-input>
+              <el-input placeholder="请输入内容" v-model.number=" item.time" class="popInp"></el-input>
               <el-select v-model="item.time_type+ ''" class="popTimer" placeholder="请选择">
                 <el-option label="分钟" value="1"></el-option>
                 <el-option label="小时" value="2"></el-option>
@@ -118,11 +118,11 @@
             </div>
 
             <div style="text-align: right; margin: 0">
-              <el-button type="text" @click="closeTimer()">取消</el-button>
+              <el-button type="text" @click="cancelTimer()">取消</el-button>
               <el-button type="primary" @click="tiemr(ruleForm.notices)">确定</el-button>
             </div>
 
-            <span class="timeicon" slot="reference"></span>
+            <span class="timeicon" @click="timeShow" slot="reference"></span>
           </el-popover>
         </el-col>
       </el-form-item>
@@ -141,7 +141,8 @@
 
       <el-form-item label="参与人员" prop="users">
         <div class="usersBox">
-          <span v-for="(item,index) in ruleForm.users" :key="index">{{item.user_name+'/'}}</span>
+          <!-- <span v-for="(item,index) in ruleForm.users" :key="index">{{item.user_name+'/'}}</span> -->
+          <span>{{ruleForm.users | filterUser}}</span>
           <el-popover placement="left-start" popper-class="transferDia" v-model="dialogVisible">
             <el-form-item label="所属组织">
               <el-select
@@ -157,7 +158,6 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-
             <el-transfer
               v-model="transferValue"
               :props="{
@@ -169,7 +169,7 @@
               @change="transferChange"
             ></el-transfer>
             <div style="width: 100%;text-align: right;margin: 30px 30px 10px 0;">
-              <el-button type="text" @click="dialogVisible = false">取消</el-button>
+              <el-button type="text" @click="transferBtnClose">取消</el-button>
               <el-button type="primary" @click="transferBtn">确定</el-button>
             </div>
             <span class="iconUser" @click="userAll" slot="reference" style="display: flex;"></span>
@@ -195,17 +195,28 @@
             <span class="del" @click="delShow(item,index)"></span>
             <span class="spanDel"></span>
 
-            <el-popover placement="left-start" trigger="click" popper-class="transferDia">
+            <el-popover
+              placement="left-start"
+              popper-class="transferDia"
+              trigger="click"
+               :ref="`popover-${index}`"
+            >
               <el-transfer
                 v-model="item.users"
                 :props="{
                   key: 'user_id',
                   label: 'user_name',
                 }"
-                :data="organDataAll"
+                :data="ruleForm.users"
                 :titles="['人员列表', '已选人员']"
               ></el-transfer>
-              <span class="addUser" slot="reference"></span>
+              <div style="width: 100%;text-align: right;margin: 30px 30px 10px 0;">
+                <el-button type="text" @click="startPopBoolClose(`popover-${index}`)">取消</el-button>
+                <el-button type="primary" @click="startPopBoolSub(`popover-${index}`)">确定</el-button>
+              </div>
+              <span class="addUser" @click="startClickPop" slot="reference">
+                <img style="width:100%;height:100%;" v-show="item.users.length > 0" src="../../assets/img/icon_addmembers_on.png" alt="">
+              </span>
             </el-popover>
           </p>
         </div>
@@ -234,7 +245,7 @@
             ></el-option>
           </el-select>
           <labelMsg
-          v-if="is_special"
+            v-if="is_special"
             :lableText="filesText"
             :labelData="filesData"
             :labelBool="filesBool"
@@ -282,6 +293,7 @@ export default {
   props: ["detailsData"],
   data() {
     return {
+      noticesData:[],
       transferSelect: [],
       dialogVisible: false,
       transferData: [],
@@ -321,7 +333,7 @@ export default {
         item_archive_ids: "",
         create_user_name: "",
         zh_status: "",
-        users: [],
+        users: []
       },
       rules: {
         item_name: [
@@ -372,12 +384,28 @@ export default {
       organArr: [],
       organDataAll: [],
       transferUser_id: [],
-      is_special:false
+      is_special: false,
+      startPop: [],
+      organizeValue: ""
     };
   },
   methods: {
+    startPopBoolClose(val) {
+      this.$refs[val][0].doClose()
+      this.takesData = this.startPop;
+    },
+    startPopBoolSub(val) {
+     this.$refs[val][0].doClose()
+    },
+    startClickPop() {
+      this.startPop = JSON.parse(JSON.stringify(this.takesData));
+    },
     transferChange(val) {
       this.transferUser_id = val;
+    },
+    transferBtnClose() {
+      this.transferValue = this.organizeValue;
+      this.dialogVisible = false;
     },
     transferBtn() {
       this.dialogVisible = false;
@@ -432,6 +460,7 @@ export default {
     /*参与人员*/
     /* 参与人员列表 */
     async userAll() {
+      this.organizeValue = JSON.parse(JSON.stringify(this.transferValue));
       let req = {
         item_id: this.ruleForm.item_id,
         organize_id: this.detailsData.organize_id
@@ -453,21 +482,27 @@ export default {
     closeTimer(index) {
       this.ruleForm.notices.splice(index, 1);
     },
+    timeShow(){
+      this.noticesData = this.ruleForm.notices
+    },
     /*取消时间提醒*/
     cancelTimer() {
-      let timerRes = JSON.parse(JSON.stringify(this.detailsData.notices));
-      this.ruleForm.notices = timerRes;
+      this.noticesData = this.ruleForm.notices
       this.visibleBool = false;
     },
     /*添加时间提醒*/
     addTimer(val) {
       let req = {
-        notice_id: val[0]["notice_id"],
         send_type: "1",
         time: "",
         time_type: "1"
       };
-      val.push(req);
+
+       if(val.length > 0 && val[0]["notice_id"]){
+       req.notice_id = val[0]["notice_id"]
+      } 
+      val.push(req)
+      this.noticesData = val
     },
     /*时间提醒确定*/
     tiemr(val) {
@@ -501,12 +536,12 @@ export default {
       if (item.label_name == "") {
         this.$message("请输入标签名称");
       } else {
-         const res = await this.$api.details.labelAdd(item);
-          if (res.status == "success") {
-            item.set_bool = false;
-            this.labelLists();
-            this.$message("标签添加成功");
-          }
+        const res = await this.$api.details.labelAdd(item);
+        if (res.status == "success") {
+          item.set_bool = false;
+          this.labelLists();
+          this.$message("标签添加成功");
+        }
       }
     },
     /* 删除标签 */
@@ -646,18 +681,27 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let item_task = JSON.parse(JSON.stringify(this.takesData));
-          item_task.forEach(i => {
-            i.users = i.users.join(",");
-          });
+          let item_task = JSON.parse(JSON.stringify(this.takesData)),taskBool = false;
+          for (let i = 0; i < item_task.length; i++) {
+            if(item_task[i]['users'].length  == 0){
+              taskBool = true
+              break;
+            }
+            item_task[i]['users'] = item_task[i]['users'].join(",")
+          }
+          if(taskBool){
+            this.$message("请为任务添加指定人")
+            return ;
+          }
           let req = {
             item_name: this.ruleForm.item_name,
             item_id: this.ruleForm.item_id,
-            organize_id: this.ruleForm.mineStatus,
-            item_label_ids: this.ruleForm.labelArr.join(','),
+            organize_id: this.ruleForm.organize_id,
+            item_label_ids: this.ruleForm.labelArr.join(","),
             article_year: this.ruleForm.article_year,
             article_sn: this.ruleForm.article_sn,
             start_time: this.ruleForm.start_time,
+            item_sn:this.ruleForm.item_sn,
             end_time: this.ruleForm.end_time,
             item_space: this.ruleForm.item_space,
             item_reason: this.ruleForm.item_reason,
@@ -669,8 +713,7 @@ export default {
             item_notice: this.ruleForm.notices,
             is_send: this.radio
           };
-
-          this.matterDetailsEdit(req);
+           this.matterDetailsEdit(req);
         } else {
           console.log("error submit!!");
           return false;
@@ -693,7 +736,8 @@ export default {
       let req = {
         set_bool: true,
         content: "",
-        task_id: ""
+        task_id: "",
+        users:[]
       };
       this.takesData.push(req);
     },
@@ -727,6 +771,21 @@ export default {
       this.filesBool = val;
     }
   },
+  filters: {
+    filterUser(val) {
+      let num = val.length,
+        str = "";
+      for (let i = 0; i < val.length; i++) {
+        if (i == num - 1 || i > 6) {
+          str += val[i].user_name + " 等" + num + "人";
+          break;
+        } else {
+          str += val[i].user_name + "/";
+        }
+      }
+      return str;
+    }
+  },
   mounted() {
     let datailsObject = JSON.parse(JSON.stringify(this.detailsData));
 
@@ -749,15 +808,21 @@ export default {
     this.ruleForm.zh_status = datailsObject.zh_status;
     this.ruleForm.users = datailsObject.users;
     this.ruleForm.organize_name = datailsObject.organize_name;
-    this.ruleForm.tasks =  datailsObject.tasks;
-    this.ruleForm.series = datailsObject.series
-    this.ruleForm.notices = datailsObject.notices
-   
-   this.takesData = JSON.parse(JSON.stringify(this.ruleForm.tasks));
+    this.ruleForm.tasks = datailsObject.tasks;
+    this.ruleForm.series = datailsObject.series;
+    this.ruleForm.notices = datailsObject.notices;
+    this.ruleForm.organize_id =  datailsObject.organize_id;
+
+    this.takesData = JSON.parse(JSON.stringify(this.ruleForm.tasks));
     this.ruleForm.mineStatus.push(this.ruleForm.organize_name);
     this.takesData.forEach(i => {
       i.set_bool = false;
       i.users = i.users.split(",");
+      if (i.users) {
+          for (let j = 0; j < i.users.length; j++) {
+            i.users[j] = parseInt(i.users[j]);
+          }
+        }
     });
 
     this.ruleForm.series.forEach(i => {
@@ -778,7 +843,7 @@ export default {
     this.labelLists();
     this.filesType();
     this.seriesMenu();
-    this.is_special = this.$api.common.user().is_special
+    this.is_special = this.$api.common.user().is_special;
   }
 };
 </script>
@@ -812,15 +877,15 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-.selcectType{
-  flex: 1;
-}
+  .selcectType {
+    flex: 1;
+  }
   span {
     display: inline-block;
     width: 50px;
     text-align: right;
     height: 25px;
-   /* background: url("../../assets/img/details_sprites.png") no-repeat;
+    /* background: url("../../assets/img/details_sprites.png") no-repeat;
 
     /* &.icon {
       background-position: -56px -10px;

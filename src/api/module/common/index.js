@@ -56,9 +56,6 @@ export default {
   webFeedback(params){
     return api.post('/item/webFeedback', params, header)
   },
-  changeDetail(params){
-    return api.get('/item/changeDetail', params, header)
-  },
   wxLogin(params){
     return api.post('/partyUser/checkAccount', params, header)
   },
@@ -67,8 +64,5 @@ export default {
   },
   webChangeDetail(params){
     return api.get('/item/changeDetail', params, header)
-  },
-  decryptUrlString(params){
-    return api.get('/base/decryptUrlString', params, header)
   },
 }

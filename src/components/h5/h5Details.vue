@@ -174,44 +174,9 @@ export default {
     async h5() {
       let url = window.location.href,
         reqBody = url.split("?")[1].split("=")[1];
-      let resUrl = await this.$api.common.decryptUrlString({
+      let res = await this.$api.common.webChangeDetail({
         unique_str: reqBody
       });
-      if (resUrl.status == "success") {
-        let req = {
-          item_id: resUrl.data.item_id,
-          user_id: resUrl.data.user_id,
-          duty_id: resUrl.data.duty_id,
-          change_id: resUrl.data.chang_id,
-          push_id: resUrl.data.push_id,
-          type: resUrl.data.type
-        };
-        let res = await this.$api.common.webChangeDetail(req);
-        if (res.status == "success") {
-          this.msg = res.data;
-          if (this.msg.is_feed) {
-            this.pop = false;
-            this.type = "";
-            this.msgBtn = "已参与反馈";
-            this.disabled = true;
-            this.type = true;
-          }
-        }
-      }
-      /* let url = window.location.href,
-        reqBody = url
-          .split("?")[1]
-          .split("=")[1]
-          .split("-");
-      let req = {
-        item_id: reqBody[0],
-        user_id: reqBody[1],
-        duty_id: reqBody[2],
-        change_id: reqBody[3],
-        push_id: reqBody[4],
-        type: reqBody[5]
-      };
-      let res = await this.$api.common.webChangeDetail(req);
       if (res.status == "success") {
         this.msg = res.data;
         if (this.msg.is_feed) {
@@ -221,7 +186,7 @@ export default {
           this.disabled = true;
           this.type = true;
         }
-      } */
+      }
     },
     async sum() {
       if (this.value != "") {
