@@ -17,7 +17,7 @@
       </span>
       <span class="iconAddTitle">新增标签</span>
     </p>
-    <p class="lableTis">删除或修改类型名称不影响已归属其下的会议，请谨慎操作</p>
+    <p class="lableTis">删除类型名称不影响已归属其下的会议，请谨慎操作</p>
     <div style="text-align: right; margin: 0">
       <el-button type="text" @click="closeType">取消</el-button>
       <el-button type="primary" @click="closeType">确定</el-button>

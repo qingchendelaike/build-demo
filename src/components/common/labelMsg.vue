@@ -1,6 +1,7 @@
 <template>
   <el-popover placement="bottom" trigger="manual" popper-class="labelpop" v-model="labelBool">
     <h3>{{lableText}}</h3>
+    <div style="width:100%;max-height:200px;overflow-y: auto;">
     <div
       v-for="(item,index) in labelData"
       :key="index"
@@ -13,13 +14,14 @@
       <span class="label Add" v-show="item.set_bool" @click="addLable(item)">保存</span>
       <span class="label Close" @click="closeLable(item,index)"></span>
     </div>
+    </div>
     <p class="labelP" @click="addTitle">
       <span class="iconAdd">
         <i class="el-icon-plus"></i>
       </span>
       <span class="iconAddTitle">新增标签</span>
     </p>
-    <p class="lableTis">删除或修改类型名称不影响已归属其下的会议，请谨慎操作</p>
+    <p class="lableTis">删除名称不影响已归属其下的会议，请谨慎操作</p>
     <div style="text-align: right; margin: 0">
       <el-button type="text" @click="closeType">取消</el-button>
       <el-button type="primary" @click="closeType">确定</el-button>

@@ -181,7 +181,7 @@
                 >
                   <el-form-item label="所属组织">
                     <el-select
-                      v-model="ruleForm.organize_id"
+                      v-model="detailsOrganize_id"
                       placeholder="请选择组织"
                       @change="organizeChange"
                     >
@@ -319,6 +319,7 @@ export default {
   },
   data() {
     return {
+      detailsOrganize_id: "",
       is_special: false,
       transferSelect: [],
       dialogVisible: false,
@@ -414,6 +415,7 @@ export default {
       noticesData: [],
       transferUser_id: [],
       startPop: [],
+      transferOldData: [],
       organizeValue: "",
       //日期控件
       pickerOptions0: {
@@ -444,21 +446,25 @@ export default {
     },
     /* 返回系统事项 */
     callBack() {
-      this.$router.push('/index/eventSummary/allMatters');
+      this.$router.push("/index/eventSummary/allMatters");
     },
 
     transferBtnClose() {
       this.transferValue = this.organizeValue;
       this.dialogVisible = false;
+      this.detailsOrganize_id = "";
+      this.transferOldData = this.transferData = [];
     },
     transferBtn() {
       this.dialogVisible = false;
       this.ruleForm.users = [];
-      this.organDataAll.forEach(i => {
+      this.transferData.forEach(i => {
         if (this.transferUser_id.indexOf(i.user_id) >= 0) {
           this.ruleForm.users.push(i);
         }
       });
+      this.detailsOrganize_id = "";
+      this.transferOldData = this.transferData = [];
     },
     organizeChange(val) {
       this.ruleForm.organize_id = val;
@@ -495,11 +501,11 @@ export default {
     async userAll() {
       this.organizeValue = JSON.parse(JSON.stringify(this.transferValue));
       let req = {
-        organize_id: this.ruleForm.organize_id
+        organize_id: this.detailsOrganize_id
       };
       const res = await this.$api.details.organizeUserLists(req);
       if (res.status == "success") {
-        this.organDataAll = this.organDataAll.concat(res.data);
+        /*  this.organDataAll = this.organDataAll.concat(res.data);
         let obj = {};
         this.organDataAll = this.organDataAll.reduce((item, next) => {
           obj[next.user_id]
@@ -507,7 +513,17 @@ export default {
             : (obj[next.user_id] = true && item.push(next));
           return item;
         }, []);
-        this.transferData = this.organDataAll;
+        this.transferData = this.organDataAll; */
+        this.transferOldData = this.transferData = [];
+        this.transferOldData = JSON.parse(JSON.stringify(res.data));
+        res.data = res.data.concat(this.ruleForm.users);
+        let resObj = {};
+        this.transferData = res.data.reduce((cur, next) => {
+          resObj[next.user_id]
+            ? ""
+            : (resObj[next.user_id] = true && cur.push(next));
+          return cur;
+        }, []);
       }
     },
     /* 删除时间提醒 */
@@ -581,7 +597,7 @@ export default {
     /* 新增标签 */
     addTitle() {
       let req = {
-        label_type: this.ruleForm.item_type,
+        label_type: this.$route.query.item_id,
         label_name: "",
         set_bool: true
       };
@@ -695,17 +711,18 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let item_task = JSON.parse(JSON.stringify(this.takesData)),taskBool = false;
+          let item_task = JSON.parse(JSON.stringify(this.takesData)),
+            taskBool = false;
           for (let i = 0; i < item_task.length; i++) {
-            if(item_task[i]['users'].length  == 0){
-              taskBool = true
+            if (item_task[i]["users"].length == 0) {
+              taskBool = true;
               break;
             }
-            item_task[i]['users'] = item_task[i]['users'].join(",")
+            item_task[i]["users"] = item_task[i]["users"].join(",");
           }
-          if(taskBool){
-            this.$message("请为任务添加指定人")
-            return ;
+          if (taskBool) {
+            this.$message("请为任务添加指定人");
+            return;
           }
           let req = {
             item_name: this.ruleForm.item_name,
@@ -715,7 +732,7 @@ export default {
             article_year: this.ruleForm.article_year,
             article_sn: this.ruleForm.article_sn,
             start_time: this.ruleForm.start_time,
-            item_sn:this.ruleForm.item_sn,
+            item_sn: this.ruleForm.item_sn,
             end_time: this.ruleForm.end_time,
             item_space: this.ruleForm.item_space,
             item_reason: this.ruleForm.item_reason,
@@ -749,7 +766,7 @@ export default {
         set_bool: true,
         content: "",
         task_id: "",
-        users:[]
+        users: []
       };
       this.takesData.push(req);
     },
@@ -795,6 +812,36 @@ export default {
         }
       }
       return str;
+    }
+  },
+  watch: {
+    transferValue: {
+      handler(newValue, oldValue) {
+        if (newValue.length < oldValue.length) {
+          let c = [...newValue, ...oldValue],
+            d = new Set(c),
+            e = Array.from(d),
+            f = [
+              ...e.filter(_ => !newValue.includes(_)),
+              ...e.filter(_ => !oldValue.includes(_))
+            ];
+
+          let transData = this.transferOldData.map(i => {
+            return i.user_id;
+          });
+
+          if (transData.indexOf(parseInt(f.join(","))) < 0) {
+            for (let i = 0; i < this.transferData.length; i++) {
+              if(this.transferData[i]['user_id'] == parseInt(f.join(","))){
+                 let num = this.transferData.indexOf(this.transferData[i])
+                  this.transferData.splice(num,1)
+                break
+              }
+            } 
+          }
+        }
+      },
+      deep: true
     }
   },
   mounted() {

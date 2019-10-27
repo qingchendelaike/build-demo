@@ -145,11 +145,7 @@
           <span>{{ruleForm.users | filterUser}}</span>
           <el-popover placement="left-start" popper-class="transferDia" v-model="dialogVisible">
             <el-form-item label="所属组织">
-              <el-select
-                v-model="detailsData.organize_id"
-                placeholder="请选择组织"
-                @change="organizeChange"
-              >
+              <el-select v-model="detailsOrganize_id" placeholder="请选择组织" @change="organizeChange">
                 <el-option
                   v-for="item in organArr"
                   :key="item.organize_id"
@@ -172,7 +168,7 @@
               <el-button type="text" @click="transferBtnClose">取消</el-button>
               <el-button type="primary" @click="transferBtn">确定</el-button>
             </div>
-            <span class="iconUser" @click="userAll" slot="reference" style="display: flex;"></span>
+            <span class="iconUser" slot="reference" style="display: flex;"></span>
           </el-popover>
         </div>
       </el-form-item>
@@ -199,7 +195,7 @@
               placement="left-start"
               popper-class="transferDia"
               trigger="click"
-               :ref="`popover-${index}`"
+              :ref="`popover-${index}`"
             >
               <el-transfer
                 v-model="item.users"
@@ -293,10 +289,12 @@ export default {
   props: ["detailsData"],
   data() {
     return {
-      noticesData:[],
+      detailsOrganize_id: "",
+      noticesData: [],
       transferSelect: [],
       dialogVisible: false,
       transferData: [],
+      transferOldData: [],
       transferValue: [],
       mineStatusValue: [],
       defaultProps: {
@@ -382,7 +380,6 @@ export default {
       labelData: [],
       seriseData: [],
       organArr: [],
-      organDataAll: [],
       transferUser_id: [],
       is_special: false,
       startPop: [],
@@ -391,11 +388,11 @@ export default {
   },
   methods: {
     startPopBoolClose(val) {
-      this.$refs[val][0].doClose()
+      this.$refs[val][0].doClose();
       this.takesData = this.startPop;
     },
     startPopBoolSub(val) {
-     this.$refs[val][0].doClose()
+      this.$refs[val][0].doClose();
     },
     startClickPop() {
       this.startPop = JSON.parse(JSON.stringify(this.takesData));
@@ -406,15 +403,19 @@ export default {
     transferBtnClose() {
       this.transferValue = this.organizeValue;
       this.dialogVisible = false;
+      this.detailsOrganize_id = "";
+      this.transferOldData = this.transferData = [];
     },
     transferBtn() {
       this.dialogVisible = false;
       this.ruleForm.users = [];
-      this.organDataAll.forEach(i => {
+      this.transferData.forEach(i => {
         if (this.transferUser_id.indexOf(i.user_id) >= 0) {
           this.ruleForm.users.push(i);
         }
       });
+      this.detailsOrganize_id = "";
+      this.transferOldData = this.transferData = [];
     },
     organizeChange(val) {
       this.ruleForm.organize_id = val;
@@ -463,31 +464,32 @@ export default {
       this.organizeValue = JSON.parse(JSON.stringify(this.transferValue));
       let req = {
         item_id: this.ruleForm.item_id,
-        organize_id: this.detailsData.organize_id
+        organize_id: this.detailsOrganize_id
       };
       const res = await this.$api.details.organizeUserLists(req);
       if (res.status == "success") {
-        this.organDataAll = this.organDataAll.concat(res.data);
-        let obj = {};
-        this.organDataAll = this.organDataAll.reduce((item, next) => {
-          obj[next.user_id]
+        this.transferOldData = this.transferData = [];
+        this.transferOldData = JSON.parse(JSON.stringify(res.data));
+        res.data = res.data.concat(this.ruleForm.users);
+        let resObj = {};
+        this.transferData = res.data.reduce((cur, next) => {
+          resObj[next.user_id]
             ? ""
-            : (obj[next.user_id] = true && item.push(next));
-          return item;
+            : (resObj[next.user_id] = true && cur.push(next));
+          return cur;
         }, []);
-        this.transferData = this.organDataAll;
       }
     },
     /* 删除时间提醒 */
     closeTimer(index) {
       this.ruleForm.notices.splice(index, 1);
     },
-    timeShow(){
-      this.noticesData = this.ruleForm.notices
+    timeShow() {
+      this.noticesData = this.ruleForm.notices;
     },
     /*取消时间提醒*/
     cancelTimer() {
-      this.noticesData = this.ruleForm.notices
+      this.noticesData = this.ruleForm.notices;
       this.visibleBool = false;
     },
     /*添加时间提醒*/
@@ -498,11 +500,11 @@ export default {
         time_type: "1"
       };
 
-       if(val.length > 0 && val[0]["notice_id"]){
-       req.notice_id = val[0]["notice_id"]
-      } 
-      val.push(req)
-      this.noticesData = val
+      if (val.length > 0 && val[0]["notice_id"]) {
+        req.notice_id = val[0]["notice_id"];
+      }
+      val.push(req);
+      this.noticesData = val;
     },
     /*时间提醒确定*/
     tiemr(val) {
@@ -613,7 +615,6 @@ export default {
         };
         const res = await this.$api.details.archiveDelete(req);
         if (res.status == "success") {
-          // this.labelLists()
           this.$message("删除标签成功");
         }
       }
@@ -681,17 +682,18 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let item_task = JSON.parse(JSON.stringify(this.takesData)),taskBool = false;
+          let item_task = JSON.parse(JSON.stringify(this.takesData)),
+            taskBool = false;
           for (let i = 0; i < item_task.length; i++) {
-            if(item_task[i]['users'].length  == 0){
-              taskBool = true
+            if (item_task[i]["users"].length == 0) {
+              taskBool = true;
               break;
             }
-            item_task[i]['users'] = item_task[i]['users'].join(",")
+            item_task[i]["users"] = item_task[i]["users"].join(",");
           }
-          if(taskBool){
-            this.$message("请为任务添加指定人")
-            return ;
+          if (taskBool) {
+            this.$message("请为任务添加指定人");
+            return;
           }
           let req = {
             item_name: this.ruleForm.item_name,
@@ -701,7 +703,7 @@ export default {
             article_year: this.ruleForm.article_year,
             article_sn: this.ruleForm.article_sn,
             start_time: this.ruleForm.start_time,
-            item_sn:this.ruleForm.item_sn,
+            item_sn: this.ruleForm.item_sn,
             end_time: this.ruleForm.end_time,
             item_space: this.ruleForm.item_space,
             item_reason: this.ruleForm.item_reason,
@@ -713,7 +715,8 @@ export default {
             item_notice: this.ruleForm.notices,
             is_send: this.radio
           };
-           this.matterDetailsEdit(req);
+
+          this.matterDetailsEdit(req);
         } else {
           console.log("error submit!!");
           return false;
@@ -737,7 +740,7 @@ export default {
         set_bool: true,
         content: "",
         task_id: "",
-        users:[]
+        users: []
       };
       this.takesData.push(req);
     },
@@ -786,6 +789,36 @@ export default {
       return str;
     }
   },
+  watch: {
+    transferValue: {
+      handler(newValue, oldValue) {
+        if (newValue.length < oldValue.length) {
+          let c = [...newValue, ...oldValue],
+            d = new Set(c),
+            e = Array.from(d),
+            f = [
+              ...e.filter(_ => !newValue.includes(_)),
+              ...e.filter(_ => !oldValue.includes(_))
+            ];
+
+          let transData = this.transferOldData.map(i => {
+            return i.user_id;
+          });
+
+          if (transData.indexOf(parseInt(f.join(","))) < 0) {
+            for (let i = 0; i < this.transferData.length; i++) {
+              if(this.transferData[i]['user_id'] == parseInt(f.join(","))){
+                 let num = this.transferData.indexOf(this.transferData[i])
+                  this.transferData.splice(num,1)
+                break
+              }
+            } 
+          }
+        }
+      },
+      deep: true
+    }
+  },
   mounted() {
     let datailsObject = JSON.parse(JSON.stringify(this.detailsData));
 
@@ -811,7 +844,7 @@ export default {
     this.ruleForm.tasks = datailsObject.tasks;
     this.ruleForm.series = datailsObject.series;
     this.ruleForm.notices = datailsObject.notices;
-    this.ruleForm.organize_id =  datailsObject.organize_id;
+    this.ruleForm.organize_id = datailsObject.organize_id;
 
     this.takesData = JSON.parse(JSON.stringify(this.ruleForm.tasks));
     this.ruleForm.mineStatus.push(this.ruleForm.organize_name);
@@ -819,10 +852,10 @@ export default {
       i.set_bool = false;
       i.users = i.users.split(",");
       if (i.users) {
-          for (let j = 0; j < i.users.length; j++) {
-            i.users[j] = parseInt(i.users[j]);
-          }
+        for (let j = 0; j < i.users.length; j++) {
+          i.users[j] = parseInt(i.users[j]);
         }
+      }
     });
 
     this.ruleForm.series.forEach(i => {
