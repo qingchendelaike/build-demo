@@ -77,6 +77,7 @@ export default {
   props: ["form", "formData"],
   data() {
     return {
+      loading:false,
       disFalse: false,
       errMsg: "",
       disabled: false,
@@ -143,11 +144,13 @@ export default {
         code: this.form.code.value
       });
       if (res.status == "success") {
-        this.$store.dispatch("setSingOut").then(result => {
-          if (result) {
-            this.$router.push("/");
-          }
-        });
+        let userInfo = JSON.parse(sessionStorage.getItem('userInfo',JSON.stringify(userInfo)))  
+        userInfo.user_email = this.form.mailbox.value
+        sessionStorage.setItem('userInfo',JSON.stringify(userInfo))
+        this.$message({message:"修改成功，正为您跳转个人主页...",duration:1000})
+        setTimeout(()=>{
+          this.$router.go(0)
+        },1100)
       }
     },
 

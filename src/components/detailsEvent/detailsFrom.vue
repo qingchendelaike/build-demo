@@ -122,7 +122,9 @@
               <el-button type="primary" @click="tiemr(ruleForm.notices)">确定</el-button>
             </div>
 
-            <span class="timeicon" @click="timeShow" slot="reference"></span>
+            <span class="timeicon" @click="timeShow" slot="reference">
+              <img style="width:100%;height:100%;" v-show="noticesData.length > 0" src="../../assets/img/icon_remind_on.png" alt="">
+            </span>
           </el-popover>
         </el-col>
       </el-form-item>
@@ -273,7 +275,7 @@
 
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
         <el-checkbox v-model="radio">
-          <span class="radioCheck">发送查阅通知，选中后提交即发送，请确认内容后操作</span>
+          <span class="radioCheck">发送变动通知，选中后提交即发送，请确认内容后操作</span>
         </el-checkbox>
       </el-form-item>
     </el-form>
@@ -514,7 +516,7 @@ export default {
     /* 类型标签 */
     async labelLists() {
       let req = {
-        label_type: this.ruleForm.item_type,
+        label_type: this.ruleForm.label_type,
         item_id: this.ruleForm.item_id
       };
       const res = await this.$api.details.labelLists(req);
@@ -555,7 +557,7 @@ export default {
         };
         const res = await this.$api.details.labelDelete(req);
         if (res.status == "success") {
-          // this.labelLists()
+          this.filesType()
           this.$message("删除标签成功");
         }
       }
@@ -563,7 +565,7 @@ export default {
     /* 新增标签 */
     addTitle() {
       let req = {
-        label_type: this.ruleForm.item_type,
+        label_type: this.ruleForm.label_type,
         label_name: "",
         is_del: 0,
         set_bool: true
@@ -575,8 +577,7 @@ export default {
     /* 文件标签 */
     async filesType() {
       let req = {
-        archive_type: this.ruleForm.item_type,
-        item_id: this.ruleForm.item_id
+        archive_type: this.ruleForm.label_type,
       };
       const res = await this.$api.details.archiveList(req);
       if (res.status == "success") {
@@ -601,7 +602,6 @@ export default {
         if (res.status == "success") {
           item.set_bool = false;
           this.filesType();
-          // this.ruleForm.filesArr = [];
           this.$message("标签添加成功");
         }
       }
@@ -622,7 +622,7 @@ export default {
     /* 新增文件标签 */
     addFiles() {
       let req = {
-        archive_type: this.ruleForm.item_type,
+        archive_type: this.ruleForm.label_type,
         label_name: "",
         is_del: 0,
         set_bool: true
@@ -746,7 +746,6 @@ export default {
     },
     /* 显示修改任务 */
     saveShow(item, index) {
-      // console.log(item,index)
       this.takesData.splice(index, 1, {
         set_bool: true,
         content: item.content,

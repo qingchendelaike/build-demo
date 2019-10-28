@@ -136,12 +136,13 @@ export default {
     }
   },
   mounted() {
-        this.userName =this.$api.common.user().userName;
+    this.userName = this.$api.common.user().userName;
     this.type = this.$api.common.user().type;
     if (this.$api.common.user().userImg) {
       this.userImg = this.defaultIcon = this.$api.common.user().userImg;
     } else {
-      this.defaultIcon = this.userImg;
+      this.userImg = this.defaultIcon;
+      // this.defaultIcon = this.userImg;
     }
   }
 };

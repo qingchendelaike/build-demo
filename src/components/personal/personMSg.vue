@@ -101,7 +101,7 @@
         </p>
         <p>
           <span>入党时间</span>
-          <span>{{selfInfo.apply_time}}</span>
+          <span>{{selfInfo.party_time}}</span>
         </p>
         <p>
           <span>转正时间</span>
@@ -251,6 +251,13 @@ export default {
       }
       &:last-child {
         margin-bottom: 0px;
+         span {
+        margin-right: 65px;
+        &:first-child {
+          width: 90px;
+        }
+        
+      }
       }
     }
 

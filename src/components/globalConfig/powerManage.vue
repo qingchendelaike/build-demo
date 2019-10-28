@@ -24,17 +24,17 @@
             @show="showEdit(scope)"
             title="编辑职务"
           >
-            <el-form label-width="100px">
-              <el-form-item label="职务名称">
-                <el-input v-model="scope.row.duty_name" placeholder="请输入职务名称"></el-input>
+            <el-form label-width="100px" :model="editFrom" :rules="rulesEdit" ref="editForm">
+              <el-form-item label="职务名称" prop="duty_name">
+                <el-input v-model="editFrom.duty_name" placeholder="请输入职务名称"></el-input>
               </el-form-item>
 
-              <el-form-item label="权限字符">
-                <el-input v-model="scope.row.duty_string" placeholder="请输入权限字符"></el-input>
+              <el-form-item label="权限字符" prop="duty_string">
+                <el-input v-model="editFrom.duty_string" placeholder="请输入权限字符"></el-input>
               </el-form-item>
 
               <el-form-item label="备注">
-                <el-input v-model="scope.row.remark" placeholder="请输入备注内容"></el-input>
+                <el-input v-model="editFrom.remark" placeholder="请输入备注内容"></el-input>
               </el-form-item>
               <el-form-item label="菜单权限">
                 <div style="height: 180px;overflow-x: auto;">
@@ -171,15 +171,41 @@ export default {
       rules: {
         name: [{ required: true, message: "请输入职务名称", trigger: "blur" }],
         power: [{ required: true, message: "请输入权限字符", trigger: "blur" }]
+      },
+      rulesEdit: {
+        duty_name: [
+          { required: true, message: "请输入职务名称", trigger: "blur" }
+        ],
+        duty_string: [
+          { required: true, message: "请输入权限字符", trigger: "blur" }
+        ]
+      },
+      editFrom: {
+        duty_name: "",
+        duty_string: "",
+        remark: ""
       }
     };
   },
   methods: {
+    foreachTree(tree, key) {
+      for (let i = 0; i < tree.length; i++) {
+        tree[i].disabled = key == 1 ? true : false;
+        if (tree[i]["sub_power"].length > 0) {
+          this.foreachTree(tree[i]["sub_power"], key);
+        }
+      }
+    },
     showEdit(scope) {
+      this.editFrom = scope.row;
       this.$refs[`addTree-${scope.$index}`].setCheckedKeys([]);
       this.dataRow = JSON.parse(JSON.stringify(scope.row));
       this.checkTree = scope.row.duty_authority.split(",");
-
+      if (scope.row.is_special == 1) {
+        this.foreachTree(this.treeData, 1);
+      } else {
+        this.foreachTree(this.treeData, 0);
+      }
     },
     /* 取消 */
     handleClose(index, row) {
@@ -188,6 +214,14 @@ export default {
     },
     /* 修改 */
     async handleEdit(index, row) {
+      this.$refs["editForm"].validate(valid => {
+        if (valid && this.$refs[`addTree-${index}`].getCheckedKeys().length > 0) {
+          this.editFromData(index, row);
+        }
+      });
+    },
+
+    async editFromData(index, row) {
       row.duty_authority = this.$refs[`addTree-${index}`]
         .getCheckedKeys()
         .join(",");

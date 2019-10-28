@@ -4,7 +4,7 @@
       <div class="box-title">
         <div class="tit">会议详情</div>
         <div v-if=" (msg.item_status == 1 && msg.is_feed == false) || (msg.item_status == 2 && msg.is_feed == false) || (msg.item_status == 3 && msg.is_feed == false)" >
-          参与者：
+          参与情况：
           <el-select v-model="value" placeholder="请选择">
             <el-option
               v-for="item in detailsData"

@@ -82,14 +82,17 @@
       <el-table-column prop="zh_sex" label="性别"></el-table-column>
       <el-table-column prop="zh_identify" label="人员身份" width="160"></el-table-column>
       <el-table-column prop="zh_status" label="人员状态"></el-table-column>
-      <el-table-column prop="zh_sex" label="所属组织">
-        <template slot-scope="scope">{{scope.row.organize_duty[0]}}</template>
+      <el-table-column prop="zh_sex" label="所属组织" width="150">
+        <template slot-scope="scope"><div v-html="scope.row.organize_duty[0]"></div></template>
       </el-table-column>
-      <el-table-column prop="zh_identify" label="党内职务">
-        <template slot-scope="scope">{{scope.row.organize_duty[1]}}</template>
+      <el-table-column prop="zh_identify" label="党内职务" width="150">
+        <template slot-scope="scope">
+          
+          <div v-html="scope.row.organize_duty[1]"></div>
+          </template>
       </el-table-column>
       <el-table-column prop="zh_status" label="任期时间">
-        <template slot-scope="scope">{{scope.row.organize_duty[2]}}</template>
+        <template slot-scope="scope"><div v-html="scope.row.organize_duty[2]"></div></template>
       </el-table-column>
       <el-table-column prop="apply_time" label="入党申请书提交时间" width="150"></el-table-column>
       <el-table-column prop="active_time" label="入党积极分子时间" width="150"></el-table-column>
@@ -97,10 +100,10 @@
       <el-table-column prop="develop_time" label="发展对象时间" width="150"></el-table-column>
       <el-table-column prop="party_time" label="入党时间" width="150"></el-table-column>
       <el-table-column prop="formal_time" label="转正时间" width="150"></el-table-column>
-      <el-table-column prop="zh_sex" label="所属部门">
+      <el-table-column prop="zh_sex" label="所属部门" width="180">
         <template slot-scope="scope">{{scope.row.company_rank[0]}}</template>
       </el-table-column>
-      <el-table-column prop="zh_identify" label="员工职级">
+      <el-table-column prop="zh_identify" label="员工职级" width="100">
         <template slot-scope="scope">{{scope.row.company_rank[1]}}</template>
       </el-table-column>
       <el-table-column prop="id_card" label="身份证号" width="180"></el-table-column>
@@ -190,7 +193,7 @@
                 <p class="box-title">公司资料</p>
 
                 <div v-for="(item,index) in companyAll" :key="index">
-                  <el-form-item label="所属公司">
+                  <el-form-item label="所属部门">
                     <el-select
                       v-model="item.companyID"
                       placeholder="请选择"
@@ -206,7 +209,7 @@
                     </el-select>
                   </el-form-item>
 
-                  <el-form-item label="所属部门">
+                 <!--  <el-form-item label="所属部门">
                     <el-select
                       v-model="item.departmentID"
                       @change="changeDepartment(item,index)"
@@ -220,7 +223,7 @@
                         :value="item.department_id"
                       ></el-option>
                     </el-select>
-                  </el-form-item>
+                  </el-form-item> -->
 
                   <el-form-item label="员工职级">
                     <el-select v-model="item.rankID" placeholder="请选择" style="width:100%;">
@@ -346,16 +349,6 @@ export default {
   components: {
     powerNav
   },
-  filters: {
-    dataSpice(val) {
-      let arr = val.split(","),
-        arrstr = "";
-      for (let i = 0; i < arr.length; i++) {
-        arrstr += arr[i] + "\n";
-      }
-      return arrstr;
-    }
-  },
   data() {
     return {
       titlePop: "人员资料库",
@@ -383,6 +376,14 @@ export default {
     };
   },
   methods: {
+    dataSpice(val) {
+      let arr = val.split(","),
+        arrstr = "";
+      for (let i = 0; i < arr.length; i++) {
+        arrstr += "<p>"+arr[i]+"</p>";
+      }
+      return arrstr;
+    },
     changeCompany(item, index) {
       this.companyAll.splice(index, 1, {
         companyID: item.companyID,
@@ -498,7 +499,15 @@ export default {
       };
       let res = await this.$api.globalConfig.partyUserList(params);
       if (res.status == "success") {
-        let com = res.data.lists;
+
+      let listduty = res.data.lists.map(i=>{
+          return i.organize_duty
+        })
+        listduty.forEach(i=>{
+          i[0] = this.dataSpice(i[0])
+          i[1] = this.dataSpice(i[1])
+          i[2] = this.dataSpice(i[2])
+        })
         this.tableData = res.data.lists;
         this.page.total = res.data.count;
       }

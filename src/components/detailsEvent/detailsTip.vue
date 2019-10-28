@@ -16,7 +16,7 @@
 
     <div class="text-title">
       <div class="title-box">发文文号</div>
-      <div class="title-conten">粤时代司党（{{detailsData.article_year}}）{{detailsData.article_sn}}号</div>
+      <div class="title-conten" v-show="detailsData.article_year =='' && detailsData.article_s == '' ">粤时代司党（{{detailsData.article_year}}）{{detailsData.article_sn}}号</div>
     </div>
 
     <div class="text-title">

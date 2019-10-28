@@ -50,7 +50,7 @@
           </el-form-item>
 
            <el-form-item label="组织职务" prop="duty_id">
-              <el-select v-model="queryForm.duty_id" placeholder="请选择党内职务" style="width: 100%;">
+              <el-select v-model="queryForm.duty_id" placeholder="请选择组织职务" style="width: 100%;">
                 <el-option
                   v-for="item in jobData"
                   :key="item.duty_id"

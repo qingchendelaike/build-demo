@@ -50,7 +50,7 @@
                   <el-option label="会议" value="1"></el-option>
                   <el-option label="课程" value="2"></el-option>
                   <el-option label="活动" value="3"></el-option>
-                  <el-option label="项目方案" value="4"></el-option>
+                  <el-option label="项目" value="4"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>

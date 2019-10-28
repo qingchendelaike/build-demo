@@ -6,9 +6,9 @@
       v-for="(item,index) in labelData"
       :key="index"
       class="labelBox"
-      v-show="item.is_del == '0'"
     >
       <span class="labelTitle" v-show="item.set_bool == false">{{item.label_name}}</span>
+
       <el-input v-model="item.label_name" v-show="item.set_bool" style="width: 150px;height: 36px;"></el-input>
       <!-- <span class="label Edit" v-show="item.set_bool == false" @click="editLabel(item)"></span> -->
       <span class="label Add" v-show="item.set_bool" @click="addLable(item)">保存</span>

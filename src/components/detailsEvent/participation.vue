@@ -272,7 +272,7 @@
 
   .selectSpan {
     cursor: not-allowed;
-    width: 180px;
+    width: 210px;
     background-color: #e5e5e5;
     background-image: none;
     border-radius: 4px;

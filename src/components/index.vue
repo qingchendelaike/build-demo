@@ -25,16 +25,17 @@
             :to="item.url"
             tag="a"
           > <span class="user-waring"></span></router-link>
-         
+         <div style="display:flex;" v-popover:popoverPse>
           <img :src="defaultImg" class="user-icon" alt />
           <span class="user-name">{{userName}}</span>
-          <span class="select-icon" v-popover:popoverPse></span>
+          <span class="select-icon"></span>
+          </div>
         </div>
       </el-header>
       <router-view />
     </el-container>
     <!-- 用户信息 -->
-    <el-popover ref="popoverPse" popper-class="personal" trigger="hover" placement="bottom-end">
+    <el-popover ref="popoverPse" popper-class="personal" trigger="hover" placement="bottom-start">
       <div class="popoverPse">
         <router-link tag="p" to="/index/person/personMSg" v-if="type == 1">个人信息</router-link>
         <router-link tag="p" to="/index/person/adminPerson">账号密码</router-link>

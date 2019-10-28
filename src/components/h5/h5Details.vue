@@ -5,7 +5,7 @@
         <div class="text-title">
           <div class="title-box">
             会议名称
-            <p v-if="this.msg[this.msg.change['item_name']]"></p>
+            <p v-if="this.msg.change.indexOf('item_name') >= 0"></p>
           </div>
           <div class="title-conten">{{msg.item_name}}</div>
         </div>
@@ -14,8 +14,8 @@
           <div class="title-box">
             发起人
             <p
-              v-if="this.msg[this.msg.change['create_user_name']]"
-            >{{this.msg[this.msg.change['create_user_name']]}}</p>
+              v-if="this.msg.change.indexOf('create_user_name') >= 0"
+            >{{this.msg.change['create_user_name']}}</p>
           </div>
           <div class="title-conten">{{msg.create_user_name}}</div>
         </div>
@@ -23,7 +23,7 @@
         <div class="text-title">
           <div class="title-box">
             组织主体
-            <p v-if="this.msg[this.msg.change['organize_name']]"></p>
+            <p v-if="this.msg.change.indexOf('organize_name') >= 0"></p>
           </div>
           <div class="title-conten">{{msg.organize_name}}</div>
         </div>
@@ -31,7 +31,7 @@
         <div class="text-title">
           <div class="title-box">
             类型标签
-            <p v-if="this.msg[this.msg.change['item_label_ids']]"></p>
+            <p v-if="this.msg.change.indexOf('item_label_ids') >= 0"></p>
           </div>
           <div class="title-conten">{{msg.item_label}}</div>
         </div>
@@ -40,7 +40,7 @@
           <div class="title-box">
             发文文号
             <p
-              v-if="this.msg[this.msg.change['article_year']] || this.msg[this.msg.change['article_sn']]"
+             v-if="this.msg.change.indexOf('article_year') >= 0 ||  this.msg.change.indexOf('article_sn') >= 0"
             ></p>
           </div>
           <div class="title-conten">粤时代司党（{{msg.article_year}}）{{msg.article_sn}}号</div>
@@ -49,7 +49,7 @@
         <div class="text-title">
           <div class="title-box">
             发文编号
-            <p v-if="this.msg[this.msg.change['item_sn']]"></p>
+            <p v-if="this.msg.change.indexOf('item_sn') >= 0"></p>
           </div>
           <div class="title-conten">{{msg.item_sn}}</div>
         </div>
@@ -57,7 +57,7 @@
           <div class="title-box">
             会议时间
             <p
-              v-if="this.msg[this.msg.change['start_time']] || this.msg[this.msg.change['end_time']]"
+              v-if="this.msg.change.indexOf('start_time') >= 0 || this.msg.change.indexOf('end_time') >= 0"
             ></p>
           </div>
           <div class="title-conten">{{msg.start_time}} - {{msg.end_time}}</div>
@@ -65,21 +65,21 @@
         <div class="text-title">
           <div class="title-box">
             会议地点
-            <p v-if="this.msg[this.msg.change['item_space']]"></p>
+            <p v-if="this.msg.change.indexOf('item_space') >= 0"></p>
           </div>
           <div class="title-conten">{{msg.item_space}}</div>
         </div>
         <div class="text-title">
           <div class="title-box">
             会议原因
-            <p v-if="this.msg[this.msg.change['item_reason']]"></p>
+            <p v-if="this.msg.change.indexOf('item_reason') >= 0"></p>
           </div>
           <div class="title-conten">{{msg.item_reason}}</div>
         </div>
         <div class="text-title">
           <div class="title-box">
             会议流程
-            <p v-if="this.msg[this.msg.change['item_flow']]"></p>
+            <p v-if="this.msg.change.indexOf('item_flow') >= 0"></p>
           </div>
           <div class="title-conten">{{msg.item_flow}}</div>
         </div>
@@ -87,7 +87,7 @@
         <div class="text-title">
           <div class="title-box">
             参与人员
-            <p v-if="this.msg[this.msg.change['users']]"></p>
+            <p v-if="this.msg.change.indexOf('users') >= 0"></p>
           </div>
           <div class="title-conten">
             <span v-for="(item,index) in msg.users" :key="index">
@@ -100,7 +100,7 @@
         <div class="text-title">
           <div class="title-box">
             会议任务
-            <p v-if="this.msg[this.msg.change['tasks']]"></p>
+            <p v-if="this.msg.change.indexOf('tasks') >= 0"></p>
           </div>
           <div class="title-conten borderFall" v-if="msg.tasks.length > 0">
             <span v-for="(item,index) in msg.tasks" :key="index">{{item.content}}</span>
@@ -178,6 +178,9 @@ export default {
         unique_str: reqBody
       });
       if (res.status == "success") {
+          if(!res.data.hasOwnProperty("change")){
+            res.data.change = ['tasks']
+          }
         this.msg = res.data;
         if (this.msg.is_feed) {
           this.pop = false;

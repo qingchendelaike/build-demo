@@ -56,7 +56,7 @@
                   placeholder="请选择类型标签"
                 >
                   <el-option
-                    v-for="item in labelData"
+                    v-for="item in labelDataArr"
                     :key="item.label_id"
                     :label="item.label_name"
                     :value="item.label_id"
@@ -141,7 +141,9 @@
                     <el-button type="primary" @click="tiemr()">确定</el-button>
                   </div>
 
-                  <span class="timeicon" slot="reference"></span>
+                  <span class="timeicon" slot="reference">
+                    <img style="width:100%;height:100%;" v-show="noticesData.length > 0" src="../../assets/img/icon_remind_on.png" alt="">
+                  </span>
                 </el-popover>
               </el-col>
             </el-form-item>
@@ -279,7 +281,7 @@
                   placeholder="请选择存档文件"
                 >
                   <el-option
-                    v-for="item in filesData"
+                    v-for="item in filesDataArr"
                     :key="item.archive_id"
                     :label="item.archive_name"
                     :value="item.archive_id"
@@ -319,6 +321,7 @@ export default {
   },
   data() {
     return {
+      labelDataArr:[],
       detailsOrganize_id: "",
       is_special: false,
       transferSelect: [],
@@ -333,6 +336,7 @@ export default {
       lableText: "类型标签管理",
       filesText: "存档文件类型管理",
       filesData: [],
+      filesDataArr:[],
       filesBool: false,
       seriesData: [],
       takesData: [],
@@ -365,16 +369,16 @@ export default {
       },
       rules: {
         item_name: [
-          { required: true, message: "请输入会议名称", trigger: "blur" }
+          { required: true, message: `请输入${this.typeSw(this.$route.query.item_id)}名称`, trigger: "blur" }
         ],
         item_reason: [
-          { required: true, message: "请输入会议原因", trigger: "blur" }
+          { required: true, message: `请输入${this.typeSw(this.$route.query.item_id)}原因`, trigger: "blur" }
         ],
         item_flow: [
-          { required: true, message: "请输入会议流程", trigger: "blur" }
+          { required: true, message: `请输入${this.typeSw(this.$route.query.item_id)}流程`, trigger: "blur" }
         ],
         item_space: [
-          { required: true, message: "请输入会议地点", trigger: "blur" }
+          { required: true, message: `请输入${this.typeSw(this.$route.query.item_id)}地点`, trigger: "blur" }
         ],
         organize_name: [
           { required: true, message: "请选择活动区域", trigger: "change" }
@@ -558,6 +562,7 @@ export default {
         res.data.forEach(i => {
           i.set_bool = false;
         });
+        this.labelDataArr = JSON.parse(JSON.stringify(res.data));
         this.labelData = res.data;
       }
     },
@@ -575,7 +580,6 @@ export default {
         if (res.status == "success") {
           item.set_bool = false;
           this.labelLists();
-          // this.ruleForm.labelArr = [];
           this.$message("标签添加成功");
         }
       }
@@ -589,7 +593,7 @@ export default {
         };
         const res = await this.$api.details.labelDelete(req);
         if (res.status == "success") {
-          // this.labelLists()
+          this.labelLists()
           this.$message("删除标签成功");
         }
       }
@@ -608,8 +612,7 @@ export default {
     /* 文件标签 */
     async filesType() {
       let req = {
-        archive_type: this.ruleForm.item_type,
-        item_id: this.ruleForm.item_id
+        archive_type:  this.$route.query.item_id,
       };
       const res = await this.$api.details.archiveList(req);
       if (res.status == "success") {
@@ -617,6 +620,7 @@ export default {
           i.set_bool = false;
           i.label_name = i.archive_name;
         });
+        this.filesDataArr = JSON.parse(JSON.stringify(res.data))
         this.filesData = res.data;
       }
     },
@@ -631,7 +635,6 @@ export default {
         if (res.status == "success") {
           item.set_bool = false;
           this.filesType();
-          // this.ruleForm.filesArr = [];
           this.$message("标签添加成功");
         }
       }
@@ -645,7 +648,7 @@ export default {
         };
         const res = await this.$api.details.archiveDelete(req);
         if (res.status == "success") {
-          // this.labelLists()
+          this.filesType()
           this.$message("删除标签成功");
         }
       }
@@ -653,7 +656,7 @@ export default {
     /* 新增文件标签 */
     addFiles() {
       let req = {
-        archive_type: this.ruleForm.item_type,
+       archive_type: this.$route.query.item_id,
         label_name: "",
         set_bool: true
       };
@@ -725,8 +728,8 @@ export default {
             return;
           }
           let req = {
+            item_type:this.$route.query.item_id,
             item_name: this.ruleForm.item_name,
-            item_id: this.$route.query.item_id,
             organize_id: this.mineStatusValue[0]["organize_id"],
             item_label_ids: this.ruleForm.labelArr.join(","),
             article_year: this.ruleForm.article_year,

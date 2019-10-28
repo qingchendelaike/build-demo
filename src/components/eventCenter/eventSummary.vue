@@ -67,7 +67,7 @@ export default {
         },
         {
           value: "/index/eventSummary/launchFrom",
-          key: "项目方案",
+          key: "项目",
           id: 4,
           icon: require("../../assets/img/plan.png")
         }
@@ -182,8 +182,8 @@ export default {
     justify-content: center;
     align-items: center;
     font-size: 19px;
-    color: #fff;
-    &:before {
+    // color: #fff;
+    /* &:before {
       content: "";
       width: 0px;
       height: 0px;
@@ -193,7 +193,7 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
-    }
+    } */
   }
 }
 .drawerLeft {
