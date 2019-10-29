@@ -8,7 +8,7 @@
         :titlePop="titlePop"
         :queryForm="exportForm"
         :exportsRouter="exportsRouter"
-        :form={}
+        :form="{}"
       ></power-nav>
 
       <div class="box-title-icon" v-popover:queryEl @click="queryIcon">
@@ -38,29 +38,29 @@
             </el-select>
           </el-form-item>
 
-           <el-form-item label="所属组织" prop="organize_id">
+          <el-form-item label="所属组织" prop="organize_id">
             <el-select v-model="queryForm.organize_id" placeholder="请选择党内组织" style="width: 100%;">
-                <el-option
-                  v-for="item in organData"
-                  :key="item.organize_id"
-                  :label="item.organize_name"
-                  :value="item.organize_id"
-                ></el-option>
-              </el-select>
+              <el-option
+                v-for="item in organData"
+                :key="item.organize_id"
+                :label="item.organize_name"
+                :value="item.organize_id"
+              ></el-option>
+            </el-select>
           </el-form-item>
 
-           <el-form-item label="组织职务" prop="duty_id">
-              <el-select v-model="queryForm.duty_id" placeholder="请选择组织职务" style="width: 100%;">
-                <el-option
-                  v-for="item in jobData"
-                  :key="item.duty_id"
-                  :label="item.duty_name"
-                  :value="item.duty_id"
-                ></el-option>
-              </el-select>
+          <el-form-item label="组织职务" prop="duty_id">
+            <el-select v-model="queryForm.duty_id" placeholder="请选择所在组织" style="width: 100%;">
+              <el-option
+                v-for="item in jobData"
+                :key="item.duty_id"
+                :label="item.duty_name"
+                :value="item.duty_id"
+              ></el-option>
+            </el-select>
           </el-form-item>
 
-         <el-form-item label="党内职务" prop="status">
+          <el-form-item label="党内职务" prop="status">
             <el-select v-model="queryForm.status" placeholder="请选择党内职务" style="width: 100%;">
               <el-option label="使用中" value="1"></el-option>
               <el-option label="已转出" value="2"></el-option>
@@ -80,15 +80,83 @@
       <el-table-column prop="phone" label="登录账号"></el-table-column>
       <el-table-column prop="user_name" label="真实姓名"></el-table-column>
       <el-table-column label="所属组织">
-        <template slot-scope="scope">{{scope.row.organize_duty[0] | dataSpice}}</template>
+        <template slot-scope="scope">
+           <div v-html="scope.row.organize_duty[0]"></div>
+        </template>
       </el-table-column>
       <el-table-column label="党内职务">
-        <template slot-scope="scope">{{scope.row.organize_duty[1] | dataSpice}}</template>
+        <template slot-scope="scope"><div v-html="scope.row.organize_duty[1]"></div></template>
       </el-table-column>
       <el-table-column label="任期时间">
-        <template slot-scope="scope">{{scope.row.organize_duty[2] | dataSpice}}</template>
+        <template slot-scope="scope"><div v-html="scope.row.organize_duty[2]"></div></template>
       </el-table-column>
-      <el-table-column prop="zh_identify" label="人员身份"></el-table-column>
+      <el-table-column prop="zh_identify" label="人员身份">
+        <template slot-scope="scope">
+         <!--  <el-popover
+            trigger="click"
+            :ref="`matter-${scope.index}`"
+            width="279"
+            placement="left"
+            popper-class="stepPop"
+          >
+            <div style="height: 383px;overflow-y: auto;">
+              <el-steps direction="vertical" :active="1">
+                <el-step title="普通群众">
+                  <template slot="description">
+                    <div class="stepBox">
+                      <p>
+                        <span>本人</span>
+                        <span>提交入党申请</span>
+                      </p>
+                      <p>
+                        <span>组织</span>
+                        <span>派人谈话</span>
+                      </p>
+                    </div>
+                  </template>
+                </el-step>
+                <el-step title="申请人">
+                  <template slot="description"></template>
+                </el-step>
+                <el-step title="入党积极分子">
+                  <template slot="description">
+                    <ul>
+                      <li style="height:50px">本人</li>
+                      <li style="height:50px">提交入党申请</li>
+                      <li style="height:50px">组织</li>
+                      <li style="height:50px">派人谈话</li>
+                    </ul>
+                  </template>
+                </el-step>
+                <el-step title="发展对象">
+                  <template slot="description">
+                    <ul>
+                      <li style="height:50px">本人</li>
+                      <li style="height:50px">提交入党申请</li>
+                      <li style="height:50px">组织</li>
+                      <li style="height:50px">派人谈话</li>
+                    </ul>
+                  </template>
+                </el-step>
+                <el-step title="预备党员">
+                  <template slot="description">
+                    <ul>
+                      <li style="height:50px">本人</li>
+                      <li style="height:50px">提交入党申请</li>
+                      <li style="height:50px">组织</li>
+                      <li style="height:50px">派人谈话</li>
+                    </ul>
+                  </template>
+                </el-step>
+                <el-step title="正式党员">正式党员</el-step>
+              </el-steps>
+            </div>
+            <span slot="reference">{{scope.row.zh_identify}}</span>
+          </el-popover> -->
+          {{scope.row.zh_identify}}
+        </template>
+      </el-table-column>
+
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-popover
@@ -285,7 +353,7 @@ export default {
   },
   data() {
     return {
-      exportsRouter:'/partyUser/export',
+      exportsRouter: "/partyUser/export",
       queryForm: {
         content: "",
         organize_id: "",
@@ -293,7 +361,7 @@ export default {
         status: "",
         identify: ""
       },
-      exportForm:{},
+      exportForm: {},
       queryPop: false,
       radio: "0",
       titlePop: "用户管理",
@@ -331,32 +399,30 @@ export default {
         name: [{ required: true, message: "请输入真实姓名", trigger: "blur" }],
         phone: [{ required: true, message: "请输入手机号码", trigger: "blur" }],
         pwd: [{ required: true, message: "请输入登录密码", trigger: "blur" }],
-      /*   email: [{ required: true, message: "请输入电子邮箱", trigger: "blur" }], */
+        /*   email: [{ required: true, message: "请输入电子邮箱", trigger: "blur" }], */
         code: [{ required: true, message: "请选择人物身份", trigger: "change" }]
       },
       userInfo: {},
       orginJob: []
     };
   },
-  filters: {
+  methods: {
     dataSpice(val) {
       let arr = val.split(","),
         arrstr = "";
       for (let i = 0; i < arr.length; i++) {
-        arrstr += arr[i] + "\n";
+        arrstr += "<p>"+arr[i]+"</p>";
       }
       return arrstr;
-    }
-  },
-  methods: {
+    },
     closePop(formName) {
       this.queryPop = false;
       this.$refs[formName].resetFields();
     },
     queryAll(formName) {
       this.exportForm = JSON.parse(JSON.stringify(this.queryForm));
-       this.lists();
-      this.closePop(formName)
+      this.lists();
+      this.closePop(formName);
     },
     queryIcon() {
       this.queryPop = !this.queryPop;
@@ -463,6 +529,14 @@ export default {
       };
       let res = await this.$api.globalConfig.dutyUserLists(params);
       if (res.status == "success") {
+        let listduty = res.data.lists.map(i=>{
+          return i.organize_duty
+        })
+        listduty.forEach(i=>{
+          i[0] = this.dataSpice(i[0])
+          i[1] = this.dataSpice(i[1])
+          i[2] = this.dataSpice(i[2])
+        })
         this.tableData = res.data.lists;
         this.page.total = res.data.count;
       }
@@ -540,6 +614,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/css/table.scss";
+
 .box {
   background: #f6f6f6;
   margin-left: 5px;
@@ -591,5 +666,28 @@ export default {
   height: 20px;
   background: url("../../assets/img/css_sprites.png") -6px -143px no-repeat;
   vertical-align: bottom;
+}
+
+.stepBox {
+  span {
+    font-size: 14px;
+    display: inline-block;
+  }
+  p {
+    display: flex;
+    width: 220px;
+    height: 40px;
+    line-height: 40px;
+    background: rgba(246, 246, 246, 1);
+    border-radius: 3px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+    padding: 0 27px;
+    span{
+      &:first-child{
+        width: 50px;
+      }
+    }
+  }
 }
 </style>

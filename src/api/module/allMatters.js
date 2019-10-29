@@ -17,6 +17,13 @@ export default {
     return api.get('/exportTicket', params, header)
   },
 
+  
+  /* 获取下载凭证 */
+  downloadTicket(params) {
+    return api.get('/downloadTicket', params, header)
+  },
+
+
   /* 组织架构(主体) */
   organization(params) {
     return api.get('/organization/lists', params, header)

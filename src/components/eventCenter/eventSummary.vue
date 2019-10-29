@@ -8,7 +8,7 @@
         v-show="item.show_menu == true"
         tag="div"
       >
-        <span :class="[{'selectMatters':$route.path.indexOf(item.url)>-1},'matters']"></span>
+        <span :class="[$route.path.indexOf(item.url)>-1 ? item.icon[1]:'',item.icon[0]]"></span>
         
         {{item.power_name}}
       </router-link>
@@ -104,7 +104,7 @@ export default {
       color: rgba(153, 153, 153, 1);
       line-height: 21px;
       cursor: pointer;
-      margin-bottom: 29px;
+      margin-top: 29px;
       &:first-child {
         margin-top: 26px;
       }
@@ -141,7 +141,7 @@ export default {
             no-repeat;
         }
         &.selectLaunched {
-          background: url("../../assets/img/navslide_sprites.png") -41px -5px
+          background: url("../../assets/img/navslide_sprites.png") -42px -6px
             no-repeat;
         }
 

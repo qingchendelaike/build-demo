@@ -13,8 +13,12 @@
 
           <!--催办  状态为：未开始 进行中 已截止 显示-->
           <span  v-if="details.item_status == 1 || details.item_status==2 || details.item_status ==3">
+            <div v-show="activeName == 0">
             <span class="statusRed" @click="pushFeedback" v-if="details.is_self || details.is_special">催办</span>
+            </div>
           </span>
+
+
         </p>
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="user_name" label="姓名"></el-table-column>

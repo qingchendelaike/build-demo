@@ -3,9 +3,9 @@
     <div class="box">
       <div class="box-title">
         <div class="tit">会议详情</div>
-        <div v-if=" (msg.item_status == 1 && msg.is_feed == false) || (msg.item_status == 2 && msg.is_feed == false) || (msg.item_status == 3 && msg.is_feed == false)" >
+        <div v-if=" msg.item_status == 1  || msg.item_status == 2  || msg.item_status == 3 " >
           参与情况：
-          <el-select v-model="value" placeholder="请选择">
+          <el-select v-model="value" :disabled="bool"  placeholder="请选择">
             <el-option
               v-for="item in detailsData"
               :key="item.feed_id"
@@ -21,7 +21,6 @@
         <div class="text-title">
           <div class="title-box">
             会议名称
-            <!--  <p></p> -->
           </div>
           <div class="title-conten">{{msg.item_name}}</div>
         </div>
@@ -29,7 +28,6 @@
         <div class="text-title">
           <div class="title-box">
             发起人
-            <!--  <p></p> -->
           </div>
           <div class="title-conten">{{msg.create_user_name}}</div>
         </div>
@@ -121,6 +119,9 @@ export default {
 
       if (res.status == "success") {
         this.msg = res.data;
+        if(this.msg.is_feed){
+          this.bool = true
+        }
       }
     },
     async sum() {
@@ -133,7 +134,8 @@ export default {
           };
           let res = await this.$api.common.webFeedback(req);
           if (res.status == "success") {
-            this.bool = false;
+            this.$message("提交成功");
+            this.bool = true;
         }
       } else {
         this.$message("请选择反馈事项");

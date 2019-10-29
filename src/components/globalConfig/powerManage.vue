@@ -222,9 +222,8 @@ export default {
     },
 
     async editFromData(index, row) {
-      row.duty_authority = this.$refs[`addTree-${index}`]
-        .getCheckedKeys()
-        .join(",");
+      let arr = [...this.$refs[`addTree-${index}`].getCheckedKeys(),...this.$refs[`addTree-${index}`].getHalfCheckedKeys()] 
+      row.duty_authority = arr.join(",");
       const res = await this.$api.globalConfig.dutyEdit(row);
       if (res.status == "success") {
         this.$refs[`popedit-${index}`].doClose();

@@ -450,7 +450,8 @@ export default {
     },
     /* 返回系统事项 */
     callBack() {
-      this.$router.push("/index/eventSummary/allMatters");
+      // this.$router.push("/index/eventSummary/allMatters");
+      this.$router.go(-1)
     },
 
     transferBtnClose() {

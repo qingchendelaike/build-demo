@@ -157,12 +157,13 @@ export default {
       );
       if (res.status == "success") {
         this.formData.export_ticket = res.data;
+        this.formData.token = encodeURIComponent(sessionStorage.getItem("Token")) 
         let exportUrl = "";
         Object.keys(this.formData).map(key => {
           exportUrl += key + "=" + this.formData[key] + "&";
         });
         window.open(
-          `${BASE_URL}/${this.exportsRouter}?${exportUrl}`
+          `${BASE_URL}${this.exportsRouter}?${exportUrl}`
         );
       }
     },

@@ -38,8 +38,8 @@
           <!--collapse-tags -->
           <el-select v-model="ruleForm.labelArr" multiple class="selcectType" placeholder="请选择类型标签">
             <el-option
-              v-for="item in labelData"
-              :key="item.label_id"
+              v-for="(item,index) in labelData"
+              :key="index+'_labelData'"
               :label="item.label_name"
               :value="item.label_id"
               v-show="item.is_del == '0'"
@@ -101,7 +101,7 @@
               </span>
             </p>
 
-            <div class="pop" v-for="(item,index) in noticesData" :key="index">
+            <div class="pop" v-for="(item,index) in noticesData" :key="index+'_noticesData'">
               <el-select v-model=" item.send_type + ''" class="popOver" placeholder="请选择">
                 <el-option label="开始前" value="1"></el-option>
                 <el-option label="开始后" value="2"></el-option>
@@ -149,8 +149,8 @@
             <el-form-item label="所属组织">
               <el-select v-model="detailsOrganize_id" placeholder="请选择组织" @change="organizeChange">
                 <el-option
-                  v-for="item in organArr"
-                  :key="item.organize_id"
+                  v-for="(item,index) in organArr"
+                  :key="index+'_organArr'"
                   :label="item.organize_name"
                   :value="item.organize_id"
                 ></el-option>
@@ -180,7 +180,7 @@
           <span class="iconTasks" @click="iconTasks"></span>
         </div>
         <div class="tasksBox" v-show="takesData.length > 0">
-          <p v-for="(item,index) in takesData" :key="index">
+          <p v-for="(item,index) in takesData" :key="index+'_takesData'">
             <span class="content" v-if="item.set_bool == false">{{item.content}}</span>
             <el-input
               v-model="item.content"
@@ -223,8 +223,8 @@
       <el-form-item label="归属系列">
         <el-select v-model="seriesData" multiple placeholder="请选择归属系列" style="width:100%;">
           <el-option
-            v-for="item in seriseData"
-            :key="item.series_id"
+            v-for="(item,index) in seriseData"
+            :key="index+'_seriseData'"
             :label="item.series_name"
             :value="item.series_id"
           ></el-option>
@@ -235,8 +235,8 @@
         <div class="inpuIcon">
           <el-select v-model="ruleForm.filesArr" multiple class="selcectType" placeholder="请选择存档文件">
             <el-option
-              v-for="item in filesData"
-              :key="item.archive_id"
+              v-for="(item,index) in filesData"
+              :key="index+'_filesData'"
               :label="item.archive_name"
               :value="item.archive_id"
               v-show="item.is_del == '0'"
@@ -275,7 +275,7 @@
 
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
         <el-checkbox v-model="radio">
-          <span class="radioCheck">发送变动通知，选中后提交即发送，请确认内容后操作</span>
+          <span class="radioCheck">发送事项变动通知(取消事项默认发送通知)</span>
         </el-checkbox>
       </el-form-item>
     </el-form>

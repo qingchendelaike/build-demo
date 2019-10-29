@@ -140,9 +140,7 @@ export default {
       value: "",
       changeLeftBackground: -1,
       feed_name: "",
-      detailsData: [
-        { feed_name: "未反馈", feed_id: 0, more_remark: 0, isSet: false }
-      ]
+      detailsData: []
     };
   },
 
@@ -167,7 +165,7 @@ export default {
         this.pop = true;
         this.type = true;
         this.msgBtn = "提交";
-      } else if ((this.msgBtn = "提交")) {
+      } else if (this.msgBtn == "提交") {
         this.sum();
       }
     },
@@ -179,15 +177,27 @@ export default {
       });
       if (res.status == "success") {
           if(!res.data.hasOwnProperty("change")){
-            res.data.change = ['tasks']
+            res.data.change = []
           }
         this.msg = res.data;
-        if (this.msg.is_feed) {
-          this.pop = false;
-          this.type = "";
+        if(this.msg.item_status == 4){
+          this.msgBtn = "已办结 ";
+           this.pop = false;
+        this.type = "";
+        this.disabled = true;
+        this.type = true;
+        }else if(this.msg.item_status == 5){
+          this.msgBtn = "已取消 ";
+           this.pop = false;
+        this.type = "";
+        this.disabled = true;
+        this.type = true;
+        }else if (this.msg.is_feed) {
           this.msgBtn = "已参与反馈";
-          this.disabled = true;
-          this.type = true;
+           this.pop = false;
+        this.type = "";
+        this.disabled = true;
+        this.type = true;
         }
       }
     },
@@ -195,13 +205,13 @@ export default {
       if (this.value != "") {
         let url = window.location.href,
           reqBody = url.split("?")[1].split("=")[1];
-        let resUrl = await this.$api.common.decryptUrlString({
+        let resUrl = await this.$api.common.webChangeDetail({
           unique_str: reqBody
         });
+
         if (resUrl.status == "success") {
           let req = {
-            item_id: resUrl.data.item_id,
-            user_id: resUrl.data.user_id,
+            unique_str: reqBody,
             feed_id: this.value
           };
           let res = await this.$api.common.webFeedback(req);
@@ -213,24 +223,6 @@ export default {
             this.type = true;
           }
         }
-        /* let url = window.location.href
-          reqBody = url
-            .split("?")[1]
-            .split("=")[1]
-            .split("-");
-        let req = {
-          item_id: reqBody[0],
-          user_id: reqBody[1],
-          feed_id: this.value
-        }; 
-        let res = await this.$api.common.webFeedback(req);
-        if (res.status == "success") {
-          this.pop = false;
-          this.type = "";
-          this.msgBtn = "已确定" + this.feed_name + "参与";
-          this.disabled = true;
-          this.type = true;
-        }*/
       } else {
         this.$message("请选择反馈事项");
       }

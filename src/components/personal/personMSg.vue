@@ -244,29 +244,8 @@ export default {
       line-height: 20px;
       span {
         display: inline-block;
-        margin-right: 95px;
         &:first-child {
-          width: 60px;
-        }
-      }
-      &:last-child {
-        margin-bottom: 0px;
-         span {
-        margin-right: 65px;
-        &:first-child {
-          width: 90px;
-        }
-        
-      }
-      }
-    }
-
-    &.party {
-      p {
-        span {
-          &:first-child {
-            width: 130px;
-          }
+          width: 160px;
         }
       }
     }

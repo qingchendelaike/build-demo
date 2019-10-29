@@ -37,7 +37,8 @@ export default {
   methods:{
      /* 返回系统事项 */
     callBack() {
-      this.$router.push('/index/eventSummary/allMatters')
+      // this.$router.push('/index/eventSummary/allMatters')
+      this.$router.go(-1)
     },
 
   },

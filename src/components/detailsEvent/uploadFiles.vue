@@ -8,7 +8,7 @@
       >
         <el-popover placement="left-start" popper-class="transferDia" v-model="dialogVisible">
           <el-form :model="diaFormData" ref="ruleForm" :rules="rules" label-width="80px">
-            <el-form-item label="活动名称" prop="metterName">
+            <el-form-item label="催办事由" prop="metterName">
               <el-input v-model="diaFormData.metterName" placeholder="请填写催办事项与催办内容"></el-input>
             </el-form-item>
 
@@ -32,7 +32,7 @@
             disabled:'is_choose' == true
           }"
             :data="transferData"
-            :titles="['所有事项', '已选事项']"
+            :titles="['所有参与人员', '已选人员']"
           ></el-transfer>
           <p
             v-if="diaFormData.bool"
@@ -70,10 +70,14 @@
         </div>
       </div>
       <el-table :data="item.file_lists" style="width: 100%">
-        <el-table-column prop="file_name" label="文件名（点击可在线预览）" width="380"></el-table-column>
-        <el-table-column prop="user_name" label="上传者" width="80"></el-table-column>
+        <el-table-column prop="file_name" label="文件名（点击可在线预览）" width="450">
+          <template slot-scope="scope">
+            <span class="preview" @click="scopeUrl(scope.row)">{{scope.row.file_name}}</span> 
+          </template>
+        </el-table-column>
+        <el-table-column prop="user_name" label="上传者" width="100"></el-table-column>
         <el-table-column prop="updated_at" label="时间"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <!-- 状态为：未开始 进行中 已截止 显示-->
             <div
@@ -85,14 +89,17 @@
               <span class="scopeIcon up" title="更换文件" v-if="detailsData.item_status != 4">
                 <input type="file" @change="changeFile($event,scope.row)" />
               </span>
-              <el-popover placement="bottom" width="230" v-model="visible">
+
+              <el-popover placement="bottom" width="230" trigger="click"
+              :ref="`popover-${scope.index}`">
                 <h3>确认删除</h3>
                 <p style="margin: 15px 0;">确定删除该文件？该操作不可恢复</p>
                 <div style="text-align: right; margin: 0">
-                  <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-                  <el-button type="primary" size="mini" @click="del(scope.row)">确定</el-button>
+                  <el-button size="mini" type="text" @click="delClose(`popover-${scope.index}`)">取消</el-button>
+                  <el-button type="primary" size="mini" @click="del(scope.row,`popover-${scope.index}`)">确定</el-button>
                 </div>
                 <span
+                @click="delVisible"
                   slot="reference"
                   v-if="detailsData.item_status != 4"
                   class="scopeIcon del"
@@ -159,6 +166,15 @@ export default {
     };
   },
   methods: {
+    scopeUrl(data){
+      window.open("https://view.officeapps.live.com/op/view.aspx?src="+data.file_url,'_blank');
+    },
+    delVisible(){
+      this.visible = true
+    },
+    delClose(val){
+       this.$refs[val][0].doClose();
+    },
     /*催办取消*/
     closeMatter(val) {
       this.$refs[val].resetFields();
@@ -218,7 +234,7 @@ export default {
     },
     /*下载文件*/
     async dow(row) {
-      const res = await this.$api.allMatters.ticket(
+      const res = await this.$api.allMatters.downloadTicket(
         sessionStorage.getItem("Token")
       );
       if (res.status == "success") {
@@ -239,12 +255,13 @@ export default {
       }
     },
     /*删除文件*/
-    async del(row) {
+    async del(row,val) {
       let req = {
         file_id: row.file_id
       };
       const res = await this.$api.details.delFile(req);
       if (res.status == "success") {
+         this.$refs[val][0].doClose();
         this.fileLists();
       }
     },
@@ -314,6 +331,10 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/css/table";
 
+.preview{
+  cursor: pointer;
+  color: #5CA7FF;
+}
 .uploadFiles {
   .status {
     margin: 10px 0 10px 0;

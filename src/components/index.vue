@@ -72,7 +72,7 @@ export default {
   mounted() {
     this.userName = this.$api.common.user().userName;
     this.type = this.$api.common.user().type;
-    this.defaultImg = this.$api.common.user().userImg;
+    this.defaultImg = this.$api.common.user().userImg == '' ? this.defaultImg : this.$api.common.user().userImg;
     this.routerMsg = this.$api.common.user().userpower_lists;
   }
 };

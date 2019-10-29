@@ -75,7 +75,7 @@
             
           </el-col>
         </el-row>
-      </el-popover> -->
+      </el-popover>-->
     </div>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="user_name" label="姓名" fixed="left" width="100"></el-table-column>
@@ -83,16 +83,19 @@
       <el-table-column prop="zh_identify" label="人员身份" width="160"></el-table-column>
       <el-table-column prop="zh_status" label="人员状态"></el-table-column>
       <el-table-column prop="zh_sex" label="所属组织" width="150">
-        <template slot-scope="scope"><div v-html="scope.row.organize_duty[0]"></div></template>
+        <template slot-scope="scope">
+          <div v-html="scope.row.organize_duty[0]"></div>
+        </template>
       </el-table-column>
       <el-table-column prop="zh_identify" label="党内职务" width="150">
         <template slot-scope="scope">
-          
           <div v-html="scope.row.organize_duty[1]"></div>
-          </template>
+        </template>
       </el-table-column>
-      <el-table-column prop="zh_status" label="任期时间">
-        <template slot-scope="scope"><div v-html="scope.row.organize_duty[2]"></div></template>
+      <el-table-column prop="zh_status" label="任期时间" width="220">
+        <template slot-scope="scope">
+          <div v-html="scope.row.organize_duty[2]"></div>
+        </template>
       </el-table-column>
       <el-table-column prop="apply_time" label="入党申请书提交时间" width="150"></el-table-column>
       <el-table-column prop="active_time" label="入党积极分子时间" width="150"></el-table-column>
@@ -100,18 +103,21 @@
       <el-table-column prop="develop_time" label="发展对象时间" width="150"></el-table-column>
       <el-table-column prop="party_time" label="入党时间" width="150"></el-table-column>
       <el-table-column prop="formal_time" label="转正时间" width="150"></el-table-column>
-      <el-table-column prop="zh_sex" label="所属部门" width="180">
+      <el-table-column prop="zh_sex" label="所属公司" width="180">
         <template slot-scope="scope">{{scope.row.company_rank[0]}}</template>
       </el-table-column>
-      <el-table-column prop="zh_identify" label="员工职级" width="100">
+      <el-table-column prop="zh_sex" label="所属部门" width="180">
         <template slot-scope="scope">{{scope.row.company_rank[1]}}</template>
+      </el-table-column>
+      <el-table-column prop="zh_identify" label="员工职级" width="220">
+        <template slot-scope="scope">{{scope.row.company_rank[2]}}</template>
       </el-table-column>
       <el-table-column prop="id_card" label="身份证号" width="180"></el-table-column>
       <el-table-column prop="birth" label="出身年月" width="130"></el-table-column>
       <el-table-column prop="age" label="年龄"></el-table-column>
       <el-table-column prop="zh_nation" label="民族"></el-table-column>
-      <el-table-column prop="sources" label="籍贯"  width="130"></el-table-column>
-      <el-table-column prop="graduation" label="毕业院校"  width="270"></el-table-column>
+      <el-table-column prop="sources" label="籍贯" width="150"></el-table-column>
+      <el-table-column prop="graduation" label="毕业院校" width="300"></el-table-column>
       <el-table-column prop="zh_education" label="学历"></el-table-column>
       <el-table-column prop="work_time" label="参与工作时间" width="150"></el-table-column>
       <el-table-column label="操作" fixed="right">
@@ -191,9 +197,8 @@
                   ></el-date-picker>
                 </el-form-item>
                 <p class="box-title">公司资料</p>
-
                 <div v-for="(item,index) in companyAll" :key="index">
-                  <el-form-item label="所属部门">
+                  <el-form-item label="所属公司">
                     <el-select
                       v-model="item.companyID"
                       placeholder="请选择"
@@ -209,7 +214,7 @@
                     </el-select>
                   </el-form-item>
 
-                 <!--  <el-form-item label="所属部门">
+                  <el-form-item label="所属部门">
                     <el-select
                       v-model="item.departmentID"
                       @change="changeDepartment(item,index)"
@@ -223,7 +228,7 @@
                         :value="item.department_id"
                       ></el-option>
                     </el-select>
-                  </el-form-item> -->
+                  </el-form-item>
 
                   <el-form-item label="员工职级">
                     <el-select v-model="item.rankID" placeholder="请选择" style="width:100%;">
@@ -380,7 +385,7 @@ export default {
       let arr = val.split(","),
         arrstr = "";
       for (let i = 0; i < arr.length; i++) {
-        arrstr += "<p>"+arr[i]+"</p>";
+        arrstr += "<p>" + arr[i] + "</p>";
       }
       return arrstr;
     },
@@ -435,21 +440,30 @@ export default {
         user_id: scope.row.user_id
       });
       if (res.status == "success") {
+        res.data.nation_id =  res.data.nation_id == 0  ?'':res.data.nation_id
         this.editData = res.data;
         let com = this.editData.company_rank;
-        com.forEach(i => {
-          let req = i.split(",")[1].split("-");
+        if (com.length == 0) {
           this.companyAll.push({
-            companyID: parseInt(req[0]),
-            departmentID: parseInt(req[1]),
-            rankID: parseInt(req[2])
+              companyID: '',
+              departmentID: '',
+              rankID: ''
           });
-        });
+        } else {
+          com.forEach(i => {
+            let req = i.split(",")[1].split("-");
+            this.companyAll.push({
+              companyID: parseInt(req[0]),
+              departmentID: parseInt(req[1]),
+              rankID: parseInt(req[2])
+            });
+          });
 
-        this.companyAll.forEach(i => {
-          this.departmentLists({ company_id: i.companyID });
-          this.rankLists({ department_id: i.departmentID });
-        });
+          this.companyAll.forEach(i => {
+            this.departmentLists({ company_id: i.companyID });
+            this.rankLists({ department_id: i.departmentID });
+          });
+        }
       }
     },
     /* 取消 */
@@ -482,11 +496,11 @@ export default {
         formal_time: this.editData.formal_time,
         company_rank: arr
       };
-       const res = await this.$api.globalConfig.partyEditUserInfo(req);
+      const res = await this.$api.globalConfig.partyEditUserInfo(req);
       if (res.status == "success") {
         this.$refs[`popedit-${index}`].doClose();
         this.lists();
-      } 
+      }
     },
     queryCondi() {
       this.queryPop = !this.queryPop;
@@ -499,15 +513,14 @@ export default {
       };
       let res = await this.$api.globalConfig.partyUserList(params);
       if (res.status == "success") {
-
-      let listduty = res.data.lists.map(i=>{
-          return i.organize_duty
-        })
-        listduty.forEach(i=>{
-          i[0] = this.dataSpice(i[0])
-          i[1] = this.dataSpice(i[1])
-          i[2] = this.dataSpice(i[2])
-        })
+        let listduty = res.data.lists.map(i => {
+          return i.organize_duty;
+        });
+        listduty.forEach(i => {
+          i[0] = this.dataSpice(i[0]);
+          i[1] = this.dataSpice(i[1]);
+          i[2] = this.dataSpice(i[2]);
+        });
         this.tableData = res.data.lists;
         this.page.total = res.data.count;
       }

@@ -101,6 +101,15 @@ body,
   }
 }
 
+.stepPop{
+  .el-step__icon{
+    width: 11px;
+    height: 11px;
+    background: #E5E5E5;
+  }
+}
+
+
 /* 事项添加 transfer */
 .transferDia {
   width: 486px;
