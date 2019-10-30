@@ -15,7 +15,6 @@
           >{{item.power_name}}</router-link>
         </div>
         <div class="userMsg">
-
           <router-link
             v-for="(item,index) in routerMsg"
             :key="index"
@@ -53,7 +52,8 @@ export default {
       type: 2,
       defaultImg: require("../assets/img/defaultIcon.png"),
       activeIndex: 1,
-      routerMsg: {}
+      routerMsg: {},
+      userInfo:''
     };
   },
   methods: {
@@ -74,7 +74,7 @@ export default {
     this.type = this.$api.common.user().type;
     this.defaultImg = this.$api.common.user().userImg == '' ? this.defaultImg : this.$api.common.user().userImg;
     this.routerMsg = this.$api.common.user().userpower_lists;
-  }
+  },
 };
 </script>
 

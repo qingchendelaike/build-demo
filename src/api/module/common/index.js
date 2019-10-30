@@ -9,6 +9,12 @@ export default {
     header = { post: { 'Content-Type': 'multipart/form-data' } }
     return api.post('/base/ossUpload', params, header)
   },
+
+  updateHeadImg(params) {
+    // return出去了一个promise
+    header = { post: { 'Content-Type': 'multipart/form-data' } }
+    return api.post('/partyUser/updateHeadImg', params, header)
+  },
   //获取预览链接
   getPreviewLink(params) {
     // return出去了一个promise

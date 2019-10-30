@@ -37,23 +37,24 @@ export default {
       } else {
         document.body.style.height = "100%";
       }
-
+/* 
       if (to.path != "/") {
         if (this.$api.common.user()) {
           let roterList = this.$api.common.user().userpower_lists;
           this.forList(roterList);
-          for (let i = 0; i < this.power.length; i++) {
-            if (to.path == this.power[i]["url"]) {
-              if (this.power[i]["show_menu"] == false) {
-                this.$router.push("*");
-                break;
-              } else {
-                break;
+          setTimeout(() => {
+            for (let i = 0; i < this.power.length; i++) {
+              if (to.path == this.power[i]["url"]) {
+                if (this.power[i]["show_menu"] == false) {
+                  this.$router.push("*");
+                  break;
+                }
               }
             }
-          }
+          }, 100);
         }
-      }
+      } */
+
       if (
         to.path == "/wxLogin" ||
         to.path == "/wxError" ||
@@ -101,18 +102,17 @@ body,
   }
 }
 
-.stepPop{
-  .el-step__icon{
+.stepPop {
+  .el-step__icon {
     width: 11px;
     height: 11px;
-    background: #E5E5E5;
+    background: #e5e5e5;
   }
 }
 
-
 /* 事项添加 transfer */
 .transferDia {
-  width: 486px;
+  max-width: 486px;
   display: flex;
   flex-wrap: wrap;
   /deep/ .el-transfer-panel {

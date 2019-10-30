@@ -72,7 +72,8 @@
       <el-table :data="item.file_lists" style="width: 100%">
         <el-table-column prop="file_name" label="文件名（点击可在线预览）" width="450">
           <template slot-scope="scope">
-            <span class="preview" @click="scopeUrl(scope.row)">{{scope.row.file_name}}</span> 
+            <span v-show="reg.test(scope.row.file_name) == false">{{scope.row.file_name}}</span>
+            <span  v-show="reg.test(scope.row.file_name)" class="preview" @click="scopeUrl(scope.row)">{{scope.row.file_name}}</span> 
           </template>
         </el-table-column>
         <el-table-column prop="user_name" label="上传者" width="100"></el-table-column>
@@ -140,6 +141,7 @@ import { BASE_URL } from "@/api/utils";
 export default {
   data() {
     return {
+      reg:/(?:doc|docx|xls|xlsx|ppt|pptx)$/,
       finisVisible: false,
       dialogVisible: false,
       transferValue: [],

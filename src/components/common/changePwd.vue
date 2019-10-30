@@ -25,8 +25,7 @@
             v-if="item.btn == null"
             v-model.trim="item.value"
             :placeholder="item.placelabel"
-            :type="item.type == true ? 'password':'text' "
-          >
+            :type="item.type == true ? 'password':'text'">
             <i
               slot="suffix"
               v-if="item.btnIcon"
@@ -213,6 +212,10 @@ export default {
     /* 发送验证码 */
     async sendCode() {
       if (this.form.phone.value.length == 11) {
+        if(this.form.phone == this.$api.common.user().userPhon){
+          this.errMsg = "新旧号码不能为同一个";
+          return;
+        }
         let i = 60;
         let timer = setInterval(() => {
           i--;
@@ -226,9 +229,13 @@ export default {
             this.form.code.btn = i + "s";
           }
         }, 1000);
+
+
          const res = await this.$api.person.sms({
           phone: this.form.phone.value
         });
+
+
         if (res.status == "success") {
           this.errMsg = "";
           this.$message("发送成功");
@@ -273,68 +280,8 @@ export default {
       this.lBool = this.pattern3.test(val) == true ? true : false;
     }
   },
-  /*  watch: {
-    "form.pwd.value"(val, old) {
-      this.regc(val);
-    },
-    "form.pwd2.value"(val, old) {
-      this.regc(val);
-      if (
-        this.form.pwd.value === this.form.pwd2.value &&
-        this.form.pwd.value.length > 0 &&
-        this.form.pwd.value.length > 0 &&
-        this.form.oldpwd.value.length > 0
-      ) {
-        this.disabled = false;
-      } else {
-        this.disabled = true;
-      }
-    },
-    "form.code.value"(val, old) {
-      if (
-        this.form.phone.value.length == 11 &&
-        this.form.code.value.length == 4
-      ) {
-        this.disabled = false;
-      } else {
-        this.disabled = true;
-      }
-    }, 
-    "form.phone.value"(val, old) {
-      if (
-        this.form.phone.phoneCompare == true &&
-        this.form.phone.value.length == 11 &&
-        this.form.phone.value == this.userPhon
-      ) {
-        this.errMsg = "新旧手机号码不可一致";
-      } else {
-        this.errMsg = "";
-      }
-      if (
-        this.form.phone.phoneCompare == true &&
-        this.form.phone.value.length == 11 &&
-        this.form.code.value.length == 4 &&
-        this.form.phone.value != this.userPhon
-      ) {
-        this.disabled = false;
-      }
-    },
-    "form.mailbox.value"(val, old) {
-      console.log(this.form.code.value, this.form.pwd.value)
-      if (
-        this.pattern4.test(this.form.mailbox.value) &&
-        this.form.code.value.length == 4 &&
-        this.form.pwd.value.length != 0
-      ) {
-        this.disabled = false;
-      } else {
-        this.disabled = true;
-      }
-    }
-  },*/
+
   mounted() {
-  /*   this.userName = userName;
-    this.userPhon = userPhon; */
      this.userName =this.$api.common.user().userName;
     this.userPhon = this.$api.common.user().userPhon;
   }
@@ -376,7 +323,7 @@ export default {
         bottom: 76px;
       }
       button {
-        width: 100px;
+        width: 110px;
       }
       .subMaxTitle {
         margin: 30px 0 40px 0;

@@ -58,8 +58,8 @@
           <el-form-item label="时间">
             <el-col :span="11">
               <el-date-picker
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd"
+                format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm"
                 type="datetime"
                 placeholder="选择开始日期"
                 v-model="formData.start_time"
@@ -70,8 +70,8 @@
             <el-col :span="11">
               <el-date-picker
                 type="datetime"
-                value-format="yyyy-MM-dd"
-                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm"
+                format="yyyy-MM-dd HH:mm"
                 placeholder="选择结束时间"
                 v-model="formData.end_time"
                 style="width: 100%;"
@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import {BASE_URL} from '@/api/utils'
+import { BASE_URL } from "@/api/utils";
 export default {
   props: [
     "headerTitle",
@@ -157,14 +157,14 @@ export default {
       );
       if (res.status == "success") {
         this.formData.export_ticket = res.data;
-        this.formData.token = encodeURIComponent(sessionStorage.getItem("Token")) 
+        this.formData.token = encodeURIComponent(
+          sessionStorage.getItem("Token")
+        );
         let exportUrl = "";
         Object.keys(this.formData).map(key => {
           exportUrl += key + "=" + this.formData[key] + "&";
         });
-        window.open(
-          `${BASE_URL}${this.exportsRouter}?${exportUrl}`
-        );
+        window.open(`${BASE_URL}${this.exportsRouter}?${exportUrl}`);
       }
     },
     pScreen() {
@@ -189,15 +189,13 @@ export default {
         dataObj.organize_name = data[i].organize_name;
         dataArray.push(dataObj);
         let dataChild = data[i]["sub_organization"];
-        if(dataChild){
-            // if (dataChild.length > 0) {
-                for (let j = 0; j < dataChild.length; j++) {
-                    let dataObj = {};
-                    dataObj.organize_id = dataChild[j].organize_id;
-                    dataObj.organize_name = dataChild[j].organize_name;
-                    dataArray.push(dataObj);
-                }
-            // }
+        if (dataChild) {
+          for (let j = 0; j < dataChild.length; j++) {
+            let dataObj = {};
+            dataObj.organize_id = dataChild[j].organize_id;
+            dataObj.organize_name = dataChild[j].organize_name;
+            dataArray.push(dataObj);
+          }
         }
       }
       return dataArray;
@@ -205,9 +203,9 @@ export default {
   },
   mounted() {
     let data = new Date().getFullYear();
-    this.formData.start_time = data+'-01-01'
-    this.formData.end_time = data+'-12-31';
-    this.subject()
+    this.formData.start_time = data+'-01-01 00:00'
+    this.formData.end_time = data+'-12-31 00:00';
+    this.subject();
   }
 };
 </script>
@@ -235,42 +233,19 @@ export default {
     .main-title-event-icon {
       padding-right: 0px;
       width: 20px;
-      background: url("../../assets/img/index_sprites.png") -61px -13px no-repeat;
+      background: url("../../assets/img/index_sprites.png") -61px -13px
+        no-repeat;
       vertical-align: bottom;
     }
     .main-title-export-icon {
       width: 20px;
-      background: url("../../assets/img/index_sprites.png") -13px -14px no-repeat;
+      background: url("../../assets/img/index_sprites.png") -13px -14px
+        no-repeat;
       vertical-align: bottom;
     }
   }
-
-  .is_task {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    vertical-align: sub;
-    background: url("../../assets/img/index_sprites.png") -12px -59px no-repeat;
-    cursor: pointer;
-  }
 }
 
-.popover-box {
-  padding: 13px;
-  p {
-    font-size: 13px;
-    padding: 9px 11px 9px 15px;
-    border: 1px solid rgba(229, 229, 229, 1);
-    border-bottom: none;
-    &:first-child {
-      border-radius: 3px 3px 0px 0px;
-    }
-    &:last-child {
-      border-radius: 0px 0px 3px 3px;
-      border-bottom: 1px solid rgba(229, 229, 229, 1);
-    }
-  }
-}
 
 .screen {
   padding: 18px;

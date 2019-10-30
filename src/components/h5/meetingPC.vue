@@ -3,7 +3,7 @@
     <div class="box">
       <div class="box-title">
         <div class="tit">会议详情</div>
-        <div v-if=" msg.item_status == 1  || msg.item_status == 2  || msg.item_status == 3 " >
+        <div>
           参与情况：
           <el-select v-model="value" :disabled="bool"  placeholder="请选择">
             <el-option
@@ -14,7 +14,7 @@
             ></el-option>
           </el-select>
 
-          <el-button type="primary" class="primaryBtn" @click="sum" :disabled="bool">提交</el-button>
+          <el-button type="primary" class="primaryBtn" @click="sum" :disabled="bool">{{btnValue}}</el-button>
         </div>
       </div>
       <div class="box-text">
@@ -93,11 +93,10 @@
 export default {
   data() {
     return {
+      btnValue:"提交",
       msg: "",
       value: "",
-      detailsData: [
-        { feed_name: "未反馈", feed_id: 0, more_remark: 0, isSet: false }
-      ],
+      detailsData: [],
       bool: false
     };
   },
@@ -119,8 +118,19 @@ export default {
 
       if (res.status == "success") {
         this.msg = res.data;
-        if(this.msg.is_feed){
-          this.bool = true
+        if (this.msg.item_status == 4) {
+           this.bool = true
+            this.btnValue = "事项已办结";
+        } else if (this.msg.item_status == 5) {
+           this.bool = true
+            this.btnValue = "事项已取消";
+        } else if(this.msg.is_feed){
+           this.bool = true
+          this.detailsData.forEach(i => {
+            if(i.feed_name = this.msg.feed_name){
+                this.value = i.feed_id
+            }
+          });
         }
       }
     },

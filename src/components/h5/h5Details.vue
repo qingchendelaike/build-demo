@@ -40,7 +40,7 @@
           <div class="title-box">
             发文文号
             <p
-             v-if="this.msg.change.indexOf('article_year') >= 0 ||  this.msg.change.indexOf('article_sn') >= 0"
+              v-if="this.msg.change.indexOf('article_year') >= 0 ||  this.msg.change.indexOf('article_sn') >= 0"
             ></p>
           </div>
           <div class="title-conten">粤时代司党（{{msg.article_year}}）{{msg.article_sn}}号</div>
@@ -112,7 +112,6 @@
     <el-button
       class="btn"
       @click="handleClick"
-      v-if="msg.item_status == 1 || msg.item_status == 2 || msg.item_status == 3"
       :disabled="disabled"
       :class="{ btGround:type == true}"
     >{{msgBtn}}</el-button>
@@ -176,28 +175,28 @@ export default {
         unique_str: reqBody
       });
       if (res.status == "success") {
-          if(!res.data.hasOwnProperty("change")){
-            res.data.change = []
-          }
+        if (!res.data.hasOwnProperty("change")) {
+          res.data.change = [];
+        }
         this.msg = res.data;
-        if(this.msg.item_status == 4){
-          this.msgBtn = "已办结 ";
-           this.pop = false;
-        this.type = "";
-        this.disabled = true;
-        this.type = true;
-        }else if(this.msg.item_status == 5){
-          this.msgBtn = "已取消 ";
-           this.pop = false;
-        this.type = "";
-        this.disabled = true;
-        this.type = true;
-        }else if (this.msg.is_feed) {
-          this.msgBtn = "已参与反馈";
-           this.pop = false;
-        this.type = "";
-        this.disabled = true;
-        this.type = true;
+        if (this.msg.item_status == 4) {
+          this.msgBtn = "事项已办结";
+          this.pop = false;
+          this.type = "";
+          this.disabled = true;
+          this.type = true;
+        } else if (this.msg.item_status == 5) {
+          this.msgBtn = "事项已取消";
+          this.pop = false;
+          this.type = "";
+          this.disabled = true;
+          this.type = true;
+        } else if (this.msg.is_feed) {
+          this.msgBtn = "已确认"+this.msg.feed_name;
+          this.pop = false;
+          this.type = "";
+          this.disabled = true;
+          this.type = true;
         }
       }
     },

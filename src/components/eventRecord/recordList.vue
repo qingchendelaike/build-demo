@@ -196,12 +196,12 @@ export default {
         axios
           .get(`${process.env.API_ROOT}/item/itemCollectLists`, {
             params: {
-              min_date: _this.modelData[_this.modelData.length - 1]["date"]
+              max_date: _this.modelData[_this.modelData.length - 1]["date"]
             }
           })
           .then(res => {
-            if (res.data.length > 0) {
-              let nextData = res.data;
+            if (res.data.data.length > 0) {
+              let nextData = res.data.data;
               for (let i = 0; i < nextData.length; i++) {
                 _this.modelData.push(nextData[i]);
               }
@@ -216,8 +216,8 @@ export default {
             }
           })
           .then(res => {
-            if (res.data.length > 0) {
-              let prevData = res.data;
+            if (res.data.data.length > 0) {
+              let prevData = res.data.data;
               for (let j = prevData.length - 1; j >= 0; j--) {
                 _this.modelData.unshift(prevData[j]);
               }
@@ -295,16 +295,24 @@ export default {
     },
     async refreshData() {
       //选择日期，刷新值
-      // alert(this.value1);
-      let res = await this.$api.eventRecord.getData({});
-      this.modelData = res.data;
-      //居中当前选择的日期
-      let tTop = document.querySelector(".today").offsetTop;
+      if (this.value1 != null) {
+        let res = await this.$api.eventRecord.getData({});
+        let bool = this.modelData.every(i => {
+          return i.date != this.value1;
+        });
+        if (bool) {
+          this.$message("该日期下无事项");
+          return;
+        }
+        this.modelData = res.data;
+        //居中当前选择的日期
+        let tTop = document.querySelector(".today").offsetTop;
 
-      let halfDis = document.querySelector("#scrollContainer").clientHeight / 2;
-      if (tTop > halfDis) {
-        let scrollDis = Math.abs(halfDis - tTop);
-        document.querySelector("#scrollContainer").scrollBy(0, scrollDis);
+        let halfDis = document.querySelector("#scrollContainer").clientHeight / 2;
+        if (tTop > halfDis) {
+          let scrollDis = Math.abs(halfDis - tTop);
+          document.querySelector("#scrollContainer").scrollBy(0, scrollDis);
+        }
       }
     },
     hidePopover(i) {

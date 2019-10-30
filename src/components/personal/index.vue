@@ -1,5 +1,4 @@
 <template>
-  <!-- <div class="person" :style="{'min-height':height}"> -->
   <div class="person">
     <div class="person-box" id="person-box">
       <div class="person-img">
@@ -94,7 +93,7 @@ export default {
     async imgSum() {
       let formdata = new FormData();
       formdata.append("file", this.files);
-      const res = await this.$api.common.uploadImg(formdata);
+      const res = await this.$api.common.updateHeadImg(formdata);
       if (res.status == "success") {
         this.userImg = this.defaultIcon = res.data.file_url;
         let userInfo = JSON.parse(sessionStorage.getItem("userInfo"));

@@ -132,7 +132,7 @@ export default {
              const power = await this.$api.userLogin.loginPower();
             if(power.status == "success"){
               this.$store.dispatch("setMenu", power.data);
-              this.$router.push("/index/eventSummary/allMatters");
+               this.routerMenu(this.$api.common.user().userpower_lists)
             }
           } else if (res.data.is_more_duty == 1) {
             this.activeBool = true;
@@ -147,7 +147,7 @@ export default {
             }
           }
         } else if (res.data.type == 2) {
-          this.$router.push("/index/eventSummary/allMatters");
+            this.routerMenu(this.$api.common.user().userpower_lists)
         }
       }else{
         this.loginSum = false
@@ -175,7 +175,7 @@ export default {
         if (res.status == "success") {
           this.dangerSum = false;
           this.$store.dispatch("setMenu", res.data);
-          this.$router.push("/index/eventSummary/allMatters");
+          this.routerMenu(this.$api.common.user().userpower_lists)
         }else{
           this.dangerSum = false
       }
@@ -198,6 +198,14 @@ export default {
           this.randomNum(0, this.identifyCodes.length)
         ];
       }
+    },
+    routerMenu(data){
+      for (let i = 0; i < data.length; i++) {
+      if(data[i]['show_menu'] == true){
+          this.$router.push(data[i]['url'])
+          break;
+      }
+    }
     }
   }
 };

@@ -197,10 +197,13 @@ export default {
       }
     },
     showEdit(scope) {
+      this.checkTree = []
       this.editFrom = scope.row;
       this.$refs[`addTree-${scope.$index}`].setCheckedKeys([]);
       this.dataRow = JSON.parse(JSON.stringify(scope.row));
-      this.checkTree = scope.row.duty_authority.split(",");
+      scope.row.duty_authority.split(",").forEach(i=>{
+        this.checkTree.push(parseInt(i))
+      })
       if (scope.row.is_special == 1) {
         this.foreachTree(this.treeData, 1);
       } else {

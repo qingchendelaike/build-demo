@@ -45,7 +45,7 @@ export default new Router({
         /* 事项总页 */
         path: '/index/eventSummary',
         name: 'eventSummary',
-        redirect: '/index/eventSummary/allMatters',
+        // redirect: '/index/eventSummary/allMatters',
         component: () => import('@/components/eventCenter/eventSummary.vue'),
         children: [{
           /* 所有事项 */
@@ -172,3 +172,8 @@ export default new Router({
     component: () => import('@/components/404.vue'),
   }]
 })
+
+const routerPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error=> error)
+}

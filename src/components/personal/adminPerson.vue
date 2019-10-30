@@ -325,7 +325,7 @@ export default {
           btn: null,
           btnIcon: null
         },
-        code: {
+        codePhone: {
           btn: "获取验证码",
           label: "验证码",
           value: "",

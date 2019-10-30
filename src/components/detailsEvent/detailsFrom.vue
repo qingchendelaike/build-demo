@@ -76,6 +76,7 @@
               format="yyyy.MM.dd HH:mm"
               value-format="yyyy-MM-dd HH:mm"
               type="datetime"
+              :picker-options="pickerOptions0"
               placeholder="选择日期时间"
             ></el-date-picker>
           </el-form-item>
@@ -89,6 +90,7 @@
               format="yyyy.MM.dd HH:mm"
               value-format="yyyy-MM-dd HH:mm"
               placeholder="选择日期时间"
+              :picker-options="pickerOptions1"
             ></el-date-picker>
           </el-form-item>
         </el-col>
@@ -274,7 +276,8 @@
         </el-popover>
 
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-        <el-checkbox v-model="radio">
+
+        <el-checkbox v-model="radio" style="display:block;">
           <span class="radioCheck">发送事项变动通知(取消事项默认发送通知)</span>
         </el-checkbox>
       </el-form-item>
@@ -385,7 +388,22 @@ export default {
       transferUser_id: [],
       is_special: false,
       startPop: [],
-      organizeValue: ""
+      organizeValue: "",
+       //日期控件
+      pickerOptions0: {
+        // 限制结束日期不能大于开始日期
+        disabledDate: time => {
+          return time.getTime() < Date.now() - 23*60*60*1000
+         /*  if (this.ruleForm.end_time != "") {
+            return (time.getTime() < new Date(this.ruleForm.end_time).getTime() || time.getTime() > Date.now());
+          } */
+        }
+      },
+      pickerOptions1: {
+        disabledDate: time => {
+           return (time.getTime() < new Date(this.ruleForm.start_time).getTime() - 23*60*60*1000)
+        }
+      }
     };
   },
   methods: {
@@ -401,21 +419,28 @@ export default {
     },
     transferChange(val) {
       this.transferUser_id = val;
+       this.ruleForm.users = []
+      this.transferData.forEach(i => {
+        if (this.transferUser_id.indexOf(i.user_id) >= 0) {
+          this.ruleForm.users.push(i);
+        }
+      });
     },
     transferBtnClose() {
       this.transferValue = this.organizeValue;
+      this.ruleForm.users = this.detailsData.users
       this.dialogVisible = false;
       this.detailsOrganize_id = "";
       this.transferOldData = this.transferData = [];
     },
     transferBtn() {
       this.dialogVisible = false;
-      this.ruleForm.users = [];
+      /* this.ruleForm.users = [];
       this.transferData.forEach(i => {
         if (this.transferUser_id.indexOf(i.user_id) >= 0) {
           this.ruleForm.users.push(i);
         }
-      });
+      }); */
       this.detailsOrganize_id = "";
       this.transferOldData = this.transferData = [];
     },

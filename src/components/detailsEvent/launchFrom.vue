@@ -142,7 +142,12 @@
                   </div>
 
                   <span class="timeicon" slot="reference">
-                    <img style="width:100%;height:100%;" v-show="noticesData.length > 0" src="../../assets/img/icon_remind_on.png" alt="">
+                    <img
+                      style="width:100%;height:100%;"
+                      v-show="noticesData.length > 0"
+                      src="../../assets/img/icon_remind_on.png"
+                      alt
+                    />
                   </span>
                 </el-popover>
               </el-col>
@@ -240,6 +245,7 @@
                     :ref="`popover-${index}`"
                   >
                     <el-transfer
+                      v-if="ruleForm.users.length > 0"
                       v-model="item.users"
                       :props="{
                         key: 'user_id',
@@ -249,12 +255,31 @@
                       :titles="['人员列表', '已选人员']"
                     ></el-transfer>
 
-                    <div style="width: 100%;text-align: right;margin: 30px 30px 10px 0;">
+                    <div
+                      v-if="ruleForm.users.length > 0"
+                      style="width: 100%;text-align: right;margin: 30px 30px 10px 0;"
+                    >
                       <el-button type="text" @click="startPopBoolClose(`popover-${index}`)">取消</el-button>
                       <el-button type="primary" @click="startPopBoolSub(`popover-${index}`)">确定</el-button>
                     </div>
+
+                    <div class="selectBox" v-if="ruleForm.users.length == 0">
+                      <p>
+                        <span>提示</span>
+                        <span @click="closeSelectBox(`popover-${index}`)">
+                          <i class="el-icon-close"></i>
+                        </span>
+                      </p>
+                      <p>请先选定参与人员,再从中选取任务执行人</p>
+                    </div>
+
                     <span class="addUser" @click="startClickPop" slot="reference">
-                      <img style="width:100%;height:100%;" v-show="item.users.length > 0" src="../../assets/img/icon_addmembers_on.png" alt="">
+                      <img
+                        style="width:100%;height:100%;"
+                        v-show="item.users.length > 0"
+                        src="../../assets/img/icon_addmembers_on.png"
+                        alt
+                      />
                     </span>
                   </el-popover>
                 </p>
@@ -310,6 +335,9 @@
         </div>
       </div>
     </div>
+    <el-dialog title="提示"  :visible.sync="launchDiaVisible" width="350px" @close="closeDiaVisible">
+      <span>会议纪要请在会后7日内上传,其他相关材料请在会后3日内上传</span>
+    </el-dialog>
   </div>
 </template>
 
@@ -321,7 +349,8 @@ export default {
   },
   data() {
     return {
-      labelDataArr:[],
+      launchDiaVisible: false,
+      labelDataArr: [],
       detailsOrganize_id: "",
       is_special: false,
       transferSelect: [],
@@ -336,7 +365,7 @@ export default {
       lableText: "类型标签管理",
       filesText: "存档文件类型管理",
       filesData: [],
-      filesDataArr:[],
+      filesDataArr: [],
       filesBool: false,
       seriesData: [],
       takesData: [],
@@ -369,16 +398,32 @@ export default {
       },
       rules: {
         item_name: [
-          { required: true, message: `请输入${this.typeSw(this.$route.query.item_id)}名称`, trigger: "blur" }
+          {
+            required: true,
+            message: `请输入${this.typeSw(this.$route.query.item_id)}名称`,
+            trigger: "blur"
+          }
         ],
         item_reason: [
-          { required: true, message: `请输入${this.typeSw(this.$route.query.item_id)}原因`, trigger: "blur" }
+          {
+            required: true,
+            message: `请输入${this.typeSw(this.$route.query.item_id)}原因`,
+            trigger: "blur"
+          }
         ],
         item_flow: [
-          { required: true, message: `请输入${this.typeSw(this.$route.query.item_id)}流程`, trigger: "blur" }
+          {
+            required: true,
+            message: `请输入${this.typeSw(this.$route.query.item_id)}流程`,
+            trigger: "blur"
+          }
         ],
         item_space: [
-          { required: true, message: `请输入${this.typeSw(this.$route.query.item_id)}地点`, trigger: "blur" }
+          {
+            required: true,
+            message: `请输入${this.typeSw(this.$route.query.item_id)}地点`,
+            trigger: "blur"
+          }
         ],
         organize_name: [
           { required: true, message: "请选择活动区域", trigger: "change" }
@@ -425,22 +470,28 @@ export default {
       pickerOptions0: {
         // 限制结束日期不能大于开始日期
         disabledDate: time => {
-          if (this.ruleForm.end_time != "") {
-            return time.getTime() > new Date(this.ruleForm.end_time).getTime();
-          }
+          return time.getTime() < Date.now() - 23 * 60 * 60 * 1000;
         }
       },
       pickerOptions1: {
         disabledDate: time => {
-          return time.getTime() < new Date(this.ruleForm.start_time).getTime();
+          return (
+            time.getTime() <
+            new Date(this.ruleForm.start_time).getTime() - 23 * 60 * 60 * 1000
+          );
         }
-      }
+      },
+      startPopBool: false,
+      num:0
     };
   },
   methods: {
     startPopBoolClose(val) {
       this.$refs[val][0].doClose();
       this.takesData = this.startPop;
+    },
+    closeSelectBox(val) {
+      this.$refs[val][0].doClose();
     },
     startPopBoolSub(val) {
       this.$refs[val][0].doClose();
@@ -450,24 +501,23 @@ export default {
     },
     /* 返回系统事项 */
     callBack() {
-      // this.$router.push("/index/eventSummary/allMatters");
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
 
     transferBtnClose() {
       this.transferValue = this.organizeValue;
       this.dialogVisible = false;
       this.detailsOrganize_id = "";
-      this.transferOldData = this.transferData = [];
+      this.transferOldData = this.transferData = this.ruleForm.users = [];
     },
     transferBtn() {
       this.dialogVisible = false;
-      this.ruleForm.users = [];
+      /*  this.ruleForm.users = [];
       this.transferData.forEach(i => {
         if (this.transferUser_id.indexOf(i.user_id) >= 0) {
           this.ruleForm.users.push(i);
         }
-      });
+      }); */
       this.detailsOrganize_id = "";
       this.transferOldData = this.transferData = [];
     },
@@ -510,15 +560,6 @@ export default {
       };
       const res = await this.$api.details.organizeUserLists(req);
       if (res.status == "success") {
-        /*  this.organDataAll = this.organDataAll.concat(res.data);
-        let obj = {};
-        this.organDataAll = this.organDataAll.reduce((item, next) => {
-          obj[next.user_id]
-            ? ""
-            : (obj[next.user_id] = true && item.push(next));
-          return item;
-        }, []);
-        this.transferData = this.organDataAll; */
         this.transferOldData = this.transferData = [];
         this.transferOldData = JSON.parse(JSON.stringify(res.data));
         res.data = res.data.concat(this.ruleForm.users);
@@ -594,7 +635,7 @@ export default {
         };
         const res = await this.$api.details.labelDelete(req);
         if (res.status == "success") {
-          this.labelLists()
+          this.labelLists();
           this.$message("删除标签成功");
         }
       }
@@ -613,7 +654,7 @@ export default {
     /* 文件标签 */
     async filesType() {
       let req = {
-        archive_type:  this.$route.query.item_id,
+        archive_type: this.$route.query.item_id
       };
       const res = await this.$api.details.archiveList(req);
       if (res.status == "success") {
@@ -621,7 +662,7 @@ export default {
           i.set_bool = false;
           i.label_name = i.archive_name;
         });
-        this.filesDataArr = JSON.parse(JSON.stringify(res.data))
+        this.filesDataArr = JSON.parse(JSON.stringify(res.data));
         this.filesData = res.data;
       }
     },
@@ -649,7 +690,7 @@ export default {
         };
         const res = await this.$api.details.archiveDelete(req);
         if (res.status == "success") {
-          this.filesType()
+          this.filesType();
           this.$message("删除标签成功");
         }
       }
@@ -657,7 +698,7 @@ export default {
     /* 新增文件标签 */
     addFiles() {
       let req = {
-       archive_type: this.$route.query.item_id,
+        archive_type: this.$route.query.item_id,
         label_name: "",
         set_bool: true
       };
@@ -713,44 +754,50 @@ export default {
 
     /* 提交 */
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          let item_task = JSON.parse(JSON.stringify(this.takesData)),
-            taskBool = false;
-          for (let i = 0; i < item_task.length; i++) {
-            if (item_task[i]["users"].length == 0) {
-              taskBool = true;
-              break;
+      this.num++;
+      if (this.num == 1 ){
+        this.launchDiaVisible = true;
+      } else {
+        this.$refs[formName].validate(valid => {
+          if (valid) {
+            let item_task = JSON.parse(JSON.stringify(this.takesData)),
+              taskBool = false;
+            for (let i = 0; i < item_task.length; i++) {
+              if (item_task[i]["users"].length == 0) {
+                taskBool = true;
+                break;
+              }
+              item_task[i]["users"] = item_task[i]["users"].join(",");
             }
-            item_task[i]["users"] = item_task[i]["users"].join(",");
+            if (taskBool) {
+              this.$message("请为任务添加指定人");
+              return;
+            }
+            let req = {
+              item_type: this.$route.query.item_id,
+              item_name: this.ruleForm.item_name,
+              organize_id: this.mineStatusValue[0]["organize_id"],
+              item_label_ids: this.ruleForm.labelArr.join(","),
+              article_year: this.ruleForm.article_year,
+              article_sn: this.ruleForm.article_sn,
+              start_time: this.ruleForm.start_time,
+              item_sn: this.ruleForm.item_sn,
+              end_time: this.ruleForm.end_time,
+              item_space: this.ruleForm.item_space,
+              item_reason: this.ruleForm.item_reason,
+              item_flow: this.ruleForm.item_flow,
+              item_user: this.ruleForm.users,
+              item_task: item_task,
+              item_series: this.seriesData.join(","),
+              item_archive_ids: this.ruleForm.filesArr.join(","),
+              item_notice: this.noticesData
+            };
+            this.matterDetailsAdd(req);
           }
-          if (taskBool) {
-            this.$message("请为任务添加指定人");
-            return;
-          }
-          let req = {
-            item_type:this.$route.query.item_id,
-            item_name: this.ruleForm.item_name,
-            organize_id: this.mineStatusValue[0]["organize_id"],
-            item_label_ids: this.ruleForm.labelArr.join(","),
-            article_year: this.ruleForm.article_year,
-            article_sn: this.ruleForm.article_sn,
-            start_time: this.ruleForm.start_time,
-            item_sn: this.ruleForm.item_sn,
-            end_time: this.ruleForm.end_time,
-            item_space: this.ruleForm.item_space,
-            item_reason: this.ruleForm.item_reason,
-            item_flow: this.ruleForm.item_flow,
-            item_user: this.ruleForm.users,
-            item_task: item_task,
-            item_series: this.seriesData.join(","),
-            item_archive_ids: this.ruleForm.filesArr.join(","),
-            item_notice: this.noticesData
-          };
-          this.matterDetailsAdd(req);
-        }
-      });
+        });
+      }
     },
+    closeDiaVisible() {},
     /* 添加事项 */
     async matterDetailsAdd(req) {
       const res = await this.$api.details.addItem(req);
@@ -760,6 +807,12 @@ export default {
     },
     transferChange(val) {
       this.transferUser_id = val;
+      this.ruleForm.users = [];
+      this.transferData.forEach(i => {
+        if (this.transferUser_id.indexOf(i.user_id) >= 0) {
+          this.ruleForm.users.push(i);
+        }
+      });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -836,12 +889,12 @@ export default {
 
           if (transData.indexOf(parseInt(f.join(","))) < 0) {
             for (let i = 0; i < this.transferData.length; i++) {
-              if(this.transferData[i]['user_id'] == parseInt(f.join(","))){
-                 let num = this.transferData.indexOf(this.transferData[i])
-                  this.transferData.splice(num,1)
-                break
+              if (this.transferData[i]["user_id"] == parseInt(f.join(","))) {
+                let num = this.transferData.indexOf(this.transferData[i]);
+                this.transferData.splice(num, 1);
+                break;
               }
-            } 
+            }
           }
         }
       },
@@ -878,7 +931,6 @@ export default {
 .numberInp {
   width: 96px;
   margin: 0 15px;
-
   &.inp {
     margin-left: 0;
   }
@@ -896,12 +948,6 @@ export default {
     width: 50px;
     height: 25px;
     text-align: right;
-    /*  background: url("../../assets/img/details_sprites.png") no-repeat;
-
-    &.icon {
-      background-position: -56px -10px;
-      cursor: pointer;
-    } */
   }
 }
 
@@ -1114,5 +1160,38 @@ export default {
 
 .Close {
   background-position: -146px -56px;
+}
+
+.selectBox {
+  width: 340px;
+  height: 90px;
+  box-sizing: border-box;
+  padding: 0 16px 0px 30px;
+  p {
+    &:first-child {
+      margin-bottom: 22px;
+      display: flex;
+      align-items: baseline;
+      span {
+        &:first-child {
+          font-size: 16px;
+          font-weight: 600;
+          color: rgba(51, 51, 51, 1);
+          line-height: 22px;
+          flex: 1;
+        }
+        &:last-child {
+          font-size: 22px;
+          cursor: pointer;
+        }
+      }
+    }
+    &:last-child {
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(51, 51, 51, 1);
+      line-height: 21px;
+    }
+  }
 }
 </style>

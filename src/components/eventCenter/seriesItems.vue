@@ -110,7 +110,7 @@
     <el-popover trigger="manual" ref="popover" width="371" placement="bottom-end" v-model="visible">
       <el-form :model="addFrom" label-width="80px" style="padding:18px">
         <el-form-item label="系列名称">
-          <el-input v-model="addFrom.series" placeholder="请输入系列名称"></el-input>
+          <el-input v-model.trim="addFrom.series" placeholder="请输入系列名称"></el-input>
         </el-form-item>
         <el-form-item style="text-align: right; margin: 0">
           <el-button type="text" @click="visible = false">取消</el-button>
@@ -331,6 +331,10 @@ export default {
     },
     /* 添加系列事项 */
     async sumHandle() {
+      if(this.addFrom.series.length == 0){
+        this.$message("系列名称不能为空")
+        return;
+      }
       const res = await this.$api.allMatters.seriesItemAdd({
         series_name: this.addFrom.series
       });

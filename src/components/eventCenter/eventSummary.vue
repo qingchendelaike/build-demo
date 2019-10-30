@@ -80,10 +80,14 @@ export default {
     }
   },
   mounted() {
-    this.indecChild = this.$api.common.user().userpower_lists[1][
-      "sub_power"
-    ][0]["sub_power"];
-  }
+    this.indecChild = this.$api.common.user().userpower_lists[1]["sub_power"][0]["sub_power"];
+    for (let i = 0; i < this.indecChild.length; i++) {
+      if(this.indecChild[i]['show_menu'] == true){
+          this.$router.push(this.indecChild[i]['url'])
+          break;
+      }
+    }
+  },
 };
 </script>
 
@@ -144,7 +148,6 @@ export default {
           background: url("../../assets/img/navslide_sprites.png") -42px -6px
             no-repeat;
         }
-
         /* 我执行的 */
         &.eXecute {
           background: url("../../assets/img/navslide_sprites.png") -40px -40px
