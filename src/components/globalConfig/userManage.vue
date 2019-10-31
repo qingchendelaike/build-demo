@@ -28,7 +28,7 @@
           </el-form-item>
 
           <el-form-item label="人员身份" prop="identify">
-            <el-select v-model="queryForm.identify" placeholder="请选择人员身份" style="width: 100%;">
+            <el-select v-model="queryForm.identify" placeholder="请选择身份" style="width: 100%;">
               <el-option label="普通群众" value="1"></el-option>
               <el-option label="申请人" value="2"></el-option>
               <el-option label="入党积极分子" value="3"></el-option>
@@ -38,8 +38,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="所属组织" prop="organize_id">
-            <el-select v-model="queryForm.organize_id" placeholder="请选择党内组织" style="width: 100%;">
+         <el-form-item label="所属组织" prop="organize_id">
+            <el-select v-model="queryForm.organize_id" placeholder="请选择所属组织" style="width: 100%;">
               <el-option
                 v-for="item in organData"
                 :key="item.organize_id"
@@ -49,8 +49,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="组织职务" prop="duty_id">
-            <el-select v-model="queryForm.duty_id" placeholder="请选择所在组织" style="width: 100%;">
+          <el-form-item label="党内职务" prop="duty_id">
+            <el-select v-model="queryForm.duty_id" placeholder="请选择党内职务" style="width: 100%;">
               <el-option
                 v-for="item in jobData"
                 :key="item.duty_id"
@@ -60,12 +60,12 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="党内职务" prop="status">
-            <el-select v-model="queryForm.status" placeholder="请选择党内职务" style="width: 100%;">
+          <el-form-item label="人员状态" prop="status">
+            <el-select v-model="queryForm.status" placeholder="请选择人员状态" style="width: 100%;">
               <el-option label="使用中" value="1"></el-option>
               <el-option label="已转出" value="2"></el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> 
 
           <el-form-item>
             <div style="text-align: right;">

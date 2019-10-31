@@ -37,7 +37,7 @@ export default {
       } else {
         document.body.style.height = "100%";
       }
-/* 
+      /* 
       if (to.path != "/") {
         if (this.$api.common.user()) {
           let roterList = this.$api.common.user().userpower_lists;
@@ -247,6 +247,7 @@ body,
         width: 100%;
         height: 36px;
         line-height: 36px;
+        font-size: 14px;
         .add-icon {
           color: #333;
           position: absolute;
@@ -294,6 +295,22 @@ body,
     margin-left: 10px;
     border: unset;
     color: #3da8ff;
+  }
+}
+.tb-edit {
+  .el-table__expanded-cell[class*="cell"] {
+    padding: 0;
+  }
+  .el-form--label-left {
+    div {
+      padding: 0 0 0 50px;
+      height: 50px;
+      line-height: 50px;
+      border-bottom: 1px solid rgba(229, 229, 229, 1);
+      &:last-child {
+        border-bottom: none !important;
+      }
+    }
   }
 }
 </style>

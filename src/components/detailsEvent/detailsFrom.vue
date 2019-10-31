@@ -135,12 +135,12 @@
         <el-input placeholder="请输入会议地点" v-model="ruleForm.item_space"></el-input>
       </el-form-item>
 
-      <el-form-item :label="typeSw(detailsData.item_type)+'原因'" prop="item_reason">
-        <el-input type="textarea" :rows="3" v-model="ruleForm.item_reason" placeholder="请输入会议原因"></el-input>
+      <el-form-item :label="typeSw(detailsData.item_type)+'目的'" prop="item_reason">
+        <el-input type="textarea" :rows="3" v-model="ruleForm.item_reason" placeholder="请输入会议目的"></el-input>
       </el-form-item>
 
-      <el-form-item :label="typeSw(detailsData.item_type)+'流程'" prop="item_flow">
-        <el-input type="textarea" :rows="3" v-model="ruleForm.item_flow" placeholder="请输入会议流程"></el-input>
+      <el-form-item :label="typeSw(detailsData.item_type)+'要求'" prop="item_flow">
+        <el-input type="textarea" :rows="3" v-model="ruleForm.item_flow" placeholder="请输入会议要求"></el-input>
       </el-form-item>
 
       <el-form-item label="参与人员" prop="users">
@@ -445,7 +445,7 @@ export default {
       this.transferOldData = this.transferData = [];
     },
     organizeChange(val) {
-      this.ruleForm.organize_id = val;
+     // this.ruleForm.organize_id = val;
       this.userAll();
     },
     /* 树图只选择一个 */
@@ -720,6 +720,7 @@ export default {
             this.$message("请为任务添加指定人");
             return;
           }
+          console.log(this.ruleForm.organize_id)
           let req = {
             item_name: this.ruleForm.item_name,
             item_id: this.ruleForm.item_id,
@@ -740,8 +741,7 @@ export default {
             item_notice: this.ruleForm.notices,
             is_send: this.radio
           };
-
-          this.matterDetailsEdit(req);
+         this.matterDetailsEdit(req);
         } else {
           console.log("error submit!!");
           return false;
@@ -774,7 +774,8 @@ export default {
       this.takesData.splice(index, 1, {
         set_bool: true,
         content: item.content,
-        task_id: item.task_id
+        task_id: item.task_id,
+        users:item.users
       });
     },
     /* 修改保存 */

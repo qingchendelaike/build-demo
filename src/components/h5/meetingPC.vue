@@ -73,14 +73,14 @@
           <div class="title-conten">
             <span v-for="(item,index) in msg.users" :key="index">
               {{item.user_name}}
-              <span v-if="index <= msg.users.length && msg.users.length > 1">/</span>
+              <span v-if=" msg.users !=undefined  && index <= msg.users.length && msg.users.length > 1">/</span>
             </span>
           </div>
         </div>
 
         <div class="text-title">
           <div class="title-box">会议任务</div>
-          <div class="title-conten borderFall" v-if="msg.tasks.length > 0">
+          <div class="title-conten borderFall" v-if="msg.tasks !=undefined  && msg.tasks.length > 0">
             <p v-for="(item,index) in msg.tasks" :key="index">{{item.content}}</p>
           </div>
         </div>

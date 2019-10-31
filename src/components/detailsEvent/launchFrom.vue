@@ -160,21 +160,21 @@
               ></el-input>
             </el-form-item>
 
-            <el-form-item :label="typeSw(this.$route.query.item_id)+'原因'" prop="item_reason">
+            <el-form-item :label="typeSw(this.$route.query.item_id)+'目的'" prop="item_reason">
               <el-input
                 type="textarea"
                 :rows="3"
                 v-model="ruleForm.item_reason"
-                :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'原因'"
+                :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'目的'"
               ></el-input>
             </el-form-item>
 
-            <el-form-item :label="typeSw(this.$route.query.item_id)+'流程'" prop="item_flow">
+            <el-form-item :label="typeSw(this.$route.query.item_id)+'要求'" prop="item_flow">
               <el-input
                 type="textarea"
                 :rows="3"
                 v-model="ruleForm.item_flow"
-                :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'流程'"
+                :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'要求'"
               ></el-input>
             </el-form-item>
 
@@ -335,7 +335,7 @@
         </div>
       </div>
     </div>
-    <el-dialog title="提示"  :visible.sync="launchDiaVisible" width="350px" @close="closeDiaVisible">
+    <el-dialog title="提示"  :visible.sync="launchDiaVisible" width="350px"  @close="closeDiaVisible">
       <span>会议纪要请在会后7日内上传,其他相关材料请在会后3日内上传</span>
     </el-dialog>
   </div>
@@ -522,7 +522,7 @@ export default {
       this.transferOldData = this.transferData = [];
     },
     organizeChange(val) {
-      this.ruleForm.organize_id = val;
+      // this.ruleForm.organize_id = val;
       this.userAll();
     },
     /* 树图只选择一个 */
@@ -754,10 +754,6 @@ export default {
 
     /* 提交 */
     submitForm(formName) {
-      this.num++;
-      if (this.num == 1 ){
-        this.launchDiaVisible = true;
-      } else {
         this.$refs[formName].validate(valid => {
           if (valid) {
             let item_task = JSON.parse(JSON.stringify(this.takesData)),
@@ -795,7 +791,6 @@ export default {
             this.matterDetailsAdd(req);
           }
         });
-      }
     },
     closeDiaVisible() {},
     /* 添加事项 */
@@ -819,6 +814,11 @@ export default {
     },
     /* 添加会议任务 */
     iconTasks() {
+      this.num++;
+      if (this.num == 1 ){
+        this.launchDiaVisible = true;
+      } else {
+
       let req = {
         set_bool: true,
         content: "",
@@ -826,13 +826,15 @@ export default {
         users: []
       };
       this.takesData.push(req);
+      }
     },
     /* 显示修改任务 */
     saveShow(item, index) {
       this.takesData.splice(index, 1, {
         set_bool: true,
         content: item.content,
-        task_id: item.task_id
+        task_id: item.task_id,
+        users:item.users
       });
     },
     /* 修改保存 */

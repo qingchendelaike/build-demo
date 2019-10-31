@@ -1,7 +1,7 @@
 <template>
   <el-container class="container-box record-wrapper">
     <el-main class="main-box" id="scrollContainer">
-      <el-timeline>
+      <el-timeline id="scrollContainerBox">
         <el-timeline-item
           v-for="(item,index) in modelData"
           :key="index"
@@ -112,7 +112,8 @@ export default {
         zh_status：状态：1-未开始 2-进行中 3-已截止 4-已办结 5-已取消
         time：	起始时间
          */
-      modelData: []
+      modelData: [],
+      boxTop: 0
     };
   },
   filters: {
@@ -227,6 +228,11 @@ export default {
     };
   },
   methods: {
+    handleScroll() {
+      // 这是一个示例代码，打印出监听滚动的组件滚动距离
+      var scrollTop = this.$refs.viewBox.scrollTop;
+      console.log(scrollTop);
+    },
     /* 事项详情 */
     itemDeatils(val) {
       this.$router.push({
@@ -281,6 +287,13 @@ export default {
       let res = await this.$api.eventRecord.getData({});
       if (res.status == "success") {
         this.modelData = res.data;
+        let scrollContainer = document.querySelector("#scrollContainer");
+        let scrollTop = scrollContainer.scrollTop;
+        if (scrollTop == 0) {
+          this.$nextTick(() => {
+            document.querySelector("#scrollContainer").scrollTop = 10;
+          });
+        }
       }
       for (let i = 0; i < this.modelData.length; i++) {
         this.visible[i] = false;
@@ -308,7 +321,8 @@ export default {
         //居中当前选择的日期
         let tTop = document.querySelector(".today").offsetTop;
 
-        let halfDis = document.querySelector("#scrollContainer").clientHeight / 2;
+        let halfDis =
+          document.querySelector("#scrollContainer").clientHeight / 2;
         if (tTop > halfDis) {
           let scrollDis = Math.abs(halfDis - tTop);
           document.querySelector("#scrollContainer").scrollBy(0, scrollDis);
@@ -327,6 +341,10 @@ export default {
     initActiveMsgIndex() {
       this.activeMsgIndex = 0;
     }
+    /*   hasScrollbar() {
+      console.log(document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight))
+    return document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight);
+} */
   }
 };
 </script>

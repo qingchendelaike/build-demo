@@ -3,7 +3,8 @@
     <!-- 头部 -->
     <div class="main-title">
       <div class="title-text">系列事项</div>
-      <div v-if="num == false" @click="newNum()">
+
+      <div v-if="num == false && mst == true" @click="newNum()">
         <span class="title-ent-icon"></span>
         <span class="title-ent">进入管理模式</span>
       </div>
@@ -197,7 +198,8 @@ export default {
         page_limit: 10,
         total: 0
       },
-      num: false
+      num: false,
+      mst:false,
     };
   },
   methods: {
@@ -257,7 +259,6 @@ export default {
     /* 事项添加弹窗 */
     matterAddPop(index, row) {
       this.dialogVisible = true;
-      console.log(row)
       this.matterData.series_id = row.series_id;
       this.matterList();
     },
@@ -358,6 +359,7 @@ export default {
   },
   mounted() {
     this.list();
+    this.mst = this.$api.common.user().userpower_lists[1]['sub_power'][1]['sub_power'][4]['show_menu']
   }
 };
 </script>
@@ -391,9 +393,9 @@ export default {
   .el-form-item {
     margin-bottom: 0;
   }
-  /deep/ .el-table__expanded-cell[class*="cell"] {
+ /*  /deep/ .el-table__expanded-cell[class*="cell"] {
     padding: 20px 0 20px 80px;
-  }
+  } */
 }
 .demo-table-expand {
   font-size: 0;

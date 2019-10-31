@@ -3,7 +3,8 @@
     <el-container>
       <el-header>
         <div class="header-router">
-          <a class="header-title">党建工作系统</a>
+          <!-- <a class="header-title">党建工作系统</a> -->
+          <img src="../assets/img/titleLogo.png" style="width:144px;height:24px;margin-right: 53px;" alt="">
           <router-link
             v-for="(item,index) in routerMsg"
             :key="index"
@@ -95,6 +96,7 @@ export default {
     padding: 19px 48px;
     display: flex;
     .header-router {
+      display: flex;
       flex: 1 250px;
       /*
       span {

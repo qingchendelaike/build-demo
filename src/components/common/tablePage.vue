@@ -15,12 +15,14 @@
       <el-table-column prop="zh_status" label="状态" width="120px;">
         <template slot-scope="scope">
           <span>{{ scope.row.zh_status }}</span>
-          <el-popover trigger="hover" placement="bottom-end">
-            <div class="popover-box">
-              <p v-for="(item,index) in scope.row.tasks" :key="index">{{item}}</p>
-            </div>
-            <span slot="reference" class="is_task" v-if="scope.row.is_task == 1"></span>
-          </el-popover>
+          <span v-for="(item,index) in scope.row.tasks" :key="index">
+            <el-popover trigger="hover"  placement="bottom-end">
+              <div class="popover-box">
+                <p v-for="(dd,index) in scope.row.tasks" :key="index">{{dd}}</p>
+              </div>
+              <span slot="reference" class="is_task" v-if="scope.row.is_task == 1 && index == 0"></span>
+            </el-popover>
+           </span>
         </template>
       </el-table-column>
     </el-table>

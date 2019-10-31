@@ -15,7 +15,7 @@
             v-show="item.show_menu == true"
             tag="div"
           >
-            <i class="nav-icon" :class="item.icon"></i>
+            <i class="nav-icon" :class="item.icon[0]"></i>
             {{item.power_name}}
           </router-link>
         </li>

@@ -34,7 +34,7 @@
         </router-link>
       </el-drawer>
 
-      <div @click="drawer" :class="[drawerBool==true?'drawerLeft':'drawerRight','drawer-switch']">
+      <div @click="drawer" v-if="drawerBoolBox" :class="[drawerBool==true?'drawerLeft':'drawerRight','drawer-switch']">
       </div>
     </el-main>
   </el-container>
@@ -71,7 +71,8 @@ export default {
           id: 4,
           icon: require("../../assets/img/plan.png")
         }
-      ]
+      ],
+      drawerBoolBox:false
     };
   },
   methods: {
@@ -87,6 +88,7 @@ export default {
           break;
       }
     }
+    this.drawerBoolBox = this.$api.common.user().userpower_lists[1]['sub_power'][1]['sub_power'][0]['show_menu']
   },
 };
 </script>

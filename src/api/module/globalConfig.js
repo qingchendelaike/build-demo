@@ -178,5 +178,9 @@ export default {
     // return出去了一个promise
     return api.post('/partyUser/editUserInfo', params, header)
   },
-  
+  /* 获取职务信息 */
+  dutyInfoTree(params) {
+    // return出去了一个promise
+    return api.get('/duty/info', params, header)
+  },
 }

@@ -184,7 +184,9 @@ export default {
         duty_name: "",
         duty_string: "",
         remark: ""
-      }
+      },
+      treeArrChild: [],
+      treeArrChildArrOld: []
     };
   },
   methods: {
@@ -196,36 +198,76 @@ export default {
         }
       }
     },
-    showEdit(scope) {
-      this.checkTree = []
+    async showEdit(scope) {
       this.editFrom = scope.row;
       this.$refs[`addTree-${scope.$index}`].setCheckedKeys([]);
-      this.dataRow = JSON.parse(JSON.stringify(scope.row));
-      scope.row.duty_authority.split(",").forEach(i=>{
-        this.checkTree.push(parseInt(i))
-      })
       if (scope.row.is_special == 1) {
         this.foreachTree(this.treeData, 1);
       } else {
         this.foreachTree(this.treeData, 0);
       }
+      const res = await this.$api.globalConfig.dutyInfoTree({
+        duty_id: scope.row.duty_id
+      });
+      if (res.status == "success") {
+        this.treeArrChild = [];
+        this.treeArrChildArrOld = [];
+        let power_lists = res.data.power_lists;
+        this.getSelectTree(power_lists);
+        this.checkTree = this.treeArrChild.filter(
+          item => this.treeArrChildArrOld.indexOf(item) == -1
+        );
+      }
     },
+
+    getSelectTree(data) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i]["show_menu"] == true) {
+          let dataArr = data[i]["sub_power"];
+          this.treeArrChild.push(data[i]["power_id"]);
+          if (data[i]["sub_power"].length > 0) {
+            for (let j = 0; j < dataArr.length; j++) {
+              let bool = dataArr[j]["sub_power"].every(ev => {
+                return ev.show_menu == true;
+              });
+              if (bool == false) {
+                // console.log(dataArr[j]['power_id'])
+                // console.log(data[i]["power_id"], "menu");
+                if(dataArr[j]['power_id']){
+                  this.treeArrChildArrOld.push(dataArr[j]['power_id'])
+                }
+                this.treeArrChildArrOld.push(data[i]["power_id"]);
+              }
+            }
+          }
+        }
+
+        this.getSelectTree(data[i]["sub_power"]);
+      }
+    },
+
     /* 取消 */
     handleClose(index, row) {
-      this.tableData.splice(index, 1, this.dataRow);
+      // this.tableData.splice(index, 1, this.dataRow);
       this.$refs[`popedit-${index}`].doClose();
     },
     /* 修改 */
     async handleEdit(index, row) {
       this.$refs["editForm"].validate(valid => {
-        if (valid && this.$refs[`addTree-${index}`].getCheckedKeys().length > 0) {
+        if (
+          valid &&
+          this.$refs[`addTree-${index}`].getCheckedKeys().length > 0
+        ) {
           this.editFromData(index, row);
         }
       });
     },
 
     async editFromData(index, row) {
-      let arr = [...this.$refs[`addTree-${index}`].getCheckedKeys(),...this.$refs[`addTree-${index}`].getHalfCheckedKeys()] 
+      let arr = [
+        ...this.$refs[`addTree-${index}`].getCheckedKeys(),
+        ...this.$refs[`addTree-${index}`].getHalfCheckedKeys()
+      ];
       row.duty_authority = arr.join(",");
       const res = await this.$api.globalConfig.dutyEdit(row);
       if (res.status == "success") {

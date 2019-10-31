@@ -85,8 +85,8 @@ export default {
       codeNum: "",
       is_more_duty: "",
       from: {
-        account: "15007221944",
-        password: "123456"
+        account: "",
+        password: ""
       },
       subject: "",
       popData: [],
