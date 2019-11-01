@@ -82,7 +82,7 @@ export default {
   },
   /* 删除事项详情 */
   matterDetailsDel(params){
-    return api.get('/item/delItem', params, header)
+    return api.post('/item/delItem', params, header)
   },
   /* 编辑事项备注 */
   matterDetailsRemark(params){

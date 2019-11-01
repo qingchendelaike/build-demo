@@ -69,9 +69,13 @@
     <div v-if="detailsData.item_status == 3 || detailsData.item_status == 4">
       <div class="text-title" v-if="detailsData.is_self || detailsData.is_special">
         <div class="title-box">事项备注</div>
-        <div class="title-conten">
+        <div class="title-conten" v-if="detailsData.item_remark == ''">
           <el-input type="textarea" :rows="3" placeholder="如有特殊情况说明，可添加事项备注" v-model="textarea"></el-input>
         </div>
+        <div class="title-conten" v-if="detailsData.item_remark != ''">
+          {{detailsData.item_remark}}
+        </div>
+
       </div>
     </div>
     <div class="text-title" v-if=" detailsData.item_status == 5 && detailsData.is_special">
@@ -89,7 +93,7 @@
       </div>
     </div>
 
-    <div v-if=" detailsData.item_status == 4 || detailsData.item_status == 3">
+    <div v-if="(detailsData.item_status == 4 && detailsData.item_remark == '') || (detailsData.item_status == 3 && detailsData.item_remark == '')">
       <div class="text-title" v-if="detailsData.is_self || detailsData.is_special">
         <div class="title-box"></div>
         <div class="title-conten">
@@ -125,7 +129,7 @@ export default {
       let req = {
         item_id: this.detailsData.item_id
       };
-      this.$emit("threeSum", req);
+      this.$emit("delDetauls", req);
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();

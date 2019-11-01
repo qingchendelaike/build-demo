@@ -153,28 +153,28 @@
               </el-col>
             </el-form-item>
 
-            <el-form-item :label="typeSw(this.$route.query.item_id)+'地点'" prop="item_space">
+            <el-form-item v-if="this.$route.query.item_id != 4" :label="typeSw(this.$route.query.item_id)+'地点'" prop="item_space">
               <el-input
                 :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'地点'"
                 v-model="ruleForm.item_space"
               ></el-input>
             </el-form-item>
 
-            <el-form-item :label="typeSw(this.$route.query.item_id)+'目的'" prop="item_reason">
+            <el-form-item :label="typeSw(this.$route.query.item_id) + (this.$route.query.item_id == 1 ? '原因' : '目的')" prop="item_reason">
               <el-input
                 type="textarea"
                 :rows="3"
                 v-model="ruleForm.item_reason"
-                :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'目的'"
+                :placeholder="'请输入'+typeSw(this.$route.query.item_id)+ (this.$route.query.item_id == 1 ? '原因' : '目的')"
               ></el-input>
             </el-form-item>
 
-            <el-form-item :label="typeSw(this.$route.query.item_id)+'要求'" prop="item_flow">
+            <el-form-item :label="(this.$route.query.item_id == 4 ? '内容要求' : (typeSw(this.$route.query.item_id)+ (this.$route.query.item_id == 1 ? '流程' : '内容'))) " prop="item_flow">
               <el-input
                 type="textarea"
                 :rows="3"
                 v-model="ruleForm.item_flow"
-                :placeholder="'请输入'+typeSw(this.$route.query.item_id)+'要求'"
+                :placeholder="'请输入'+ (this.$route.query.item_id == 4 ? '内容要求' : (typeSw(this.$route.query.item_id)+ (this.$route.query.item_id == 1 ? '流程' : '内容')))"
               ></el-input>
             </el-form-item>
 
@@ -815,7 +815,7 @@ export default {
     /* 添加会议任务 */
     iconTasks() {
       this.num++;
-      if (this.num == 1 ){
+      if (this.num == 1 && this.$route.query.item_id == 1 ){
         this.launchDiaVisible = true;
       } else {
 

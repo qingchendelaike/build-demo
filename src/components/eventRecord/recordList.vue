@@ -50,7 +50,6 @@
           <el-card
             v-for="(eventItem,index) in item.item_lists"
             :key="index"
-            v-show="index==0"
             :class="eventItem.item_status|itemStatusColor()"
           >
             <span class="event-title" @click="itemDeatils(eventItem)" style="cursor: pointer;">

@@ -2,14 +2,14 @@
   <div>
     <!-- 表格 -->
     <el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName">
-      <el-table-column prop="item_name" label="事项" width="300px;">
+      <el-table-column prop="item_name" label="事项" width="550px;">
         <template slot-scope="scope">
           <span @click="itemDeatils(scope.row)" style="cursor: pointer;">{{ scope.row.item_name }}</span>
 
           <span class="time_label" v-show="scope.row.time_label">{{ scope.row.time_label }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="zh_type" label="类型"></el-table-column>
+      <el-table-column prop="zh_type" label="类型" ></el-table-column>
       <el-table-column prop="organize_name" label="组织主体"></el-table-column>
       <el-table-column prop="time" label="时间" width="300px;"></el-table-column>
       <el-table-column prop="zh_status" label="状态" width="120px;">

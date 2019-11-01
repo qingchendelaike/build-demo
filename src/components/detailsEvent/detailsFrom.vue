@@ -125,22 +125,22 @@
             </div>
 
             <span class="timeicon" @click="timeShow" slot="reference">
-              <img style="width:100%;height:100%;" v-show="noticesData.length > 0" src="../../assets/img/icon_remind_on.png" alt="">
+              <img style="width:100%;height:100%;" v-show="ruleForm.notices !=undefined && ruleForm.notices.length > 0" src="../../assets/img/icon_remind_on.png" alt="">
             </span>
           </el-popover>
         </el-col>
       </el-form-item>
 
-      <el-form-item :label="typeSw(detailsData.item_type)+'地点'" prop="item_space">
+      <el-form-item  v-if="detailsData.item_type != 4" :label="typeSw(detailsData.item_type)+'地点'" prop="item_space">
         <el-input placeholder="请输入会议地点" v-model="ruleForm.item_space"></el-input>
       </el-form-item>
 
-      <el-form-item :label="typeSw(detailsData.item_type)+'目的'" prop="item_reason">
-        <el-input type="textarea" :rows="3" v-model="ruleForm.item_reason" placeholder="请输入会议目的"></el-input>
+      <el-form-item :label="typeSw(detailsData.item_type) + (detailsData.item_type == 1 ? '原因' : '目的')" prop="item_reason">
+        <el-input type="textarea" :rows="3" v-model="ruleForm.item_reason" :placeholder="'请输入'+typeSw(detailsData.item_type) + (detailsData.item_type == 1 ? '原因' : '目的')"></el-input>
       </el-form-item>
 
-      <el-form-item :label="typeSw(detailsData.item_type)+'要求'" prop="item_flow">
-        <el-input type="textarea" :rows="3" v-model="ruleForm.item_flow" placeholder="请输入会议要求"></el-input>
+      <el-form-item :label="(detailsData.item_type == 4 ? '内容要求' : (typeSw(detailsData.item_type)+ (detailsData.item_type == 1 ? '流程' : '内容'))) " prop="item_flow">
+        <el-input type="textarea" :rows="3" v-model="ruleForm.item_flow" :placeholder="'请输入'+(detailsData.item_type == 4 ? '内容要求' : (typeSw(detailsData.item_type)+ (detailsData.item_type == 1 ? '流程' : '内容')))"></el-input>
       </el-form-item>
 
       <el-form-item label="参与人员" prop="users">
@@ -340,16 +340,16 @@ export default {
       },
       rules: {
         item_name: [
-          { required: true, message: "请输入会议名称", trigger: "blur" }
+          { required: true, message: `请输入${this.typeSw(this.detailsData.item_type)}名称`, trigger: "blur" }
         ],
         item_reason: [
-          { required: true, message: "请输入会议原因", trigger: "blur" }
+          { required: true, message: `请输入${(this.typeSw(this.detailsData.item_type)) + (this.detailsData.item_type == 1 ? '原因' : '目的')}`, trigger: "blur" }
         ],
         item_flow: [
-          { required: true, message: "请输入会议流程", trigger: "blur" }
+          { required: true, message: `请输入${(this.typeSw(this.detailsData.item_type)) + (this.detailsData.item_type == 4 ? '内容要求' : (this.detailsData.item_type == 1 ? '流程' : '内容'))}`, trigger: "blur" }
         ],
         item_space: [
-          { required: true, message: "请输入会议地点", trigger: "blur" }
+          { required: true, message: `请输入${this.typeSw(this.detailsData.item_type)}地点`, trigger: "blur" }
         ],
         organize_name: [
           { required: true, message: "请选择活动区域", trigger: "change" }
@@ -720,7 +720,6 @@ export default {
             this.$message("请为任务添加指定人");
             return;
           }
-          console.log(this.ruleForm.organize_id)
           let req = {
             item_name: this.ruleForm.item_name,
             item_id: this.ruleForm.item_id,

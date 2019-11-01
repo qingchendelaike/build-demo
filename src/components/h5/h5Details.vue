@@ -4,7 +4,7 @@
       <div class="box-text">
         <div class="text-title">
           <div class="title-box">
-            会议名称
+            {{typeSw(msg.item_type)}}名称
             <p v-show=" msg.change !=undefined  && msg.change.indexOf('item_name') >= 0"></p>
           </div>
           <div class="title-conten">{{msg.item_name}}</div>
@@ -55,30 +55,31 @@
         </div>
         <div class="text-title">
           <div class="title-box">
-            会议时间
+            {{typeSw(msg.item_type)}}时间
             <p
               v-if="(msg.change !=undefined && this.msg.change.indexOf('start_time') >= 0) || (msg.change !=undefined && this.msg.change.indexOf('end_time') >= 0)"
             ></p>
           </div>
           <div class="title-conten">{{msg.start_time}} - {{msg.end_time}}</div>
         </div>
-        <div class="text-title">
+        <div class="text-title" v-if="msg.item_type != 4">
           <div class="title-box">
-            会议地点
+            {{typeSw(msg.item_type)}}地点
             <p v-if="msg.change !=undefined && this.msg.change.indexOf('item_space') >= 0"></p>
           </div>
           <div class="title-conten">{{msg.item_space}}</div>
         </div>
         <div class="text-title">
           <div class="title-box">
-            会议原因
+            {{typeSw(msg.item_type) + (msg.item_type == 1 ? '原因' : '目的')}}
             <p v-if=" msg.change !=undefined && this.msg.change.indexOf('item_reason') >= 0"></p>
           </div>
           <div class="title-conten">{{msg.item_reason}}</div>
         </div>
         <div class="text-title">
           <div class="title-box">
-            会议流程
+            {{(msg.item_type == 4 ? '内容要求' : (typeSw(msg.item_type)+ (msg.item_type == 1 ? '流程' : '内容')))}}
+            
             <p v-if="msg.change !=undefined && this.msg.change.indexOf('item_flow') >= 0"></p>
           </div>
           <div class="title-conten">{{msg.item_flow}}</div>
@@ -91,8 +92,7 @@
           </div>
           <div class="title-conten">
             <span v-for="(item,index) in msg.users" :key="index">
-              {{item.user_name}}
-              <span v-if="msg.users !=undefined && index <= msg.users.length && msg.users.length > 1">/</span>
+              {{item.user_name}}<span v-if=" msg.users !=undefined  && msg.users.length > 1 && msg.users.length != (index +1)">/</span>
             </span>
           </div>
         </div>
@@ -103,7 +103,9 @@
             <p v-if="msg.change !=undefined && this.msg.change.indexOf('tasks') >= 0"></p>
           </div>
           <div class="title-conten borderFall" v-if="msg.tasks !=undefined && msg.tasks.length > 0">
-            <span v-for="(item,index) in msg.tasks" :key="index">{{item.content}}</span>
+            <span v-for="(item,index) in msg.tasks" :key="index">
+              {{item.content}}<span v-if=" msg.tasks !=undefined  && msg.tasks.length > 1 && msg.tasks.length != (index +1)">、</span>
+            </span>
           </div>
         </div>
       </div>
@@ -144,6 +146,26 @@ export default {
   },
 
   methods: {
+    
+    /* 会议类型 */
+    typeSw(key) {
+      switch (key) {
+        case 1:
+          return "会议";
+          break;
+        case 2:
+          return "课程";
+          break;
+        case 3:
+          return "活动";
+          break;
+        case 4:
+          return "项目";
+          break;
+        default:
+          break;
+      }
+    },
     clickName(item, index) {
       this.changeLeftBackground = index;
       this.disabled = false;
