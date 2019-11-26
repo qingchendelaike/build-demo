@@ -4,6 +4,7 @@
 
 FROM nginx
 
+WORKDIR ./
 MAINTAINER new5tt <new5tt@163.com>
 
 # commands
@@ -15,4 +16,4 @@ RUN rm /etc/nginx/conf.d/default.conf  && mkdir /usr/share/nginx/html/vue-news
 COPY default.conf /etc/nginx/conf.d/default.conf
 
 # 把刚才生成dist文件夹下的文件copy到nginx下面去
-COPY dist/  /usr/share/nginx/html/vue-news  
+COPY ./dist/  /usr/share/nginx/html/vue-news  
